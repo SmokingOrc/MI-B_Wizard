@@ -8,6 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     Button click = null;
+    Button buttonRegeln;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +22,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        buttonRegeln = findViewById(R.id.buttonRegeln);
     }
 
+    public void buttonRegeln(View view) {
+        Intent i2 = new Intent(MainActivity.this, RulesActivity.class);
+        startActivity(i2);
+
+    }
 }
