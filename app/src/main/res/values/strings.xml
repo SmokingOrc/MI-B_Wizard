@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">MI-B_WIzard</string>
+    <string name="app_name">Wizard</string>
+    <string name="join_game">Join Game</string>
+    <string name="spielregeln">Spielregeln</string>
+    <string name="lehrlingsname">Lehrlingsname</string>
+    <string name="create_game">Create Game</string>
 </resources>

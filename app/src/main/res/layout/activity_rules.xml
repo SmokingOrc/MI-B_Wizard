@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RulesActivity">
+    tools:context=".RulesActivity"
+    android:background="#9fadb6">
 
     <Button
         android:id="@+id/button_zurück"

@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".JoinGameActivity">
+    tools:context=".JoinGameActivity"
+    android:background="#9fadb6">
 
     <TextView
         android:id="@+id/tvHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Available Games:"/>
+        android:text="Available Games:" />
 
     <ListView
         android:id="@+id/lvAvailableGames"
