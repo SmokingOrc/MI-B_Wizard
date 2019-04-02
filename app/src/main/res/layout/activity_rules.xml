@@ -8,26 +8,33 @@
     android:background="#9fadb6">
 
     <Button
-        android:id="@+id/button_zurück"
+        android:id="@+id/btn_create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="buttonZurück"
-        android:text="Zurück"
+        android:text="Create Game"
         android:textColor="@color/colorAccent"
-
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/webView1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/btn_join"
+         />
+    <Button
+        android:id="@+id/btn_join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join Game"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        android:layout_alignParentRight="true"
+
+        />
 
     <WebView
         android:id="@+id/webView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="0dp"
-        android:layout_below="@+id/button_zurück"
+        android:layout_below="@+id/btn_create"
         />
 
 

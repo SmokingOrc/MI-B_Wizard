@@ -5,11 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class RulesActivity extends AppCompatActivity {
-
-    TextView textView;
+    
+    Button ButtonCreateGame;
+    Button ButtonJoinGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,11 +20,23 @@ public class RulesActivity extends AppCompatActivity {
 
         WebView webView = findViewById(R.id.webView1);
         webView.loadUrl("file:///android_asset/regeln.html");
-    }
 
-    public void buttonZurück(View view) {
-        Intent i = new Intent(RulesActivity.this, MainActivity.class);
-        startActivity(i);
+        ButtonCreateGame = findViewById(R.id.btn_create);
+        ButtonCreateGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(RulesActivity.this, NewGameActivity.class);
+                startActivity(i);
+            }
+        });
 
+        ButtonJoinGame = findViewById(R.id.btn_join);
+        ButtonJoinGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(RulesActivity.this, JoinGameActivity.class);
+                startActivity(i);
+            }
+        });
     }
 }
