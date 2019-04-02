@@ -4,12 +4,17 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 
 public class NewGameActivity extends AppCompatActivity {
+
+    //Button ButtonStart;
+    Button ButtonRegeln;
+    Button ButtonJoin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,26 @@ public class NewGameActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });*/
+
+        ButtonRegeln = findViewById(R.id.rules);//Wechsel zu Regeln
+        ButtonRegeln.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(NewGameActivity.this, RulesActivity.class);
+                startActivity(i);
+            }
+        });
+
+        ButtonJoin = findViewById(R.id.joingame);//Wechsel zu Join Game
+        ButtonJoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(NewGameActivity.this, JoinGameActivity.class);
+                startActivity(i);
+            }
+        });
+
+
     }
 
 
