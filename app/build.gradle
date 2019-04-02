@@ -1,6 +1,7 @@
 plugins {
     id "org.sonarqube" version "2.7"
 }
+
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 
@@ -54,5 +55,6 @@ sonarqube {
     properties {
         property "sonar.projectName", "MI-B_Wizard"
         property "sonar.projectKey", "SmokingOrc_MI-B_Wizard"
+
     }
 }
