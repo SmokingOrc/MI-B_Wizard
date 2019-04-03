@@ -10,6 +10,7 @@ import android.widget.EditText;
 public class MainActivity extends AppCompatActivity {
     Button ButtonJoin = null;
     Button ButtonRegeln;
+    Button ButtonCreate;
     EditText Userid;
     String user;
 
@@ -36,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i2);
             }
         });
+
+        ButtonCreate = findViewById(R.id.btnCreate);//Wechsel zu Create Game
+        ButtonCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i3 = new Intent(MainActivity.this, NewGameActivity.class);
+                startActivity(i3);
+            }
+        });
+
         Userid = findViewById(R.id.Userid);
         user = Userid.getText().toString();// Username
     }
