@@ -107,8 +107,22 @@ public class Game {
         }
     }
 
-    public void calculatePointsForPlayers() {
+    public void calculatePointsForAllPlayers() {
         //needs to be implemented when "Player" is implemented
+    }
+
+    public int calculatePointsForOnePlayer(int predicted, int made) {
+        int points = 0;
+
+        if(predicted == made) {
+            points = 20 + made * 10;
+        } else if (predicted < made){
+            points = (predicted - made) * 10;
+        } else {
+            points = (made - predicted) * 10;
+        }
+
+        return  points;
     }
 
 

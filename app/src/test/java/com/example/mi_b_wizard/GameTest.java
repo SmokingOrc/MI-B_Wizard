@@ -56,6 +56,16 @@ public class GameTest {
         assertEquals("player2", testGame.calculateWhoWonTheRound());
     }
 
+    @Test
+    public void testCalculatePointsForOnePlayer() {
+        assertEquals(40, testGame.calculatePointsForOnePlayer(2,2));
+        assertEquals(70, testGame.calculatePointsForOnePlayer(5, 5));
+        assertEquals(-20, testGame.calculatePointsForOnePlayer(2,0));
+        assertEquals(-10, testGame.calculatePointsForOnePlayer(2,1));
+        assertEquals(-30, testGame.calculatePointsForOnePlayer(3,6));
+        assertEquals(20, testGame.calculatePointsForOnePlayer(0,0));
+    }
+
     @After
     public void tearDown() {
         testGame = null;
