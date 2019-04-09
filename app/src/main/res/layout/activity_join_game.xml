@@ -24,5 +24,17 @@
         android:id="@+id/btnStartGame"
         android:text="Start Game"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnDiscover"
+        android:text="Discover"/>
+
+    <TextView
+        android:id="@+id/wifi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
 
 </android.widget.LinearLayout>
