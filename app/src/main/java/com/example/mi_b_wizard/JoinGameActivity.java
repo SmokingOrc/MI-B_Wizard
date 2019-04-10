@@ -12,8 +12,6 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -27,16 +25,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
+
+import com.example.mi_b_wizard.Network.Client;
+import com.example.mi_b_wizard.Network.SendReceive;
+import com.example.mi_b_wizard.Network.Server;
 import com.example.mi_b_wizard.Network.WiFiDirectBroadcastReceiver;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,7 +155,7 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             }
         });
     }
-    public Handler handler = new Handler(new Handler.Callback() {
+   /* public Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what){
@@ -175,7 +171,7 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             return true;
         }
     });
-
+/*
     private class SendReceive extends Thread {
         private Socket socket;
         private InputStream inputStream;
@@ -216,7 +212,7 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
                 e.printStackTrace();
             }
         }
-    }
+    } */
 
     @Override
     protected void onResume() {
@@ -257,7 +253,7 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
            }
        }
    };
-
+/*
     public class Server extends Thread {
         Socket socket;
         ServerSocket serverSocket;
@@ -276,7 +272,7 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             }
         }
     }
-
+/*
     public class Client extends Thread {
         Socket socket;
         String host;
@@ -300,7 +296,7 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             }
         }
     }
-
+*/
     public WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
         @Override
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
