@@ -1,6 +1,7 @@
 package com.example.mi_b_wizard;
 
 import com.example.mi_b_wizard.Data.Game;
+import com.example.mi_b_wizard.Data.Player;
 
 import org.junit.After;
 import org.junit.Before;
@@ -16,6 +17,60 @@ public class GameTest {
         testGame = new Game();
     }
 
+
+
+    @Test
+    public void testAddPlayer() {
+        testGame.addPlayerToPlayers(new Player("Hanno"));
+        assertEquals(1, testGame.get_players().size());
+        testGame.addPlayerToPlayers(new Player("Felix"));
+        assertEquals(2, testGame.get_players().size());
+    }
+
+    @Test
+    public void testGiveCardsInFirstRound() {
+        Player p = new Player("Hanno");
+        Player p1 = new Player("Hugo");
+
+        testGame.addPlayerToPlayers(p);
+        testGame.addPlayerToPlayers(p1);
+        testGame.setCurrentRound(1);
+        testGame.handOutCards();
+        assertEquals(1, p1.getHandSize());
+        assertEquals(1, p.getHandSize());
+    }
+
+    @Test
+    public void testGiveCardsInThirdRound() {
+        Player p = new Player("Hanno");
+        Player p1 = new Player("Hugo");
+
+        testGame.addPlayerToPlayers(p);
+        testGame.addPlayerToPlayers(p1);
+        testGame.setCurrentRound(3);
+        testGame.handOutCards();
+        assertEquals(3, p1.getHandSize());
+        assertEquals(3, p.getHandSize());
+    }
+
+    @Test
+    public void testCalculateWhoWonTheRound() {
+        Player p = new Player("Hanno");
+        Player p1 = new Player("Hugo");
+
+        testGame.addPlayerToPlayers(p);
+        testGame.addPlayerToPlayers(p1);
+        testGame.setCurrentRound(3);
+        testGame.handOutCards();
+
+        testGame.addCardToCardsPlayed(p, p.playCardForTesting());
+        testGame.addCardToCardsPlayed(p1, p1.playCardForTesting());
+
+        System.out.println("Player who won: " + testGame.calculateWhoWonTheRound().getPlayerName());
+
+    }
+
+    /*
     @Test
     public void testAddPlayer() {
         testGame.addPlayer("player1");
@@ -64,7 +119,7 @@ public class GameTest {
         assertEquals(-10, testGame.calculatePointsForOnePlayer(2,1));
         assertEquals(-30, testGame.calculatePointsForOnePlayer(3,6));
         assertEquals(20, testGame.calculatePointsForOnePlayer(0,0));
-    }
+    }*/
 
     @After
     public void tearDown() {

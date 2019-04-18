@@ -1,7 +1,11 @@
 package com.example.mi_b_wizard.Data;
 
+import android.os.Debug;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Player{
 
@@ -19,7 +23,7 @@ public class Player{
     //Getter-Setter
 
     public void setPlayerName(String name){
-        this.playerName = playerName;
+        this.playerName = name;
     }
 
     public String getPlayerName() {
@@ -85,6 +89,7 @@ public class Player{
     //<-------------------------->
 
     //Needs to be updated (Game)
+
     public void updatePoints(){
         //points =+ Game.calculatePointsForOnePlayer(predictedTrick, madeTrick);
     }
@@ -97,6 +102,17 @@ public class Player{
     //Which card should be played
     public void playCard(Card card){
 
+    }
+
+
+    //Only for testing Game Class!!!!
+    public Card playCardForTesting() {
+        Random r = new Random();
+        int index = r.nextInt(hand.size());
+        Card item = hand.get(index);
+        //Log.d("Info", "Player: " + this.playerName + " plays: " + item.getId());
+        System.out.println("Player: " + this.playerName + " plays: " + item.getId());
+        return item;
     }
 
 

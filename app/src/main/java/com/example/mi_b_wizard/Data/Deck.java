@@ -14,6 +14,9 @@ public class Deck {
 
     Map<String, Card> card = new HashMap<>();
 
+    public Deck() {
+        resetDeck();
+    }
 
     private void resetDeck() {                                   //resetDeck() initializes and resets all the Cards in the HashMap
 
@@ -126,24 +129,24 @@ public class Deck {
     }
 
 
-    public List<String> getCards(int currentRound) {                //getCards method takes the input currentRound, to generate a List<String> with the number of random cards equal to current Round
-
-
-
-
-        List<String> HandCards;
+    public List<Card> getCards(int currentRound) {                //getCards method takes the input currentRound, to generate a List<String> with the number of random cards equal to current Round
+        List<Card> HandCards = new ArrayList<Card>();
         HashSet<String> set = new HashSet();                        //HashSet doesn't allow duplicates values
 
+        int i = 0;                                                  //for while loop
 
-        while (set.size() < currentRound) {
+        while (i < currentRound) {
             Object[] rand = card.keySet().toArray();                //get a random entry from the HashMap
             Object key = rand[new Random().nextInt(rand.length)];   //get a random key for a card
-            String c = card.get(key).toString();                    //get ID from the Card with the generated key
-            set.add(c);                                             //add the ID of the Card with the random generated key to the HashSet set
+            Card c = card.get(key);
+            HandCards.add(c);
+            //get ID from the Card with the generated key
+            //set.add(c);                                             //add the ID of the Card with the random generated key to the HashSet set
             card.remove(key);                                       //remove this Card from the HashMap card, so that the getCards Method gives different Cards every time it is called, until the Method resetDeck() is colled
+            i++;
         }
 
-        HandCards = new ArrayList<String>(set);                     //save HashSet set into a new ArrayList
+        //HandCards = new ArrayList<String>(set);                     //save HashSet set into a new ArrayList
 
 
         return HandCards;
