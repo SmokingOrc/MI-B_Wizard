@@ -11,24 +11,21 @@ import java.util.Map;
 
 public class Game {
     private String ID;
-    //will be a list of player after merge
-    private List<String> players;
+
+
     private List<Player> _players;
-    //will be a deck after merge
-    private List<String> deck;
+
+
     private Deck _deck;
 
     private Card.Colour trump;
 
     private int currentRound;
-    //will be a KVP with Player and Card after merge
-    private Map<String,Integer> cardsPlayed;
+
     private Map<Player, Card> _cardsPlayed;
 
     public Game() {
-        players = new ArrayList<String>();
-        deck = new ArrayList<String>();
-        cardsPlayed = new HashMap<String, Integer>();
+
         _cardsPlayed = new LinkedHashMap<Player, Card>();
         _deck = new Deck();
         _players = new ArrayList<Player>();
@@ -55,29 +52,7 @@ public class Game {
         this.ID = ID;
     }
 
-    public List<String> getPlayers() {
-        return players;
-    }
 
-    public void setPlayers(List<String> players) {
-        this.players = players;
-    }
-
-    public List<String> getDeck() {
-        return deck;
-    }
-
-    public void setDeck(List<String> deck) {
-        this.deck = deck;
-    }
-
-    public Map<String, Integer> getCardsPlayed() {
-        return cardsPlayed;
-    }
-
-    public void setCardsPlayed(Map<String, Integer> cardsPlayed) {
-        this.cardsPlayed = cardsPlayed;
-    }
 
     public List<Player> get_players() {
         return _players;
@@ -96,9 +71,7 @@ public class Game {
     }
 
     //end of Getter/Setter
-    public void addPlayer(String player) {
-        this.players.add(player);
-    }
+
 
     public void addPlayerToPlayers(Player toAdd) {
         this._players.add(toAdd);
@@ -113,15 +86,7 @@ public class Game {
 
     }
 
-    public String removePlayer(String player) {
-        String returnValue = null;
-        if(this.players.contains(player)) {
-            this.players.remove(player);
-            returnValue = player;
-        }
 
-        return returnValue;
-    }
 
 
     //network method - receiving message from player with card
@@ -131,6 +96,7 @@ public class Game {
 
     }
 
+    //network - send
     public Player calculateWhoWonTheRound() {
         Player returnValue;
         Map.Entry<Player, Card> currentHighestCard = null;
@@ -184,15 +150,18 @@ public class Game {
          */
         for(Player player : _players) {
             player.setHand(_deck.getCards(currentRound));
-            //Network must be used here
+            //Network - send
         }
+        //network - send
         trump = _deck.getCards(1).get(0).getColour();
     }
 
+    //network - send
     public void calculatePointsForAllPlayers() {
         //needs to be implemented when "Player" is implemented
         for(Player p : _players) {
             p.setPoints(p.getPoints() + calculatePointsForOnePlayer(p.getPredictedTrick(), p.getMadeTrick()));
+            System.out.println("Points for " + p.getPlayerName() + ": " + p.getPoints());
         }
     }
 

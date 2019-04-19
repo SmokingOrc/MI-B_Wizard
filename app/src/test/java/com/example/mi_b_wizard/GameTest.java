@@ -119,6 +119,32 @@ public class GameTest {
         System.out.println("Player who won: " + testGame.calculateWhoWonTheRound().getPlayerName());
     }
 
+    @Test
+    public void testCalculatePoints() {
+        Player p = new Player("Hanno");
+        Player p1 = new Player("Franz");
+        Player p2 = new Player("Kain");
+        Player p3 = new Player("Abel");
+
+        p.setMadeTrick(3);
+        p.setPredictedTrick(3);
+        p1.setMadeTrick(2);
+        p1.setPredictedTrick(0);
+        p2.setMadeTrick(1);
+        p2.setPredictedTrick(1);
+        p3.setPredictedTrick(0);
+        p3.setMadeTrick(0);
+
+        testGame.addPlayerToPlayers(p);
+        testGame.addPlayerToPlayers(p1);
+        testGame.addPlayerToPlayers(p2);
+        testGame.addPlayerToPlayers(p3);
+
+        testGame.calculatePointsForAllPlayers();
+
+
+    }
+
     /*
     @Test
     public void testAddPlayer() {
