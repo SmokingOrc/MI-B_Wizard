@@ -5,6 +5,7 @@ import android.util.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,8 @@ public class Game {
     private List<String> deck;
     private Deck _deck;
 
+    private Card.Colour trump;
+
     private int currentRound;
     //will be a KVP with Player and Card after merge
     private Map<String,Integer> cardsPlayed;
@@ -26,7 +29,7 @@ public class Game {
         players = new ArrayList<String>();
         deck = new ArrayList<String>();
         cardsPlayed = new HashMap<String, Integer>();
-        _cardsPlayed = new HashMap<Player, Card>();
+        _cardsPlayed = new LinkedHashMap<Player, Card>();
         _deck = new Deck();
         _players = new ArrayList<Player>();
 
@@ -34,6 +37,16 @@ public class Game {
     }
 
     //getter and setter for testing
+
+
+    public Card.Colour getTrump() {
+        return trump;
+    }
+
+    public void setTrump(Card.Colour trump) {
+        this.trump = trump;
+    }
+
     public String getID() {
         return ID;
     }
@@ -91,6 +104,15 @@ public class Game {
         this._players.add(toAdd);
     }
 
+    public void removePlayerFromPlayers(Player toRemove) throws Exception {
+        if(this._players.contains(toRemove)) {
+            this._players.remove(toRemove);
+        } else {
+            throw new Exception("Player to remove: " + toRemove.getPlayerName() + " is not in Collection");
+        }
+
+    }
+
     public String removePlayer(String player) {
         String returnValue = null;
         if(this.players.contains(player)) {
@@ -113,28 +135,50 @@ public class Game {
         Player returnValue;
         Map.Entry<Player, Card> currentHighestCard = null;
         Card c;
-        Card c1;
+        Card currentHighest;
         Iterator it = _cardsPlayed.entrySet().iterator();
         while(it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+            Map.Entry<Player,Card> pair = (Map.Entry)it.next();
             if(currentHighestCard == null) {
                 currentHighestCard = pair;
+                System.out.println("First Card is: " + currentHighestCard.getValue().getId() +
+                        " from: " + currentHighestCard.getKey().getPlayerName());
             } else {
-                c = (Card)pair.getValue();
-                c1 = (Card)currentHighestCard.getValue();
-                if(c.getRank().ordinal() > c1.getRank().ordinal()) {
+                c = pair.getValue();
+                currentHighest = currentHighestCard.getValue();
+                //check if first card is a wizard
+                if(currentHighest.getRank().ordinal() == 9) {
+                    currentHighestCard.getKey().setMadeTrick(currentHighestCard.getKey().getMadeTrick() + 1);
+                    return currentHighestCard.getKey(); //first wizard wins
+                } else if(c.getRank().ordinal() == 9) {
                     currentHighestCard = pair;
+                    currentHighestCard.getKey().setMadeTrick(currentHighestCard.getKey().getMadeTrick() + 1);
+                    return currentHighestCard.getKey();
+                } else if(currentHighest.getRank().ordinal() == 0 && c.getRank().ordinal() > 0) {
+                    currentHighestCard = pair;
+                } else if (c.getRank().ordinal() == 0) {
+                    //do nothing because narr
+                } else if(currentHighest.getColour() == this.trump && c.getColour() == trump) {
+                    if(c.getRank().ordinal() > currentHighest.getRank().ordinal()) {
+                        currentHighestCard = pair;
+                    }
+                } else if (currentHighest.getColour() != this.trump && c.getColour() == trump) {
+                    currentHighestCard = pair;
+                } else if (currentHighest.getColour() == c.getColour()) {
+                    if(c.getRank().ordinal() > currentHighest.getRank().ordinal()) {
+                        currentHighestCard = pair;
+                    }
                 }
             }
         }
 
         returnValue = currentHighestCard.getKey();
-
+        returnValue.setMadeTrick(returnValue.getMadeTrick() + 1);
 
         return returnValue;
     }
     //Network method - send message here
-    public void handOutCards() {
+    public void handOutCardsAndSetTrump() {
         /*
         needs to be updated when "Deck" and "Player" are implemented
          */
@@ -142,6 +186,7 @@ public class Game {
             player.setHand(_deck.getCards(currentRound));
             //Network must be used here
         }
+        trump = _deck.getCards(1).get(0).getColour();
     }
 
     public void calculatePointsForAllPlayers() {

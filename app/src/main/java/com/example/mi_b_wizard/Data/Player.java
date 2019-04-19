@@ -18,6 +18,8 @@ public class Player{
     public Player(String playerName){
         setPlayerName(playerName);
         hand = new ArrayList<>();
+        points = 0; //added by martin
+        madeTrick = 0; //added by martin
     }
 
     //Getter-Setter

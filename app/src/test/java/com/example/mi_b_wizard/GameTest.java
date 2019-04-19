@@ -1,5 +1,7 @@
 package com.example.mi_b_wizard;
 
+import android.content.SyncStatusObserver;
+
 import com.example.mi_b_wizard.Data.Game;
 import com.example.mi_b_wizard.Data.Player;
 
@@ -35,7 +37,7 @@ public class GameTest {
         testGame.addPlayerToPlayers(p);
         testGame.addPlayerToPlayers(p1);
         testGame.setCurrentRound(1);
-        testGame.handOutCards();
+        testGame.handOutCardsAndSetTrump();
         assertEquals(1, p1.getHandSize());
         assertEquals(1, p.getHandSize());
     }
@@ -48,26 +50,73 @@ public class GameTest {
         testGame.addPlayerToPlayers(p);
         testGame.addPlayerToPlayers(p1);
         testGame.setCurrentRound(3);
-        testGame.handOutCards();
+        testGame.handOutCardsAndSetTrump();
         assertEquals(3, p1.getHandSize());
         assertEquals(3, p.getHandSize());
     }
 
     @Test
-    public void testCalculateWhoWonTheRound() {
-        Player p = new Player("Hanno");
-        Player p1 = new Player("Hugo");
+    public void testCalculateWhoWonTheRoundWithTwoPlayers() {
+        Player p = new Player("Anna");
+        Player p1 = new Player("Bella");
 
         testGame.addPlayerToPlayers(p);
         testGame.addPlayerToPlayers(p1);
         testGame.setCurrentRound(3);
-        testGame.handOutCards();
-
+        testGame.handOutCardsAndSetTrump();
+        //first card check1!!!!
         testGame.addCardToCardsPlayed(p, p.playCardForTesting());
         testGame.addCardToCardsPlayed(p1, p1.playCardForTesting());
 
+        System.out.println("Trump is: " + testGame.getTrump());
         System.out.println("Player who won: " + testGame.calculateWhoWonTheRound().getPlayerName());
 
+    }
+
+    @Test
+    public void testCalculateWhoWonTheRoundWithThreePlayers() {
+        Player p = new Player("Hanno");
+        Player p1 = new Player("Franz");
+        Player p2 = new Player("Kain");
+
+        testGame.addPlayerToPlayers(p);
+        testGame.addPlayerToPlayers(p1);
+        testGame.addPlayerToPlayers(p2);
+        testGame.setCurrentRound(1);
+        testGame.handOutCardsAndSetTrump();
+        //first card check1!!!!
+        testGame.addCardToCardsPlayed(p, p.playCardForTesting());
+        testGame.addCardToCardsPlayed(p1, p1.playCardForTesting());
+        testGame.addCardToCardsPlayed(p2, p2.playCardForTesting());
+
+        System.out.println("Trump is: " + testGame.getTrump());
+        System.out.println("Player who won: " + testGame.calculateWhoWonTheRound().getPlayerName());
+        System.out.println("Tricks made player " + p.getPlayerName() + ": " + p.getMadeTrick());
+        System.out.println("Tricks made player " + p1.getPlayerName() + ": " + p1.getMadeTrick());
+        System.out.println("Tricks made player " + p2.getPlayerName() + ": " + p2.getMadeTrick());
+
+    }
+
+    @Test
+    public void testCalculateWhoWonTheRoundWithFourPlayers() {
+        Player p = new Player("Hanno");
+        Player p1 = new Player("Franz");
+        Player p2 = new Player("Kain");
+        Player p3 = new Player("Abel");
+
+        testGame.addPlayerToPlayers(p);
+        testGame.addPlayerToPlayers(p1);
+        testGame.addPlayerToPlayers(p2);
+        testGame.addPlayerToPlayers(p3);
+        testGame.setCurrentRound(5);
+        testGame.handOutCardsAndSetTrump();
+        //first card check1!!!!
+        testGame.addCardToCardsPlayed(p, p.playCardForTesting());
+        testGame.addCardToCardsPlayed(p1, p1.playCardForTesting());
+        testGame.addCardToCardsPlayed(p2, p2.playCardForTesting());
+        testGame.addCardToCardsPlayed(p3, p3.playCardForTesting());
+        System.out.println("Trump is: " + testGame.getTrump());
+        System.out.println("Player who won: " + testGame.calculateWhoWonTheRound().getPlayerName());
     }
 
     /*
