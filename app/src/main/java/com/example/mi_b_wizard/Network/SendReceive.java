@@ -1,5 +1,7 @@
 package com.example.mi_b_wizard.Network;
 
+import com.example.mi_b_wizard.Network.Server;
+import com.example.mi_b_wizard.Network.Client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,10 +9,18 @@ import java.net.Socket;
 
 
 public class SendReceive extends Thread {
+    handler handler;
     private Socket socket;
     private InputStream inputStream;
     private OutputStream outputStream;
 
+    public void setOutputStream(OutputStream outputStream) {
+        this.outputStream = outputStream;
+    }
+
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
 
     @Override
     public void run() {
@@ -22,18 +32,11 @@ public class SendReceive extends Thread {
             try {
                 bytes = inputStream.read();
                 if(bytes>0) {
-                    handler.eventHandler.obtainMessage(handler.MSG, bytes, -1, buffer).sendToTarget();
+                    handler.handler.obtainMessage(handler.MSG, bytes, -1, buffer).sendToTarget();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-    public void write(byte[] bytes){
-        try {
-            outputStream.write(bytes);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -46,4 +49,6 @@ public class SendReceive extends Thread {
             e.printStackTrace();
         }
     }
-}
+
+    }
+
