@@ -1,42 +1,7 @@
 package com.example.mi_b_wizard.Data;
 
 public class Card {
-    
-    //Create 4 different card colours
-    public enum Colour{
-        BLAU(0),
-        GRÜN(1),
-        GELB(2),
-        ROT(3);
 
-        //variable to get the values
-        private int value;
-
-        //Enum constructor
-        Colour(int value){
-            this.value = value;
-        }
-    }
-
-    //Enum for the different ranks of the cards
-    public enum Rank{
-        NARR(0),
-        EINS(1),
-        ZWEI(2),
-        DREI(3),
-        VIER(4),
-        FÜNF(5),
-        SECHS(6),
-        SIEBEN(7),
-        ACHT(8),
-        ZAUBERER(9);
-
-       private int value;
-
-        Rank(int value) {
-            this.value = value;
-        }
-    }
     private Rank rank;
     private Colour colour;
     private String id;
