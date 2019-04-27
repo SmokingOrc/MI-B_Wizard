@@ -146,7 +146,7 @@ public class Deck {
             i++;
         }
 
-        HandCards = new ArrayList<String>(set);                     //save HashSet set into a new ArrayList
+        //HandCards = new ArrayList<String>(set);                     //save HashSet set into a new ArrayList
 
 
 
