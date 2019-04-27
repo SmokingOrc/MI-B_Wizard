@@ -5,27 +5,45 @@ import android.util.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Game {
     private String ID;
-    //will be a list of player after merge
-    private List<String> players;
-    //will be a deck after merge
-    private List<String> deck;
-    //will be a KVP with Player and Card after merge
-    private Map<String,Integer> cardsPlayed;
+
+
+    private List<Player> _players;
+
+
+    private Deck _deck;
+
+    private Card.Colour trump;
+
+    private int currentRound;
+
+    private Map<Player, Card> _cardsPlayed;
 
     public Game() {
-        players = new ArrayList<String>();
-        deck = new ArrayList<String>();
-        cardsPlayed = new HashMap<String, Integer>();
+
+        _cardsPlayed = new LinkedHashMap<Player, Card>();
+        _deck = new Deck();
+        _players = new ArrayList<Player>();
 
 
     }
 
     //getter and setter for testing
+
+
+    public Card.Colour getTrump() {
+        return trump;
+    }
+
+    public void setTrump(Card.Colour trump) {
+        this.trump = trump;
+    }
+
     public String getID() {
         return ID;
     }
@@ -34,81 +52,117 @@ public class Game {
         this.ID = ID;
     }
 
-    public List<String> getPlayers() {
-        return players;
+
+
+    public List<Player> get_players() {
+        return _players;
     }
 
-    public void setPlayers(List<String> players) {
-        this.players = players;
+    public void set_players(List<Player> _players) {
+        this._players = _players;
     }
 
-    public List<String> getDeck() {
-        return deck;
+    public int getCurrentRound() {
+        return currentRound;
     }
 
-    public void setDeck(List<String> deck) {
-        this.deck = deck;
+    public void setCurrentRound(int currentRound) {
+        this.currentRound = currentRound;
     }
 
-    public Map<String, Integer> getCardsPlayed() {
-        return cardsPlayed;
+    //end of Getter/Setter
+
+
+    public void addPlayerToPlayers(Player toAdd) {
+        this._players.add(toAdd);
     }
 
-    public void setCardsPlayed(Map<String, Integer> cardsPlayed) {
-        this.cardsPlayed = cardsPlayed;
-    }
-
-    public void addPlayer(String player) {
-        this.players.add(player);
-    }
-
-    public String removePlayer(String player) {
-        String returnValue = null;
-        if(this.players.contains(player)) {
-            this.players.remove(player);
-            returnValue = player;
+    public void removePlayerFromPlayers(Player toRemove) throws Exception {
+        if(this._players.contains(toRemove)) {
+            this._players.remove(toRemove);
+        } else {
+            throw new Exception("Player to remove: " + toRemove.getPlayerName() + " is not in Collection");
         }
 
-        return returnValue;
     }
 
-    public void addCardToCardsPlayed(String player, Integer card) {
-        this.cardsPlayed.put(player, card);
+
+
+
+    //network method - receiving message from player with card
+    public void addCardToCardsPlayed(Player player, Card card) {
+        //this.cardsPlayed.put(player, card);
+        this._cardsPlayed.put(player, card);
+
     }
 
-    public String calculateWhoWonTheRound() {
-        String returnValue = "";
-        Map.Entry<String, Integer> currentHighestCard = null;
-        Iterator it = cardsPlayed.entrySet().iterator();
+    //network - send
+    public Player calculateWhoWonTheRound() {
+        Player returnValue;
+        Map.Entry<Player, Card> currentHighestCard = null;
+        Card c;
+        Card currentHighest;
+        Iterator it = _cardsPlayed.entrySet().iterator();
         while(it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+            Map.Entry<Player,Card> pair = (Map.Entry)it.next();
             if(currentHighestCard == null) {
                 currentHighestCard = pair;
+                System.out.println("First Card is: " + currentHighestCard.getValue().getId() +
+                        " from: " + currentHighestCard.getKey().getPlayerName());
             } else {
-                if((Integer)pair.getValue() > (Integer)currentHighestCard.getValue()) {
+                c = pair.getValue();
+                currentHighest = currentHighestCard.getValue();
+                //check if first card is a wizard
+                if(currentHighest.getRank().ordinal() == 9) {
+                    currentHighestCard.getKey().setMadeTrick(currentHighestCard.getKey().getMadeTrick() + 1);
+                    return currentHighestCard.getKey(); //first wizard wins
+                } else if(c.getRank().ordinal() == 9) {
                     currentHighestCard = pair;
+                    currentHighestCard.getKey().setMadeTrick(currentHighestCard.getKey().getMadeTrick() + 1);
+                    return currentHighestCard.getKey();
+                } else if(currentHighest.getRank().ordinal() == 0 && c.getRank().ordinal() > 0) {
+                    currentHighestCard = pair;
+                } else if (c.getRank().ordinal() == 0) {
+                    //do nothing because narr
+                } else if(currentHighest.getColour() == this.trump && c.getColour() == trump) {
+                    if(c.getRank().ordinal() > currentHighest.getRank().ordinal()) {
+                        currentHighestCard = pair;
+                    }
+                } else if (currentHighest.getColour() != this.trump && c.getColour() == trump) {
+                    currentHighestCard = pair;
+                } else if (currentHighest.getColour() == c.getColour()) {
+                    if(c.getRank().ordinal() > currentHighest.getRank().ordinal()) {
+                        currentHighestCard = pair;
+                    }
                 }
             }
         }
 
         returnValue = currentHighestCard.getKey();
-
+        returnValue.setMadeTrick(returnValue.getMadeTrick() + 1);
 
         return returnValue;
     }
-
-    public void handOutCards() {
+    //Network method - send message here
+    public void handOutCardsAndSetTrump() {
         /*
         needs to be updated when "Deck" and "Player" are implemented
          */
-        for(String player : players) {
-            //player.giveCards(deck.getCards(currentRound));
-
+        for(Player player : _players) {
+            player.setHand(_deck.getCards(currentRound));
+            //Network - send
         }
+        //network - send
+        trump = _deck.getCards(1).get(0).getColour();
     }
 
+    //network - send
     public void calculatePointsForAllPlayers() {
         //needs to be implemented when "Player" is implemented
+        for(Player p : _players) {
+            p.setPoints(p.getPoints() + calculatePointsForOnePlayer(p.getPredictedTrick(), p.getMadeTrick()));
+            System.out.println("Points for " + p.getPlayerName() + ": " + p.getPoints());
+        }
     }
 
     public int calculatePointsForOnePlayer(int predicted, int made) {
