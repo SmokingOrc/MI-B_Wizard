@@ -1,30 +1,31 @@
 package com.example.mi_b_wizard.Data;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import java.util.List;
 import java.util.Set;
 
 public class Hand {
-    public HashMap<String,Card> hand;
+
+
+    public List<Card> hand;
 
     public Hand() {
-        hand = new HashMap<>();
+        hand = new ArrayList<Card>();
     }
 
-    //add a list of cards to the hand
-    public void addListOfCardsToHand(HashMap<String, Card> cards){
-        hand.putAll(cards);
-    }
+
 
     //adds a card to the hand
     public void addCardToHand(String id, Card card){
-        hand.put(id,card);
+        hand.add(card);
     }
 
     //show all cards in the hand
     public void showHand(){
-        Set keys = hand.keySet();
+        /*Set keys = hand.keySet();
         for(Object key: keys){
             System.out.println(key +": "+ hand.get(key));
         }
@@ -38,12 +39,12 @@ public class Hand {
         return hand.size();
     }
     public void removeCardFromHand(Card playedcard){
-        hand.remove(playedcard.getId());
+        hand.remove(playedcard);
     }
-    public void setHand(){
+    public void setHand(List<Card> hand) {
         this.hand = hand;
     }
-    public HashMap getHand(){
+    public List<Card> getHand(){
         return hand;
     }
 

@@ -38,8 +38,8 @@ public class GameTest {
         testGame.addPlayerToPlayers(p1);
         testGame.setCurrentRound(1);
         testGame.handOutCardsAndSetTrump();
-        assertEquals(1, p1.getHandSize());
-        assertEquals(1, p.getHandSize());
+        assertEquals(1, p1.getHand().getHandSize());
+        assertEquals(1, p.getHand().getHandSize());
     }
 
     @Test
@@ -51,8 +51,8 @@ public class GameTest {
         testGame.addPlayerToPlayers(p1);
         testGame.setCurrentRound(3);
         testGame.handOutCardsAndSetTrump();
-        assertEquals(3, p1.getHandSize());
-        assertEquals(3, p.getHandSize());
+        assertEquals(3, p1.getHand().getHandSize());
+        assertEquals(3, p.getHand().getHandSize());
     }
 
     @Test

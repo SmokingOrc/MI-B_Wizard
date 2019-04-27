@@ -101,9 +101,9 @@ public class Player{
     }
 
     //Reset for new Round + Get the actual cards from Game and add it to the hand of the player
-    public void giveCards(HashMap<String,Card> playReadyCardsFromGame){
+    public void giveCards(List<Card> playReadyCardsFromGame){
         resetForNewRound();
-        hand.addListOfCardsToHand(playReadyCardsFromGame);
+        hand.setHand(playReadyCardsFromGame);
     }
 
     //Updates made Tricks per round
@@ -130,8 +130,8 @@ public class Player{
     //Only for testing Game Class!!!!
     public Card playCardForTesting() {
         Random r = new Random();
-        int index = r.nextInt(hand.size());
-        Card item = hand.get(index);
+        int index = r.nextInt(hand.getHandSize());
+        Card item = (Card)hand.getHand().get(index);
         //Log.d("Info", "Player: " + this.playerName + " plays: " + item.getId());
         System.out.println("Player: " + this.playerName + " plays: " + item.getId());
         return item;

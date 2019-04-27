@@ -18,7 +18,7 @@ public class Game {
 
     private Deck _deck;
 
-    private Card.Colour trump;
+    private Colour trump;
 
     private int currentRound;
 
@@ -36,11 +36,11 @@ public class Game {
     //getter and setter for testing
 
 
-    public Card.Colour getTrump() {
+    public Colour getTrump() {
         return trump;
     }
 
-    public void setTrump(Card.Colour trump) {
+    public void setTrump(Colour trump) {
         this.trump = trump;
     }
 
@@ -149,7 +149,7 @@ public class Game {
         needs to be updated when "Deck" and "Player" are implemented
          */
         for(Player player : _players) {
-            player.setHand(_deck.getCards(currentRound));
+            player.getHand().setHand(_deck.getCards(currentRound));
             //Network - send
         }
         //network - send
