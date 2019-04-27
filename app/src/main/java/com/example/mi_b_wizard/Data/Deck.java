@@ -18,7 +18,7 @@ public class Deck {
         resetDeck();
     }
 
-    private void resetDeck() {                                   //resetDeck() initializes and resets all the Cards in the HashMap
+    public void resetDeck() {                                   //resetDeck() initializes and resets all the Cards in the HashMap
 
 
         //   <---- Create new Cards ---->
@@ -146,61 +146,24 @@ public class Deck {
             i++;
         }
 
-        //HandCards = new ArrayList<String>(set);                     //save HashSet set into a new ArrayList
+        HandCards = new ArrayList<String>(set);                     //save HashSet set into a new ArrayList
+
 
 
         return HandCards;
+    }
+
+
+    //Getter and Setter for testing
+    public Map<String, Card> getCard() {
+        return card;
+    }
+
+    public void setCard(Map<String, Card> card) {
+        this.card = card;
     }
 
 
 }
-
-
-
-
-
-    //Main Method and getCardsTest Method for testing functionality (with sout for better understanding)
-
-
-    /*public static void main(String[] args) {
-        Deck test = new Deck();
-        test.resetDeck();
-
-
-        System.out.println(test.getCardsTest(5));
-
-
-        test.resetDeck();
-
-
-        System.out.println(test.getCardsTest(5));
-        System.out.println(test.getCardsTest(4));
-
-    }
-
-    public List<String> getCardsTest(int currentRound) {
-
-
-        List<String> HandCards;
-        HashSet<String> set = new HashSet();
-
-
-        while (set.size() < currentRound) {
-            Object[] rand = card.keySet().toArray();                //Get a random entry from the HashMap
-            Object key = rand[new Random().nextInt(rand.length)];
-            String c = card.get(key).toString();
-            set.add(c);
-            card.remove(key);
-            System.out.println(card.size());
-
-        }
-
-        HandCards = new ArrayList<String>(set);
-
-
-        return HandCards;
-    }
-
-}*/
 
 

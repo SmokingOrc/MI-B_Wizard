@@ -4,6 +4,7 @@ import android.os.Debug;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -13,13 +14,17 @@ public class Player{
     private int points;
     private int madeTrick; // tricks, which were made (gemachte Stiche)
     private int predictedTrick; //tricks, which were predicted (angesagte Stiche)
-    private List<Card> hand;  //Cards in the hand of a player
+    private Hand hand; //actual Hand of the player
+    private Game game;
+    private Card actualPlayedCard;
 
     public Player(String playerName){
         setPlayerName(playerName);
-        hand = new ArrayList<>();
-        points = 0; //added by martin
-        madeTrick = 0; //added by martin
+
+
+        hand = new Hand();
+        game = new Game();
+
     }
 
     //Getter-Setter
@@ -48,12 +53,8 @@ public class Player{
         this.predictedTrick = predictedTrick;
     }
 
-    public List<Card> getHand() {
+    public Hand getHand() {
         return hand;
-    }
-
-    public void setHand(List<Card> hand) {
-        this.hand = hand;
     }
 
     public int getPoints() {
@@ -64,48 +65,67 @@ public class Player{
         this.points = points;
     }
 
-    //<-----PlayerHand----->
-
-
-    //adds a card to the hand
-    public void addCardToHand(Card card){
-        hand.add(card);
+    public Card getActualPlayedCard() {
+        return actualPlayedCard;
     }
-    // method to show all cards in the hand
+
+    public void setActualPlayedCard(Card actualPlayedCard) {
+        this.actualPlayedCard = actualPlayedCard;
+    }
+
+   // <------------------------------------------->
+
     public void showHand(){
-        for(Card card : hand){
-            card.showCard();
+        hand.showHand();
+    }
+    public void showActualPoints(){
+        System.out.println("Your actual points are: "+points);
+    }
+
+    //Methode to reset for new round
+    public void resetForNewRound(){
+        hand.clearHand();
+        actualPlayedCard = null;
+        predictedTrick = 0;
+        madeTrick = 0;
+    }
+
+
+    //<------------Interaction with Game-------------->
+
+
+    //updates the points from a player
+    public void updatePoints(int predictedTrick, int madeTrick){
+        points = game.calculatePointsForOnePlayer(predictedTrick, madeTrick);
+
+    }
+
+    //Reset for new Round + Get the actual cards from Game and add it to the hand of the player
+    public void giveCards(HashMap<String,Card> playReadyCardsFromGame){
+        resetForNewRound();
+        hand.addListOfCardsToHand(playReadyCardsFromGame);
+    }
+
+    //Updates made Tricks per round
+    public void updateMadeTricks(){
+        if(game.calculateWhoWonTheRound().equals(playerName)){
+            madeTrick++;
         }
     }
-    public void clearHand(){
-        hand.clear();
-    }
-    public int getHandSize(){
-        return hand.size();
-    }
-    public void removeCardFromHand(Card playedcard){
-        hand.remove(playedcard);
-    }
 
+    //<---------------Action Player-------------------->
 
-    //<-------------------------->
-
-    //Needs to be updated (Game)
-
-    public void updatePoints(){
-        //points =+ Game.calculatePointsForOnePlayer(predictedTrick, madeTrick);
-    }
-    public void getActualCardsHandFromGame(){
-        //needs to be updated
-    }
-
-    //<------Action Player------>(needs to be implemented)
-
-    //Which card should be played
+    //Method to play Card
     public void playCard(Card card){
-
+        hand.removeCardFromHand(card);
+       // game.addCardToCardsPlayed(this.playerName,card); -->needs to be updated to give over card as Card
+        actualPlayedCard = card;
     }
 
+    //update Set Predicted Tricks (currently per default set to 2 tricks, needs to be updated with speech input)
+    public void updatePredictedTricks(){
+        predictedTrick = 2;
+    }
 
     //Only for testing Game Class!!!!
     public Card playCardForTesting() {
@@ -119,17 +139,21 @@ public class Player{
 
 
     //Main Methode to test the functionality
-    /*public static void main(String[] args) {
+  /*public static void main(String[] args) {
 
-        List<Card> listHand = new ArrayList();
-        Player player = new Player("Julia");
-        Card c1 = new Card(0,1);
-        player.addCardToHand(c1);
-        player.addCardToHand(new Card(2,2));
-        player.addCardToHand(new Card(3,3));
+        Card c1 = new Card(0,1); Card c2 = new Card(1,2); Card c3 = new Card(5,1); Card c4 = new Card(8,2);
+
+        HashMap<String, Card> playReadyCardsFromGame = new HashMap<>();
+        playReadyCardsFromGame.put(c1.getId(),c1); playReadyCardsFromGame.put(c2.getId(),c2); playReadyCardsFromGame.put(c3.getId(),c3); playReadyCardsFromGame.put(c4.getId(),c4);
+
+        Player player = new Player ("Julia");
+        player.giveCards(playReadyCardsFromGame);
         player.showHand();
-        System.out.println(player.getHandSize());
-        player.removeCardFromHand(c1);
-        System.out.println(player.getHandSize());
+        int madeTricks = 1; int predictedTricks = 2;
+        player.updatePoints(predictedTricks, madeTricks);
+        player.showActualPoints();
+        player.playCard(c2);
+        System.out.println(player.actualPlayedCard);
+        player.showHand();
     }*/
 }
