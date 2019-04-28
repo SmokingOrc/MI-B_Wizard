@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -29,10 +32,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mi_b_wizard.Data.Player;
+import com.example.mi_b_wizard.MainActivity;
 import com.example.mi_b_wizard.Network.Client;
 import com.example.mi_b_wizard.Network.GroupOwnerSocketHandler;
 import com.example.mi_b_wizard.Network.Server;
 import com.example.mi_b_wizard.Network.WiFiDirectBroadcastReceiver;
+
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -52,12 +58,17 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
     public WifiP2pManager mManager;
     public WifiP2pManager.Channel mChannel;
     Server mServer;
-    Client mClient;
     BroadcastReceiver mReceiver;
     IntentFilter mIntentFilter;
     List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
+    String user;
+
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     public Handler getHandler() {
         return handler;
@@ -95,6 +106,9 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
         btnDiscover = findViewById(R.id.btnDiscover);
         btnSend = findViewById(R.id.send);
         message = findViewById(R.id.message);
+
+
+        setUser(MainActivity.user);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -143,8 +157,9 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
            @Override
             public void onClick(View v) {
             if(mServer != null){
-                mServer.write(message.getText().toString());
+                mServer.write(user+" says: "+message.getText().toString());
             }else{
+                Toast.makeText(getApplicationContext(), "Please reconnect..", Toast.LENGTH_SHORT).show();
                 System.out.println("Server is null....");
             }
            }
@@ -267,6 +282,13 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             byte[] read = (byte[]) msg.obj;
             String s = new String(read,0, msg.arg1);
             System.out.println(s);
+                try {
+                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                    r.play();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             showMsg(s);
             break;
 
