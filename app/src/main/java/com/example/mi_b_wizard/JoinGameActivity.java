@@ -1,10 +1,18 @@
 package com.example.mi_b_wizard;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -19,6 +27,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,10 +38,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.example.mi_b_wizard.Network.Client;
 import com.example.mi_b_wizard.Network.GroupOwnerSocketHandler;
 import com.example.mi_b_wizard.Network.Server;
 import com.example.mi_b_wizard.Network.WiFiDirectBroadcastReceiver;
+
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -58,6 +69,13 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
     List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
+    String user;
+    boolean Owner = false;
+
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     public Handler getHandler() {
         return handler;
@@ -95,6 +113,9 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
         btnDiscover = findViewById(R.id.btnDiscover);
         btnSend = findViewById(R.id.send);
         message = findViewById(R.id.message);
+
+
+        setUser(MainActivity.user);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -143,8 +164,11 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
            @Override
             public void onClick(View v) {
             if(mServer != null){
-                mServer.write(message.getText().toString());
-            }else{
+                mServer.write(user+" says: "+message.getText().toString());
+                message.setText("");
+
+            }else {
+                Toast.makeText(getApplicationContext(), "Please reconnect..", Toast.LENGTH_SHORT).show();
                 System.out.println("Server is null....");
             }
            }
@@ -221,7 +245,8 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             Thread handler = null;
             final InetAddress groupOwnerAddress = info.groupOwnerAddress;
 
-            if (info.groupFormed && info.isGroupOwner) {
+            if (info.groupFormed && info.isGroupOwner && !Owner) {
+                Owner = true;
                 Toast.makeText(getApplicationContext(), "you are the host of the game", Toast.LENGTH_SHORT).show();
                 try {
                     handler = new GroupOwnerSocketHandler(getHandler());
@@ -267,6 +292,7 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             byte[] read = (byte[]) msg.obj;
             String s = new String(read,0, msg.arg1);
             System.out.println(s);
+            showNotification("New message",s);
             showMsg(s);
             break;
 
@@ -276,6 +302,26 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
                 setmServer((Server) obj);
         }
         return true;
+    }
+    void showNotification(String title, String message) {
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("CHANNEL_ID",
+                    "CHANNEL_NAME",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("NOTIFICATION_CHANNEL_DISCRIPTION");
+            mNotificationManager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "CHANNEL_ID")
+                .setSmallIcon(R.mipmap.ic_launcher) // notification icon
+                .setContentTitle(title) // title for notification
+                .setContentText(message)// message for notification
+                .setAutoCancel(true); // clear notification after click
+        Intent intent = new Intent(getApplicationContext(), JoinGameActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pi);
+        mNotificationManager.notify(0, mBuilder.build());
     }
 }
 

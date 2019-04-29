@@ -28,10 +28,8 @@ public class handler {
             switch (msg.what){
                 case MSG:
                     byte[] read = (byte[]) msg.obj;
-                    System.out.println(msg+"+++++++++++++++++++++"+read);
                     String s = new String(read, StandardCharsets.UTF_8);
                     System.out.println(s);
-                   // String temp = new String(readBuffe,0,msg.arg1);
                     break;
 
                 case MOVE:
