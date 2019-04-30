@@ -4,7 +4,6 @@ package com.example.mi_b_wizard.Data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -78,7 +77,7 @@ public class Deck {
         //    <----- put Cards in HashMap (with ID) ---->
 
         //Blue
-        card.put(blue1.getId(), blue1);
+        card.put(blue1.getId(), blue1);             //key, value
         card.put(blue2.getId(), blue2);
         card.put(blue3.getId(), blue3);
         card.put(blue4.getId(), blue4);
@@ -131,23 +130,18 @@ public class Deck {
 
     public List<Card> getCards(int currentRound) {                //getCards method takes the input currentRound, to generate a List<String> with the number of random cards equal to current Round
         List<Card> HandCards = new ArrayList<Card>();
-        HashSet<String> set = new HashSet();                        //HashSet doesn't allow duplicates values
+
 
         int i = 0;                                                  //for while loop
 
         while (i < currentRound) {
-            Object[] rand = card.keySet().toArray();                //get a random entry from the HashMap
+            Object[] rand = card.keySet().toArray();                //keySet() is used to get a view of the keys contained in the HashMap --> get the key entries from the HashMap and "change" into an Array
             Object key = rand[new Random().nextInt(rand.length)];   //get a random key for a card
-            Card c = card.get(key);
-            HandCards.add(c);
-            //get ID from the Card with the generated key
-            //set.add(c);                                             //add the ID of the Card with the random generated key to the HashSet set
-            card.remove(key);                                       //remove this Card from the HashMap card, so that the getCards Method gives different Cards every time it is called, until the Method resetDeck() is colled
+            Card c = card.get(key);                                 //get ID from the Card with the generated key
+            HandCards.add(c);                                       //add Card into ArrayList HandCards
+            card.remove(key);                                       //remove this Card from the HashMap card, so that the getCards Method gives different Cards every time it is called, until the Method resetDeck() is called
             i++;
         }
-
-        //HandCards = new ArrayList<String>(set);                     //save HashSet set into a new ArrayList
-
 
 
         return HandCards;
