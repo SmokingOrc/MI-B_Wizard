@@ -47,17 +47,4 @@ public class Hand {
     public List<Card> getHand(){
         return hand;
     }
-
-    //Main Methode for testing the functionality
-    /*public static void main(String[] args) {
-        HashMap<String, Card> hand1 = new HashMap<>();
-        Card card1 = new Card(0,1); Card card2 = new Card(1,2); Card card3 = new Card(2,3);Card card4 = new Card(2,2);
-        hand1.put(card1.getId(),card1); hand1.put(card2.getId(),card2); hand1.put(card3.getId(),card3);hand1.put(card4.getId(),card4);
-
-        Hand handClass = new Hand();
-        handClass.addListOfCardsToHand(hand1);
-        handClass.showHand();
-        handClass.removeCardFromHand(card1);
-        handClass.showHand();
-    }*/
 }

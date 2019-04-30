@@ -65,23 +65,4 @@ public class Card {
     public String toString(){
         return String.format("%s in %s", getRank(),getColour());
     }
-
-
-
-
-//Main Methode to test the functionality
-   /* public static void main(String[] args) {
-        Card cards;
-        Card cards1;
-
-        cards = new Card(9,1);
-        System.out.println("Rank: "+cards.getRank()+ " Colour: "+ cards.getColour());
-        System.out.println("Methode toString: "+cards.toString());
-        System.out.println("Is card a Magican: "+ cards.isMagician());
-        System.out.println("Is card a Narr: "+cards.isNarr());
-        System.out.println("ID of the card: "+ cards.getId());
-
-        cards1 = new Card(9, 1);
-        System.out.println("Are these cards equal: "+cards1.equalToOtherCard(cards));
-    }*/
 }
