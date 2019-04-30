@@ -37,7 +37,7 @@ public class PlayerTest {
         player.setMadeTrick(3);
         assertEquals(3, player.getMadeTrick());
         player.setMadeTrick(5);
-        assertEquals(5, player.getPredictedTrick());
+        assertEquals(5, player.getMadeTrick());
     }
     @Test
     public void testGetPoints(){
