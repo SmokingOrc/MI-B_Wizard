@@ -65,7 +65,8 @@ public class Server implements Runnable {
                         super.run();
                        try {
                            outputStream.write(buffer);
-                           System.out.println("writing");
+
+                           System.out.println("writing-Server");
                        }catch (IOException e){
                            e.printStackTrace();
                        }
