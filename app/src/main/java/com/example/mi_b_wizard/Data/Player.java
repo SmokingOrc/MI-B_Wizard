@@ -96,7 +96,7 @@ public class Player{
 
     //updates the points from a player
     public void updatePoints(int predictedTrick, int madeTrick){
-        points = game.calculatePointsForOnePlayer(predictedTrick, madeTrick);
+        points = points + game.calculatePointsForOnePlayer(predictedTrick, madeTrick);
 
     }
 
@@ -118,7 +118,7 @@ public class Player{
     //Method to play Card
     public void playCard(Card card){
         hand.removeCardFromHand(card);
-       // game.addCardToCardsPlayed(this.playerName,card); -->needs to be updated to give over card as Card
+       // game.addCardToCardsPlayed(this.playerName,card); -->needs to be updated
         actualPlayedCard = card;
     }
 
@@ -136,24 +136,4 @@ public class Player{
         System.out.println("Player: " + this.playerName + " plays: " + item.getId());
         return item;
     }
-
-
-    //Main Methode to test the functionality
-  /*public static void main(String[] args) {
-
-        Card c1 = new Card(0,1); Card c2 = new Card(1,2); Card c3 = new Card(5,1); Card c4 = new Card(8,2);
-
-        HashMap<String, Card> playReadyCardsFromGame = new HashMap<>();
-        playReadyCardsFromGame.put(c1.getId(),c1); playReadyCardsFromGame.put(c2.getId(),c2); playReadyCardsFromGame.put(c3.getId(),c3); playReadyCardsFromGame.put(c4.getId(),c4);
-
-        Player player = new Player ("Julia");
-        player.giveCards(playReadyCardsFromGame);
-        player.showHand();
-        int madeTricks = 1; int predictedTricks = 2;
-        player.updatePoints(predictedTricks, madeTricks);
-        player.showActualPoints();
-        player.playCard(c2);
-        System.out.println(player.actualPlayedCard);
-        player.showHand();
-    }*/
 }
