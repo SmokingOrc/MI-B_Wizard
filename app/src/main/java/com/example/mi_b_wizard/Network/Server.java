@@ -4,124 +4,79 @@ package com.example.mi_b_wizard.Network;
 import android.os.Handler;
 
 import com.example.mi_b_wizard.JoinGameActivity;
+import com.example.mi_b_wizard.MainActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class Server implements Runnable {
 
+public class Server extends Thread{
     private Socket socket;
     private Handler handler;
+    private long id;
 
-
-    public Server(Socket socket, Handler handler){
+    public Server(Socket socket, Handler handler) {
         this.socket = socket;
         this.handler = handler;
+
     }
+
 
     private InputStream inputStream;
     private OutputStream outputStream;
 
     @Override
     public void run() {
-            try {
-                inputStream = socket.getInputStream();
-                outputStream = socket.getOutputStream();
-                byte[] buffer = new byte[1024];
-                int bytes;
-
-                handler.obtainMessage(JoinGameActivity.HANDLE, this).sendToTarget();
-
-                while (true){
-                    try {
-                        bytes = inputStream.read(buffer);
-                        if (bytes == -1) {
-                            break;
-                        }
-                        System.out.println("server: "+String.valueOf(buffer));
-                        handler.obtainMessage(JoinGameActivity.READ,bytes,-1,buffer).sendToTarget();
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }finally {
-                try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            public void write (String msg){
-                final byte[] buffer = msg.getBytes();
-                Thread thread = new Thread(){
-                    @Override
-                    public void run() {
-                        super.run();
-                       try {
-                           outputStream.write(buffer);
-
-                           System.out.println("writing-Server");
-                       }catch (IOException e){
-                           e.printStackTrace();
-                       }
-                    }
-                };
-                thread.start();
-            }
-
-
-    /*handler handler;
-    Socket socket;
-    SendReceive sendReceive;
-    ServerSocket serverSocket;
-    InputStream inputStream;
-    OutputStream outputStream;
-    ByteArrayInputStream byteArrayInputStream;
-    byte[] buffer = new byte[1024];
-    int bytes;
-
-
-    @Override
-    public void run() {
-        super.run();
-        handler = new handler();
         try {
-            serverSocket = new ServerSocket(8888);
-            socket = serverSocket.accept();
             inputStream = socket.getInputStream();
-            outputStream =  socket.getOutputStream();
-            sendReceive = new SendReceive(socket);
+            outputStream = socket.getOutputStream();
+            byte[] buffer = new byte[1024];
+            int bytes;
+            handler.obtainMessage(MessageHandler.HANDLE, this).sendToTarget();
 
-            while (socket!=null){
+            while (true) {
                 try {
                     bytes = inputStream.read(buffer);
-                    String s = new String(buffer);
-                    if(bytes>0) {
-                        handler.handler.obtainMessage(MSG, bytes, 0, buffer).sendToTarget();
+                    if (bytes == -1) {
+                        break;
                     }
+                    System.out.println("server: ");
+                    handler.obtainMessage(MessageHandler.READ, bytes, (int)getId(), buffer).sendToTarget();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-    public void write(String msg){
-        try {
-                if(outputStream !=null){
-                    System.out.println("writing -----------------------");
-                    outputStream.write(bytes);}
+    public void write(String msg) {
+        final byte[] buffer = (msg).getBytes();
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    outputStream.write(buffer);
+                    System.out.println("writing-Server");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.run();
+    }
 
-
-            } catch (IOException e) {
-            e.printStackTrace();
-        }
-    } */
+    @Override
+    public long getId() {
+        return super.getId();
+    }
 }

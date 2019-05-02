@@ -4,15 +4,19 @@ import android.os.Handler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class GroupOwnerSocketHandler extends Thread{
-
     ServerSocket socket = null;
     private final int THREAD_COUNT = 10;
     private Handler handler;
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
 
     public GroupOwnerSocketHandler(Handler handler) throws IOException{
         try {
@@ -33,16 +37,16 @@ public class GroupOwnerSocketHandler extends Thread{
     public void run() {
         super.run();
 
-        while (true){
+        while (true) {
             try {
-                pool.execute(new Server(socket.accept(),handler));
+                pool.execute(new Server(socket.accept(), handler)); // Für jede neuen Client wird eine neue Thread executed.
                 System.out.println("Starting Input/Output handler...");
-            }catch (IOException e){
+            } catch (IOException e) {
                 try {
-                    if(socket != null && !socket.isClosed()){
+                    if (socket != null && !socket.isClosed()) {
                         socket.close();
                     }
-                }catch (IOException ee){
+                } catch (IOException ee) {
                     e.printStackTrace();
                 }
                 e.printStackTrace();
@@ -50,5 +54,9 @@ public class GroupOwnerSocketHandler extends Thread{
                 break;
             }
         }
+    }
+
+    public ThreadPoolExecutor getPool() {
+        return pool;
     }
 }
