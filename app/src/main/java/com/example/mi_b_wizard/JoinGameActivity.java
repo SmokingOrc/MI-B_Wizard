@@ -1,18 +1,10 @@
 package com.example.mi_b_wizard;
 
 import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -24,10 +16,8 @@ import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,12 +28,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.example.mi_b_wizard.Network.Client;
 import com.example.mi_b_wizard.Network.GroupOwnerSocketHandler;
+import com.example.mi_b_wizard.Network.MessageHandler;
 import com.example.mi_b_wizard.Network.Server;
 import com.example.mi_b_wizard.Network.WiFiDirectBroadcastReceiver;
-
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -51,11 +40,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class JoinGameActivity extends AppCompatActivity implements ChannelListener, Handler.Callback {
+public class JoinGameActivity extends AppCompatActivity implements ChannelListener {
     private static final int PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION = 1001;
-    public static final int HANDLE = 0x400+2;
-    public static final int READ = 0x400+1;
-    Handler handler = new Handler(this);
+    Handler handler;
+    Notifications notifications = new Notifications(this);
+    MessageHandler messageHandler;
     ListView lvAvailableGames;
     Button btnDiscover, btnStartGame, btnSend;
     public TextView wifi;
@@ -63,40 +52,38 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
     public WifiP2pManager mManager;
     public WifiP2pManager.Channel mChannel;
     Server mServer;
-    Client mClient;
     BroadcastReceiver mReceiver;
     IntentFilter mIntentFilter;
     List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
     String user;
-    boolean Owner = false;
+    public static boolean owner = false;
 
 
     public void setUser(String user) {
         this.user = user;
     }
 
-    public Handler getHandler() {
-        return handler;
+    public Context getNotifications() {
+        return this;
     }
 
-    public void setHandler(Handler handler) {
-        this.handler = handler;
+    public Notifications getNotification() {
+        return notifications;
     }
 
-    public void setmServer(Server obj){ mServer = obj; }
+    public void setmServer(Server obj) {
+        mServer = obj;
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION:
-                if  (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    System.out.println("Coarse location permission is not granted!");
-                    finish();
-                }
-                break;
+
+        if (grantResults[0] != PackageManager.PERMISSION_GRANTED && requestCode == PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION) {
+            System.out.println("Coarse location permission is not granted!");
+            finish();
         }
     }
 
@@ -106,15 +93,17 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
         setContentView(R.layout.activity_join_game);
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
-        mReceiver = new WiFiDirectBroadcastReceiver(mManager,mChannel,this);
-        wifi=findViewById(R.id.wifi);
-        lvAvailableGames = (ListView)findViewById(R.id.lvAvailableGames);
+        mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+        wifi = findViewById(R.id.wifi);
+        lvAvailableGames = (ListView) findViewById(R.id.lvAvailableGames);
         btnStartGame = findViewById(R.id.btnStartGame);
         btnDiscover = findViewById(R.id.btnDiscover);
         btnSend = findViewById(R.id.send);
         message = findViewById(R.id.message);
-
-
+        messageHandler = new MessageHandler();
+        handler = new Handler();
+        handler = messageHandler.getHandler();
+        messageHandler.setJoingameContext(this);
         setUser(MainActivity.user);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -159,21 +148,29 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             }
         });
 
-       btnSend.setOnClickListener(new View.OnClickListener(){
+        btnSend.setOnClickListener(new View.OnClickListener() {
 
-           @Override
+            @Override
             public void onClick(View v) {
-            if(mServer != null){
-                mServer.write(user+" says: "+message.getText().toString());
-                message.setText("");
+                if (!owner) {
+                    if (mServer == null) {
+                        mServer = messageHandler.getServer();
+                    } else {
+                        mServer.write(user + " says: " + message.getText().toString());
+                        message.setText("");
+                    }
+                } else {
+                    messageHandler.write(user + " says: " + message.getText().toString());
+                    message.setText("");
 
-            }else {
-                Toast.makeText(getApplicationContext(), "Please reconnect..", Toast.LENGTH_SHORT).show();
-                System.out.println("Server is null....");
+                }
+
+                if (mServer == null && !owner) {
+                    Toast.makeText(getApplicationContext(), "Please reconnect..", Toast.LENGTH_SHORT).show();
+                    System.out.println("Server is null....");
+                }
             }
-           }
         });
-
 
         lvAvailableGames.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -186,22 +183,23 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
                 mManager.connect(mChannel, config, new ActionListener() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(getApplicationContext(),"Connected to "+device.deviceName,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Connected to " + device.deviceName, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(int reason) {
-                        Toast.makeText(getApplicationContext(),"Can't connect to device: "+device,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Can't connect to device: " + device, Toast.LENGTH_SHORT).show();
                     }
                 });
 
             }
         });
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(mReceiver,mIntentFilter);
+        registerReceiver(mReceiver, mIntentFilter);
     }
 
     @Override
@@ -210,33 +208,34 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
         unregisterReceiver(mReceiver);
     }
 
- public WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
-       @Override
-       public void onPeersAvailable(WifiP2pDeviceList peerList) {
-           if(!peerList.getDeviceList().equals(peers)) {
 
-            peers.clear();
-            peers.addAll(peerList.getDeviceList());
+    public WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
+        @Override
+        public void onPeersAvailable(WifiP2pDeviceList peerList) {
+            if (!peerList.getDeviceList().equals(peers)) {
 
-            deviceNameArray = new String[peerList.getDeviceList().size()];
-            deviceArray = new WifiP2pDevice[peerList.getDeviceList().size()];
-            int index = 0;
+                peers.clear();
+                peers.addAll(peerList.getDeviceList());
 
-            for(WifiP2pDevice device : peerList.getDeviceList()){
-                deviceNameArray[index]=device.deviceName;
-                deviceArray[index]=device;
-                index++;
+                deviceNameArray = new String[peerList.getDeviceList().size()];
+                deviceArray = new WifiP2pDevice[peerList.getDeviceList().size()];
+                int index = 0;
+
+                for (WifiP2pDevice device : peerList.getDeviceList()) {
+                    deviceNameArray[index] = device.deviceName;
+                    deviceArray[index] = device;
+                    index++;
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);
+                lvAvailableGames.setAdapter(adapter);
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,deviceNameArray);
-            lvAvailableGames.setAdapter(adapter);
-           }
-           if(peers.size() == 0){
-               System.out.println("no devices found");
-               Toast.makeText(getApplicationContext(),"No devices found",Toast.LENGTH_SHORT).show();
-               return;
-           }
-       }
-   };
+            if (peers.size() == 0) {
+                System.out.println("no devices found");
+                Toast.makeText(getApplicationContext(), "No devices found", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+    };
 
 
     public WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
@@ -245,33 +244,28 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             Thread handler = null;
             final InetAddress groupOwnerAddress = info.groupOwnerAddress;
 
-            if (info.groupFormed && info.isGroupOwner && !Owner) {
-                Owner = true;
+            if (info.groupFormed && info.isGroupOwner) {
+                owner = true;
                 Toast.makeText(getApplicationContext(), "you are the host of the game", Toast.LENGTH_SHORT).show();
                 try {
-                    handler = new GroupOwnerSocketHandler(getHandler());
+                    handler = new GroupOwnerSocketHandler(messageHandler.getHandler());
                     handler.start();
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-            //   mServer = new Server();
-            //   mServer.start();
-        }else if(info.groupFormed){
-            handler = new Client(getHandler(),groupOwnerAddress);
-            handler.start();
-            Toast.makeText(getApplicationContext(), "you are a client of the game", Toast.LENGTH_SHORT).show();}
-        }
-
-        {
-            //  mClient = new Client(groupOwnerAddress);
-            //  mClient.start();
-         //   Toast.makeText(getApplicationContext(), "you are a client of the game", Toast.LENGTH_SHORT).show();
+                //   mServer = new Server();
+                //   mServer.start();
+            } else if (info.groupFormed) {
+                handler = new Client(messageHandler.getHandler(), groupOwnerAddress);
+                handler.start();
+                Toast.makeText(getApplicationContext(), "you are a client of the game", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
     @Override
     public void onChannelDisconnected() {
-        if (mManager != null ) {
+        if (mManager != null) {
             Toast.makeText(this, "Channel lost. Trying again", Toast.LENGTH_LONG).show();
             mManager.initialize(this, getMainLooper(), this);
         } else {
@@ -281,48 +275,6 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
         }
     }
 
-    public void showMsg(String msg){
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what){
-            case READ:
-            byte[] read = (byte[]) msg.obj;
-            String s = new String(read,0, msg.arg1);
-            System.out.println(s);
-            showNotification("New message",s);
-            showMsg(s);
-            break;
-
-            case HANDLE:
-                System.out.println("setting server....");
-                Object obj = msg.obj;
-                setmServer((Server) obj);
-        }
-        return true;
-    }
-    void showNotification(String title, String message) {
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("CHANNEL_ID",
-                    "CHANNEL_NAME",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("NOTIFICATION_CHANNEL_DISCRIPTION");
-            mNotificationManager.createNotificationChannel(channel);
-        }
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "CHANNEL_ID")
-                .setSmallIcon(R.mipmap.ic_launcher) // notification icon
-                .setContentTitle(title) // title for notification
-                .setContentText(message)// message for notification
-                .setAutoCancel(true); // clear notification after click
-        Intent intent = new Intent(getApplicationContext(), JoinGameActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(pi);
-        mNotificationManager.notify(0, mBuilder.build());
-    }
 }
 
 
