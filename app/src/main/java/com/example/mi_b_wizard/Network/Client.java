@@ -2,7 +2,11 @@ package com.example.mi_b_wizard.Network;
 
 import android.os.Handler;
 
+import com.example.mi_b_wizard.Data.Card;
+
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -13,6 +17,7 @@ public class Client extends Thread {
     private Socket socket;
     private Server server;
     private InetAddress mAddress;
+
 
     public Client(Handler handler, InetAddress hostAddress){
         this.handler = handler;
@@ -38,6 +43,11 @@ public class Client extends Thread {
             return;
         }
     }
+
+
+
+
+
 
     public Server getServer(){return server;}
 }

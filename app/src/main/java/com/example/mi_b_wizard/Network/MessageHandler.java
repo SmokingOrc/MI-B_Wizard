@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.example.mi_b_wizard.Data.Card;
 import com.example.mi_b_wizard.JoinGameActivity;
 import com.example.mi_b_wizard.Notifications;
 import java.util.ArrayList;
@@ -89,4 +90,17 @@ public class MessageHandler implements Handler.Callback{
                 Clients.write(msg);
             }
     }
+
+    public void move(String msg){
+        for (Server Clients : Clients) {
+            Clients.write(msg);
+        }
+    }
+
+    public void sendCard(Card card){
+        for (Server Clients : Clients) {
+            Clients.sendCard(card);
+        }
+    }
+
 }

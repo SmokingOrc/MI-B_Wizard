@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mi_b_wizard.Data.Card;
 import com.example.mi_b_wizard.Network.Client;
 import com.example.mi_b_wizard.Network.GroupOwnerSocketHandler;
 import com.example.mi_b_wizard.Network.MessageHandler;
@@ -47,6 +48,7 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
     MessageHandler messageHandler;
     ListView lvAvailableGames;
     Button btnDiscover, btnStartGame, btnSend;
+
     public TextView wifi;
     EditText message;
     public WifiP2pManager mManager;
@@ -192,6 +194,34 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
                     }
                 });
 
+            }
+        });
+
+
+        // Testing for Move Card network method
+        btnStartGame.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+                Card c = new Card(1,1);
+
+                if (!owner) {
+                    if (mServer == null) {
+                        mServer = messageHandler.getServer();
+                    } else {
+                        mServer.sendCard(c);
+                        message.setText("");
+                    }
+                } else {
+                    messageHandler.sendCard(c);
+                    message.setText("");
+
+                }
+
+                if (mServer == null && !owner) {
+                    Toast.makeText(getApplicationContext(), "Please reconnect..", Toast.LENGTH_SHORT).show();
+                    System.out.println("Server is null....");
+                }
             }
         });
     }

@@ -1,6 +1,10 @@
 package com.example.mi_b_wizard.Data;
 
-public class Card {
+import java.io.Serializable;
+
+public class Card implements Serializable {
+
+    private static final long serialVersionUID=1;
 
     private Rank rank;
     private Colour colour;
