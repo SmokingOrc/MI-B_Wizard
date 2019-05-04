@@ -3,28 +3,19 @@ package com.example.mi_b_wizard.Network;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.NetworkInfo;
-import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.mi_b_wizard.JoinGameActivity;
 
-import java.net.InetAddress;
-
-import static android.content.ContentValues.TAG;
 
 
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
     private JoinGameActivity mActivity;
-    SendReceive sendReceive;
+
 
     public WiFiDirectBroadcastReceiver(WifiP2pManager mManager, WifiP2pManager.Channel mChannel, JoinGameActivity mActivity) {
         this.mManager = mManager;

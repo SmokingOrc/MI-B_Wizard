@@ -14,7 +14,7 @@ public class Client extends Thread {
     private Server server;
     private InetAddress mAddress;
 
-    public Client(Handler handler, InetAddress hostAddress) {
+    public Client(Handler handler, InetAddress hostAddress){
         this.handler = handler;
         this.mAddress = hostAddress;
     }
@@ -38,36 +38,6 @@ public class Client extends Thread {
             return;
         }
     }
-    public Server getServer(){return  server;}
+
+    public Server getServer(){return server;}
 }
-           /* inputStream = socket.getInputStream();
-            outputStream =  socket.getOutputStream();
-            sendReceive = new SendReceive(socket);
-            while (socket!=null){
-                try {
-                    bytes = inputStream.read();
-                    System.out.println(bytes);
-
-                    if(bytes>0) {
-                        handler.handler.obtainMessage(1, bytes,0,buffer).sendToTarget();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void write(byte[] bytes){
-        try {
-            if(outputStream !=null){
-                System.out.println("writing -----------------------");
-                this.outputStream.write(bytes);}
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-} */
-

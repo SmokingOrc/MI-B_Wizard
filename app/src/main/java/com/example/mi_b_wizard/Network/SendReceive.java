@@ -9,7 +9,7 @@ import java.net.Socket;
 
 
 public class SendReceive extends Thread {
-    handler handler;
+ /*   handler handler;
     private Socket socket;
     private InputStream inputStream;
     private OutputStream outputStream;
@@ -32,7 +32,6 @@ public class SendReceive extends Thread {
             try {
                 bytes = inputStream.read();
                 if(bytes>0) {
-                    handler.handler.obtainMessage(handler.MSG, bytes, -1, buffer).sendToTarget();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -49,6 +48,6 @@ public class SendReceive extends Thread {
             e.printStackTrace();
         }
     }
-
+*/
     }
 
