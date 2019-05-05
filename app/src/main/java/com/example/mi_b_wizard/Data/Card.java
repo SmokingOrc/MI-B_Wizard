@@ -38,10 +38,10 @@ public class Card {
     public boolean isMagician(){
         return this.rank == Rank.values()[9];
     }
-    public boolean isNarr(){
+    public boolean isJester(){
         return this.rank ==Rank.values()[0];
     }
-    //SetId example Rank= ZAUBERER, Colour = CRÜN -->ZAUBERER_GRÜN
+    //SetId example Rank= Magician, Colour = Green-->MAGICIAN_GREEN
     public void setId(int rank, int colour) {
         this.id = Rank.values()[rank].toString()+"_"+Colour.values()[colour].toString();
     }
@@ -60,7 +60,7 @@ public class Card {
         //needs to be implemented
         System.out.println(toString()+", ");
     }
-    //This method returns e.g. "ZWEI in BLAU"
+    //This method returns e.g. "TWO in BLUE"
     @Override
     public String toString(){
         return String.format("%s in %s", getRank(),getColour());
