@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     static String user;
     Player player;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,10 +68,5 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    /*  public void buttonRegeln(View view) {
-        Intent i2 = new Intent(MainActivity.this, RulesActivity.class);
-        startActivity(i2);
-
-    }*/
 
 }
