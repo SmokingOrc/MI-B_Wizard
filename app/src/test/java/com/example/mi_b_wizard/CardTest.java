@@ -32,9 +32,9 @@ public class CardTest {
     }
     @Test
     public void testGetRank(){
-        assertEquals(Rank.NARR,card.getRank());
-        assertEquals(Rank.ZAUBERER, card1.getRank());
-        assertEquals(Rank.FÜNF, card3.getRank());
+        assertEquals(Rank.JESTER,card.getRank());
+        assertEquals(Rank.MAGICIAN, card1.getRank());
+        assertEquals(Rank.FIVE, card3.getRank());
 
     }
     @Test
@@ -60,18 +60,18 @@ public class CardTest {
     @Test
     public void testSetRankValide(){
         card.setRank(2);
-        assertEquals(Rank.ZWEI,card.getRank());
+        assertEquals(Rank.TWO,card.getRank());
     }
     @Test
     public void testGetColour(){
-        assertEquals(Colour.GRÜN, card.getColour());
-        assertEquals(Colour.GELB, card1.getColour());
-        assertEquals(Colour.ROT, card3.getColour());
+        assertEquals(Colour.GREEN, card.getColour());
+        assertEquals(Colour.YELLOW, card1.getColour());
+        assertEquals(Colour.RED, card3.getColour());
     }
     @Test
     public void testSetColourValide(){
         card.setColour(2);
-        assertEquals(Colour.GELB, card.getColour());
+        assertEquals(Colour.YELLOW, card.getColour());
     }
     @Test
     public void testSetClourFailed(){
@@ -94,22 +94,22 @@ public class CardTest {
     }
     @Test
     public void testisNarrTrue(){
-        assertTrue(card.isNarr());
-        assertTrue(card2.isNarr());
+        assertTrue(card.isJester());
+        assertTrue(card2.isJester());
     }
     @Test
     public void testisNarrFalse(){
-        assertFalse(card1.isNarr());
-        assertFalse(card3.isNarr());
+        assertFalse(card1.isJester());
+        assertFalse(card3.isJester());
     }
     @Test
     public void testGetId(){
-        assertEquals("NARR_GRÜN",card.getId());
+        assertEquals("JESTER_GREEN",card.getId());
     }
     @Test
     public void testSetIdValide(){
         card.setId(9,1);
-        assertEquals("ZAUBERER_GRÜN",card.getId());
+        assertEquals("MAGICIAN_GREEN",card.getId());
     }
     @Test
     public void testEqualToOtherCardTrue(){
@@ -121,7 +121,7 @@ public class CardTest {
     }
     @Test
     public void testToString(){
-        assertEquals("NARR in GRÜN",card.toString());
+        assertEquals("JESTER in GREEN",card.toString());
     }
 }
 
