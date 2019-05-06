@@ -1,7 +1,13 @@
 package com.example.mi_b_wizard.Data;
 
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Debug;
 import android.util.Log;
+
+import com.example.mi_b_wizard.JoinGameActivity;
+import com.example.mi_b_wizard.Network.ConnectionManager;
+import com.example.mi_b_wizard.Network.MessageHandler;
+import com.example.mi_b_wizard.Network.Server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +23,8 @@ public class Player{
     private Hand hand; //actual Hand of the player
     private Game game;
     private Card actualPlayedCard;
+
+    WifiP2pDevice mdevice;
 
     public Player(String playerName){
         setPlayerName(playerName);
@@ -73,6 +81,19 @@ public class Player{
         this.actualPlayedCard = actualPlayedCard;
     }
 
+    //Network
+    public void setDevice(WifiP2pDevice mdevice){
+        this.mdevice=mdevice;
+    }
+
+    public WifiP2pDevice getDevice(){
+        return mdevice;
+    }
+
+    public String getDeviceName(){
+        return mdevice.deviceName;
+    }
+
    // <------------------------------------------->
 
     public void showHand(){
@@ -118,7 +139,18 @@ public class Player{
     //Method to play Card
     public void playCard(Card card){
         hand.removeCardFromHand(card);
+
+        //Connect to Server / MessageHandler
+        Server mServer = ConnectionManager.getInstance().getServer();
+        MessageHandler messageHandler = ConnectionManager.getInstance().getMessageHandler();
+        boolean owner = ConnectionManager.getInstance().isOwner();
+        if (!owner){
+        mServer.sendCard(card);
+        }else {
+            messageHandler.sendCard(card);
+        }
        // game.addCardToCardsPlayed(this.playerName,card); -->needs to be updated
+
         actualPlayedCard = card;
     }
 

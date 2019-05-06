@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.example.mi_b_wizard.Data.Card;
 import com.example.mi_b_wizard.Network.Client;
+import com.example.mi_b_wizard.Network.ConnectionManager;
 import com.example.mi_b_wizard.Network.GroupOwnerSocketHandler;
 import com.example.mi_b_wizard.Network.MessageHandler;
 import com.example.mi_b_wizard.Network.Server;
@@ -204,8 +205,8 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             public void onClick(View v){
 
                 Card c = new Card(1,1);
-
-                if (!owner) {
+                sendCard(c);
+               /* if (!owner) {
                     if (mServer == null) {
                         mServer = messageHandler.getServer();
                     } else {
@@ -221,10 +222,41 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
                 if (mServer == null && !owner) {
                     Toast.makeText(getApplicationContext(), "Please reconnect..", Toast.LENGTH_SHORT).show();
                     System.out.println("Server is null....");
-                }
+                }*/
             }
         });
+
+        //Add ConnectionManager for Singleton
+       // ConnectionManager.getInstance(mServer, messageHandler).setConnection(mServer, messageHandler);
+
+
+
     }
+
+    public void sendCard(Card c){
+        if (!owner) {
+            if (mServer == null) {
+                mServer = messageHandler.getServer();
+            } else {
+                mServer.sendCard(c);
+                message.setText("");
+            }
+        } else {
+            messageHandler.sendCard(c);
+            message.setText("");
+
+        }
+
+        if (mServer == null && !owner) {
+            Toast.makeText(getApplicationContext(), "Please reconnect..", Toast.LENGTH_SHORT).show();
+            System.out.println("Server is null....");
+        }
+    }
+
+    public void addDevice(int Adress){
+
+    }
+
 
     @Override
     protected void onResume() {
@@ -285,6 +317,10 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
                 }
                 //   mServer = new Server();
                 //   mServer.start();
+                //Add ConnectionManager for Singleton and setting Owner
+                ConnectionManager.getInstance(mServer, messageHandler).setConnection(mServer, messageHandler);
+                ConnectionManager.getInstance().setIsOwner(owner);
+
             } else if (info.groupFormed) {
                 handler = new Client(messageHandler.getHandler(), groupOwnerAddress);
                 handler.start();

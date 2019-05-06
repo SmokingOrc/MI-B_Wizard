@@ -86,7 +86,7 @@ public class Server extends Thread{
         thread.run();
     }
     //Object Card send
-    public void move() {
+    public void recieveCard() {
 
         Thread thread = new Thread() {
             @Override

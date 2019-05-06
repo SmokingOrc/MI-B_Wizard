@@ -90,10 +90,10 @@ public class MessageHandler implements Handler.Callback{
                 Clients.write(msg);
             }
     }
-
-    public void move(String msg){
+        // Recieved Card send to Clients
+    public void recieveCard(){
         for (Server Clients : Clients) {
-            Clients.write(msg);
+            Clients.recieveCard();
         }
     }
 

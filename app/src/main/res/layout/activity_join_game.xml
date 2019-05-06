@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#9fadb6"
     android:orientation="vertical"
-    tools:context=".JoinGameActivity"
-    android:background="#9fadb6">
+    tools:context=".JoinGameActivity">
 
     <TextView
         android:id="@+id/tvHeader"
@@ -37,23 +37,23 @@
     <ListView
         android:id="@+id/lvAvailableGames"
         android:layout_width="match_parent"
-        android:layout_height="443dp"></ListView>
+        android:layout_height="300dp"></ListView>
 
     <Button
+        android:id="@+id/btnStartGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnStartGame"
-        android:text="Start Game"/>
+        android:text="Start Game" />
 
     <TextView
         android:id="@+id/wifi"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:baselineAligned="false">
 
     </FrameLayout>
 
