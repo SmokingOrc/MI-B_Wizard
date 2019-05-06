@@ -17,7 +17,11 @@ public class Deck {
         resetDeck();
     }
 
-    public void resetDeck() {                                //resetDeck() initializes and resets all the Cards in the HashMap
+    /**
+     * resetDeck() initializes and resets all the Cards in the HashMap
+     */
+
+    public void resetDeck() {
 
 
         for (int rank = 0; rank < 10; rank++)               //give rank IDs from 0 - 9
@@ -29,11 +33,17 @@ public class Deck {
     }
 
 
-    public List<Card> getCards(int currentRound) {                //getCards method takes the input currentRound, to generate a List<String> with the number of random cards equal to current Round
+    /**
+     * getCards method takes the input currentRound
+     * to generate a List<String> with the number of
+     * random cards equal to current Round
+     */
+
+    public List<Card> getCards(int currentRound) {
         List<Card> handCards = new ArrayList<Card>();
 
 
-        int i = 0;                                                  //for while loop
+        int i = 0;
 
         while (i < currentRound) {
             Object[] rand = card.keySet().toArray();                //keySet() is used to get a view of the keys contained in the HashMap --> get the key entries from the HashMap and "change" into an Array
@@ -49,13 +59,29 @@ public class Deck {
     }
 
 
-    //to get Size of Deck
+    /**
+     * to get Size of Deck - for testing
+     */
+
     public int deckSize(){
-        return deckSize();
+        return card.size();
     }
 
 
-    //Getter and Setter for testing
+    /**
+     * to get Number of Cards which are still available - for testing
+     */
+
+    public int availableCards(){
+        return card.size();
+    }
+
+
+
+    /**
+     * Getter and Setter for testing
+     */
+
     public Map<String, Card> getCard() {
         return card;
     }
