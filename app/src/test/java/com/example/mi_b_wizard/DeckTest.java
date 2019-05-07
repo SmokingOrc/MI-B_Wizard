@@ -28,29 +28,56 @@ public class DeckTest {
     }
 
 
+    //Test if Deck is full
+    @Test
+    public void fullDeck(){
+        assertEquals(40,deck.availableCards());
+    }
+
+
+    //Test if Deck is empty
+    @Test
+    public void deckIsEmpty(){
+        deck.getCards(40);
+        assertEquals(0, deck.availableCards());
+    }
+
+
     //Test if ArrayList has 5 entries
     @Test
     public void getFiveCards(){
-        assertEquals(5,deck.getCards(5).size());
+        assertEquals(5, deck.getCards(5).size());
     }
+
+
 
     //Test if 5 cards get removed from Deck
     @Test
     public void removeFiveCardsFromDeck(){
-        System.out.println("Size of Deck: " + deck.getCard().size());
-        System.out.println(deck.getCards(5));
-        System.out.println("Size of Deck: " + deck.getCard().size());
+        System.out.println("Size of Deck: " + deck.deckSize());
+        System.out.println("Cards: " + deck.getCards(5));
+        System.out.println("Size of Deck: " + deck.availableCards());
     }
+
+
 
     //Test if resetDeck() method is working
     @Test
     public void removeFiveCardsAndResetDeck(){
-        System.out.println("Size of Deck: " + deck.getCard().size());
-        System.out.println(deck.getCards(5));
-        System.out.println("Size of Deck: " + deck.getCard().size());
+        System.out.println("Size of Deck: " + deck.deckSize());
+        System.out.println("Cards: " + deck.getCards(5));
+        System.out.println("Size of Deck: " + deck.availableCards());
         System.out.println("----- Reset Deck -----");
         deck.resetDeck();
-        System.out.println("Size of Deck: " + deck.getCard().size());
+        System.out.println("Size of Deck: " + deck.deckSize());
+    }
+
+
+    //Test if Current Round number is too large
+
+    @Test(expected = IllegalArgumentException.class)
+    public void currentRoundNumberTooLarge() {
+        deck.getCards(41);
     }
 
 }

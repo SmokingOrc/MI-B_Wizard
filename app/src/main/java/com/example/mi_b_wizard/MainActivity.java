@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     Button ButtonCreate;
     Button ButtonSpeech;
     EditText Userid;
-    static String user;
+    String user;
     Player player;
 
 
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 user = Userid.getText().toString();}
                 if(!user.isEmpty()) {
                     player = new Player(user);
+                    Instance.setPlayer(player);
                     Intent i = new Intent(MainActivity.this, JoinGameActivity.class);
                     startActivity(i);
                 }else {

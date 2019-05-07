@@ -1,9 +1,14 @@
 package com.example.mi_b_wizard;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,7 +30,7 @@ public class PredictedTricksActivity extends AppCompatActivity implements Recogn
     private ProgressBar progressBar;
     private SpeechRecognizer speechRecognizer = null;
     private Intent speechRecognizerIntent;
-    //static final int REQUEST_PERMISSION_KEY = 1;
+    static final int REQUEST_PERMISSION_KEY = 1;
     private static final String LOG_TAG = "SpeechActivity";
     Player player; //JoinGameActivity.owner;
 
@@ -40,6 +45,12 @@ public class PredictedTricksActivity extends AppCompatActivity implements Recogn
         speechButton = findViewById(R.id.speech_btn);
         //TODO Methode to get real player name
         player = new Player("Julia");
+
+        //Checks the permission- User has to accept the permission by the first use
+        String[] PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
+        if(!checkForPermission(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, REQUEST_PERMISSION_KEY);
+        }
 
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -173,4 +184,17 @@ public class PredictedTricksActivity extends AppCompatActivity implements Recogn
         //To request partial results
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
     }
-}
+
+        //Methode to check the permission
+        private static boolean checkForPermission(Context context, String... permissions){
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+                for (String permission : permissions) {
+                    if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+    }

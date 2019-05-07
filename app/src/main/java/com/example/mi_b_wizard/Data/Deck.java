@@ -17,138 +17,71 @@ public class Deck {
         resetDeck();
     }
 
-    public void resetDeck() {                                   //resetDeck() initializes and resets all the Cards in the HashMap
+    /**
+     * resetDeck() initializes and resets all the Cards in the HashMap
+     */
+
+    public void resetDeck() {
 
 
-        //   <---- Create new Cards ---->
-
-        //Blue
-        Card blue1 = new Card(1, 0);
-        Card blue2 = new Card(2, 0);
-        Card blue3 = new Card(3, 0);
-        Card blue4 = new Card(4, 0);
-        Card blue5 = new Card(5, 0);
-        Card blue6 = new Card(6, 0);
-        Card blue7 = new Card(7, 0);
-        Card blue8 = new Card(8, 0);
-        Card narr1 = new Card(0, 0);
-        Card zauberer1 = new Card(9, 0);
-
-
-        //Green
-        Card green1 = new Card(1, 1);
-        Card green2 = new Card(2, 1);
-        Card green3 = new Card(3, 1);
-        Card green4 = new Card(4, 1);
-        Card green5 = new Card(5, 1);
-        Card green6 = new Card(6, 1);
-        Card green7 = new Card(7, 1);
-        Card green8 = new Card(8, 1);
-        Card narr2 = new Card(0, 1);
-        Card zauberer2 = new Card(9, 1);
-
-
-        //Yellow
-        Card yellow1 = new Card(1, 2);
-        Card yellow2 = new Card(2, 2);
-        Card yellow3 = new Card(3, 2);
-        Card yellow4 = new Card(4, 2);
-        Card yellow5 = new Card(5, 2);
-        Card yellow6 = new Card(6, 2);
-        Card yellow7 = new Card(7, 2);
-        Card yellow8 = new Card(8, 2);
-        Card narr3 = new Card(0, 2);
-        Card zauberer3 = new Card(9, 2);
-
-
-        //Red
-        Card red1 = new Card(1, 3);
-        Card red2 = new Card(2, 3);
-        Card red3 = new Card(3, 3);
-        Card red4 = new Card(4, 3);
-        Card red5 = new Card(5, 3);
-        Card red6 = new Card(6, 3);
-        Card red7 = new Card(7, 3);
-        Card red8 = new Card(8, 3);
-        Card narr4 = new Card(0, 3);
-        Card zauberer4 = new Card(9, 3);
-
-
-        //    <----- put Cards in HashMap (with ID) ---->
-
-        //Blue
-        card.put(blue1.getId(), blue1);             //key, value
-        card.put(blue2.getId(), blue2);
-        card.put(blue3.getId(), blue3);
-        card.put(blue4.getId(), blue4);
-        card.put(blue5.getId(), blue5);
-        card.put(blue6.getId(), blue6);
-        card.put(blue7.getId(), blue7);
-        card.put(blue8.getId(), blue8);
-        card.put(narr1.getId(), narr1);
-        card.put(zauberer1.getId(), zauberer1);
-
-        //Green
-        card.put(green1.getId(), green1);
-        card.put(green2.getId(), green2);
-        card.put(green3.getId(), green3);
-        card.put(green4.getId(), green4);
-        card.put(green5.getId(), green5);
-        card.put(green6.getId(), green6);
-        card.put(green7.getId(), green7);
-        card.put(green8.getId(), green8);
-        card.put(narr2.getId(), narr2);
-        card.put(zauberer2.getId(), zauberer2);
-
-        //Yellow
-        card.put(yellow1.getId(), yellow1);
-        card.put(yellow2.getId(), yellow2);
-        card.put(yellow3.getId(), yellow3);
-        card.put(yellow4.getId(), yellow4);
-        card.put(yellow5.getId(), yellow5);
-        card.put(yellow6.getId(), yellow6);
-        card.put(yellow7.getId(), yellow7);
-        card.put(yellow8.getId(), yellow8);
-        card.put(narr3.getId(), narr3);
-        card.put(zauberer3.getId(), zauberer3);
-
-        //Red
-        card.put(red1.getId(), red1);
-        card.put(red2.getId(), red2);
-        card.put(red3.getId(), red3);
-        card.put(red4.getId(), red4);
-        card.put(red5.getId(), red5);
-        card.put(red6.getId(), red6);
-        card.put(red7.getId(), red7);
-        card.put(red8.getId(), red8);
-        card.put(narr4.getId(), narr4);
-        card.put(zauberer4.getId(), zauberer4);
-
+        for (int rank = 0; rank < 10; rank++)               //give rank IDs from 0 - 9
+            for (int color = 0; color < 4; color++) {       //give color IDs from 0 - 3
+                Card c = new Card(rank, color);             //create new Cards identified by rank and color
+                card.put(c.getId(), c);                     //add new created Cards into HashMap
+            }
 
     }
 
 
-    public List<Card> getCards(int currentRound) {                //getCards method takes the input currentRound, to generate a List<String> with the number of random cards equal to current Round
-        List<Card> HandCards = new ArrayList<Card>();
+    /**
+     * getCards method takes the input currentRound
+     * to generate a List<String> with the number of
+     * random cards equal to current Round
+     */
+
+    public List<Card> getCards(int currentRound) {
+        List<Card> handCards = new ArrayList<Card>();
 
 
-        int i = 0;                                                  //for while loop
+        int i = 0;
 
         while (i < currentRound) {
             Object[] rand = card.keySet().toArray();                //keySet() is used to get a view of the keys contained in the HashMap --> get the key entries from the HashMap and "change" into an Array
             Object key = rand[new Random().nextInt(rand.length)];   //get a random key for a card
             Card c = card.get(key);                                 //get ID from the Card with the generated key
-            HandCards.add(c);                                       //add Card into ArrayList HandCards
+            handCards.add(c);                                       //add Card into ArrayList HandCards
             card.remove(key);                                       //remove this Card from the HashMap card, so that the getCards Method gives different Cards every time it is called, until the Method resetDeck() is called
             i++;
         }
 
 
-        return HandCards;
+        return handCards;
     }
 
 
-    //Getter and Setter for testing
+    /**
+     * to get Size of Deck - for testing
+     */
+
+    public int deckSize(){
+        return card.size();
+    }
+
+
+    /**
+     * to get Number of Cards which are still available - for testing
+     */
+
+    public int availableCards(){
+        return card.size();
+    }
+
+
+
+    /**
+     * Getter and Setter for testing
+     */
+
     public Map<String, Card> getCard() {
         return card;
     }
