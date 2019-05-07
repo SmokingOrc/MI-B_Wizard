@@ -3,6 +3,7 @@ package com.example.mi_b_wizard;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.WpsInfo;
@@ -42,11 +43,10 @@ import java.util.List;
 
 public class JoinGameActivity extends AppCompatActivity implements ChannelListener {
     private static final int PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION = 1001;
-    Handler handler;
     Notifications notifications = new Notifications(this);
     MessageHandler messageHandler;
     ListView lvAvailableGames;
-    Button btnDiscover, btnStartGame, btnSend;
+    Button btnDiscover, btnSend;
     public TextView wifi;
     EditText message;
     public WifiP2pManager mManager;
@@ -77,6 +77,10 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
         mServer = obj;
     }
 
+    public MessageHandler getMessageHandler() {
+        return messageHandler;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -96,15 +100,13 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
         mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
         wifi = findViewById(R.id.wifi);
         lvAvailableGames = (ListView) findViewById(R.id.lvAvailableGames);
-        btnStartGame = findViewById(R.id.btnStartGame);
+
         btnDiscover = findViewById(R.id.btnDiscover);
         btnSend = findViewById(R.id.send);
         message = findViewById(R.id.message);
         messageHandler = new MessageHandler();
-        handler = new Handler();
-        handler = messageHandler.getHandler();
         messageHandler.setJoingameContext(this);
-        setUser(MainActivity.user);
+        Instance.setMh(messageHandler);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -148,29 +150,6 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
             }
         });
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (!owner) {
-                    if (mServer == null) {
-                        mServer = messageHandler.getServer();
-                    } else {
-                        mServer.write(user + " says: " + message.getText().toString());
-                        message.setText("");
-                    }
-                } else {
-                    messageHandler.write(user + " says: " + message.getText().toString());
-                    message.setText("");
-
-                }
-
-                if (mServer == null && !owner) {
-                    Toast.makeText(getApplicationContext(), "Please reconnect..", Toast.LENGTH_SHORT).show();
-                    System.out.println("Server is null....");
-                }
-            }
-        });
 
         lvAvailableGames.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -250,15 +229,18 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
                 try {
                     handler = new GroupOwnerSocketHandler(messageHandler.getHandler());
                     handler.start();
+                    Intent i = new Intent(JoinGameActivity.this, WaitingLobby.class);
+                    startActivity(i);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //   mServer = new Server();
-                //   mServer.start();
             } else if (info.groupFormed) {
                 handler = new Client(messageHandler.getHandler(), groupOwnerAddress);
                 handler.start();
                 Toast.makeText(getApplicationContext(), "you are a client of the game", Toast.LENGTH_SHORT).show();
+
+                Intent i = new Intent(JoinGameActivity.this, WaitingLobby.class);
+                startActivity(i);
             }
         }
     };

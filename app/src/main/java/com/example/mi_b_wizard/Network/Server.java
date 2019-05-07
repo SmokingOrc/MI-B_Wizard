@@ -3,9 +3,6 @@ package com.example.mi_b_wizard.Network;
 
 import android.os.Handler;
 
-import com.example.mi_b_wizard.JoinGameActivity;
-import com.example.mi_b_wizard.MainActivity;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,7 +12,10 @@ import java.net.Socket;
 public class Server extends Thread{
     private Socket socket;
     private Handler handler;
-    private long id;
+    public final static byte MOVE = 1;
+    public final static byte START_GAME = 2;
+    public final static byte GIVE_ME_CARDS = 3;
+    public final static byte CARDS = 4;
 
     public Server(Socket socket, Handler handler) {
         this.socket = socket;
@@ -23,13 +23,13 @@ public class Server extends Thread{
 
     }
 
-
     private InputStream inputStream;
     private OutputStream outputStream;
 
     @Override
     public void run() {
         try {
+
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
             byte[] buffer = new byte[1024];
@@ -42,14 +42,43 @@ public class Server extends Thread{
                     if (bytes == -1) {
                         break;
                     }
-                    System.out.println("server: ");
-                    handler.obtainMessage(MessageHandler.READ, bytes, (int)getId(), buffer).sendToTarget();
+
+                    System.out.println("event id is : "+buffer[0]);
+                    switch (buffer[0]){
+                        case MOVE:
+                            handler.obtainMessage(MessageHandler.MOVE, bytes, (int)getId(), buffer).sendToTarget();
+                            System.out.println("move");
+                            break;
+
+                        case START_GAME:
+                            handler.obtainMessage(MessageHandler.START_GAME, bytes, (int)getId(), buffer).sendToTarget();
+                            System.out.println("start");
+                            break;
+
+                        case GIVE_ME_CARDS:
+                            handler.obtainMessage(MessageHandler.SEND_CARDS, bytes, (int)getId(), buffer).sendToTarget();
+                            System.out.println("give me cards");
+                            break;
+
+                        case CARDS:
+                            handler.obtainMessage(MessageHandler.CARDS, bytes, (int)getId(), buffer).sendToTarget();
+                            System.out.println("cards");
+                            break;
+
+                            default:
+                                handler.obtainMessage(MessageHandler.READ, bytes, (int)getId(), buffer).sendToTarget();
+                                System.out.println("default");
+                                break;
+
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    System.out.println(e);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println(e);
         } finally {
             try {
                 socket.close();
@@ -60,19 +89,38 @@ public class Server extends Thread{
     }
     public void write(String msg) {
         final byte[] buffer = (msg).getBytes();
+
         Thread thread = new Thread() {
             @Override
             public void run() {
                 super.run();
                 try {
                     outputStream.write(buffer);
-                    System.out.println("writing-Server");
+                    System.out.println("writing-Server ");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         };
         thread.run();
+    }
+
+    public void event (byte whatEvent, byte card, byte cardColor, byte player){
+        final byte[] buffer = {whatEvent,card,cardColor,player};
+
+       Thread thread1 = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    outputStream.write(buffer);
+                    System.out.println("New event");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread1.run();
     }
 
     @Override
