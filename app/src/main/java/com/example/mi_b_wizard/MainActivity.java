@@ -11,10 +11,12 @@ import android.widget.Toast;
 import com.example.mi_b_wizard.Data.Player;
 
 
+
 public class MainActivity extends AppCompatActivity {
     Button ButtonJoin = null;
     Button ButtonRegeln;
     Button ButtonCreate;
+    Button ButtonSpeech;
     EditText Userid;
     static String user;
     Player player;
@@ -64,6 +66,17 @@ public class MainActivity extends AppCompatActivity {
             }else {
                 Toast.makeText(getApplicationContext(), "You need a name to create a game..", Toast.LENGTH_SHORT).show();
             }
+            }
+        });
+
+
+        //Go to speech input currently only for Testing the speech recognition needs to be updated
+        ButtonSpeech =  findViewById(R.id.btnSpeech);
+        ButtonSpeech.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i3 = new Intent(MainActivity.this, PredictedTricksActivity.class);
+                startActivity(i3);
             }
         });
 
