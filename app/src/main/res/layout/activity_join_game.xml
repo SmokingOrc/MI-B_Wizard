@@ -11,7 +11,7 @@
         android:id="@+id/tvHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Available Games:" />
+        android:text="Available devices:" />
 
     <Button
         android:id="@+id/btnDiscover"
@@ -19,31 +19,10 @@
         android:layout_height="wrap_content"
         android:text="Discover" />
 
-    <EditText
-        android:id="@+id/message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="your message..."
-        android:ems="10"
-        android:hint="your message..."
-        android:inputType="textPersonName" />
-
-    <Button
-        android:id="@+id/send"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="send" />
-
     <ListView
         android:id="@+id/lvAvailableGames"
         android:layout_width="match_parent"
         android:layout_height="443dp"></ListView>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnStartGame"
-        android:text="Start Game"/>
 
     <TextView
         android:id="@+id/wifi"
