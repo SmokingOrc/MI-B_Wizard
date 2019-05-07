@@ -11,11 +11,11 @@ import android.widget.Toast;
 import com.example.mi_b_wizard.Data.Player;
 
 
-
 public class MainActivity extends AppCompatActivity {
     Button ButtonJoin = null;
     Button ButtonRegeln;
     Button ButtonCreate;
+    private Button btnCheat = null; //only for testing shaking
     Button ButtonSpeech;
     EditText Userid;
     String user;
@@ -70,7 +70,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnCheat = findViewById(R.id.btnCheat);
+        btnCheat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iCheat = new Intent(MainActivity.this, Cheating_Test.class);
+                startActivity(iCheat);
+            }
 
+    });
         //Go to speech input currently only for Testing the speech recognition needs to be updated
         ButtonSpeech =  findViewById(R.id.btnSpeech);
         ButtonSpeech.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i3);
             }
         });
+
+
+
 
     }
 
