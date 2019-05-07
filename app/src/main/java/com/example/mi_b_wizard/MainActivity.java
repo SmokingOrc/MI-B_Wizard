@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     Button ButtonJoin = null;
     Button ButtonRegeln;
     Button ButtonCreate;
+    private Button btnCheat = null; //only for testing shaking
     EditText Userid;
     String user;
     Player player;
@@ -67,6 +68,18 @@ public class MainActivity extends AppCompatActivity {
             }
             }
         });
+
+        btnCheat = findViewById(R.id.btnCheat);
+        btnCheat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iCheat = new Intent(MainActivity.this, Cheating_Test.class);
+                startActivity(iCheat);
+            }
+
+    });
+
+
 
     }
 
