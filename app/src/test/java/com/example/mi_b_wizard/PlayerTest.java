@@ -81,7 +81,9 @@ public class PlayerTest {
     }
     @Test
     public void testUpdatePredictedtricks(){
-        player.updatePredictedTricks();
-        assertEquals(2, player.getPredictedTrick());
+        player.updatePredictedTricks("drei");
+        assertEquals(3, player.getPredictedTrick());
+        player.updatePredictedTricks("3 Uhr");
+        assertEquals(3, player.getPredictedTrick());
     }
 }

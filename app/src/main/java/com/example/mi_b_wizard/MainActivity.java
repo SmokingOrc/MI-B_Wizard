@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     Button ButtonRegeln;
     Button ButtonCreate;
     private Button btnCheat = null; //only for testing shaking
+    Button ButtonSpeech;
     EditText Userid;
     String user;
     Player player;
@@ -78,6 +79,16 @@ public class MainActivity extends AppCompatActivity {
             }
 
     });
+        //Go to speech input currently only for Testing the speech recognition needs to be updated
+        ButtonSpeech =  findViewById(R.id.btnSpeech);
+        ButtonSpeech.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i3 = new Intent(MainActivity.this, PredictedTricksActivity.class);
+                startActivity(i3);
+            }
+        });
+
 
 
 
