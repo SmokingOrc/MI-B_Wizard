@@ -10,10 +10,10 @@ import android.widget.Toast;
 
 public class Notifications {
     protected Context context;
-
     public Notifications(Context context) {
         this.context = context;
     }
+
 
     public void showMsg(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
