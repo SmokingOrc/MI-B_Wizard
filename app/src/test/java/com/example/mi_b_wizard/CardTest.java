@@ -12,15 +12,15 @@ import org.junit.Test;
 
 
 public class CardTest {
-    Card card;
-    Card card1;
-    Card card2;
-    Card card3;
+    private Card card;
+    private Card card1;
+    private Card card2;
+    private Card card3;
 
     @Before
     public void before(){
         card = new Card(0,1);
-        card1 = new Card(9,2);
+        card1 = new Card(14,2);
         card2 = new Card(0,1);
         card3 = new Card(5,3);
     }
@@ -40,10 +40,10 @@ public class CardTest {
     @Test
     public void testSetRankFailed(){
         try{
-            card.setRank(10);
+            card.setRank(15);
             fail();
         }catch (RuntimeException e){
-            assertEquals(e.getMessage(),"Rank must be between 0 and 9");
+            assertEquals(e.getMessage(),"Rank must be between 0 and 14");
 
         }
     }
@@ -53,7 +53,7 @@ public class CardTest {
             card.setRank(-2);
             fail();
         }catch (RuntimeException e){
-            assertEquals(e.getMessage(),"Rank must be between 0 and 9");
+            assertEquals(e.getMessage(),"Rank must be between 0 and 14");
 
         }
     }
@@ -104,20 +104,25 @@ public class CardTest {
     }
     @Test
     public void testGetId(){
-        assertEquals("JESTER_GREEN",card.getId());
+        assertEquals(1,card.getId());
     }
     @Test
-    public void testSetIdValide(){
-        card.setId(9,1);
-        assertEquals("MAGICIAN_GREEN",card.getId());
+    public void testSetIdValide1(){
+        card.setId(2,1);
+        assertEquals(21,card.getId());
+    }
+    @Test
+    public void testSetIdValide2(){
+        card.setId(11,1);
+        assertEquals(111,card.getId());
     }
     @Test
     public void testEqualToOtherCardTrue(){
-        assertEquals(true,card.equalToOtherCard(card2));
+        assertTrue(card.equalToOtherCard(card2));
     }
     @Test
     public void testEqualToOtherCardFalse(){
-        assertEquals(false, card.equalToOtherCard(card1));
+        assertFalse(card.equalToOtherCard(card1));
     }
     @Test
     public void testToString(){
