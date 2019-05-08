@@ -4,7 +4,7 @@ public class Card {
 
     private Rank rank;
     private Colour colour;
-    private String id;
+    private byte id;
 
     //Constructor
     public Card(int rank, int colour){
@@ -18,8 +18,8 @@ public class Card {
     }
 
     public void setRank(int rank){
-        if(rank <0|| rank >9){
-            throw new RuntimeException("Rank must be between 0 and 9");
+        if(rank <0|| rank >14){
+            throw new RuntimeException("Rank must be between 0 and 14");
         }else
         this.rank = Rank.values()[rank];
     }
@@ -36,16 +36,21 @@ public class Card {
     }
 
     public boolean isMagician(){
-        return this.rank == Rank.values()[9];
+        return this.rank == Rank.values()[14];
     }
     public boolean isJester(){
         return this.rank ==Rank.values()[0];
     }
-    //SetId example Rank= Magician, Colour = Green-->MAGICIAN_GREEN
-    public void setId(int rank, int colour) {
-        this.id = Rank.values()[rank].toString()+"_"+Colour.values()[colour].toString();
+
+    //Sets the ID of the cards in Byte to send the cards clients <->host
+    //ID Example rank 0, colour 1 --> 1 ; rank 1, colour 0 -->10
+    public void setId(int rank, int colour){
+        String idString = Integer.toString(rank)+(colour);
+        int idInt = Integer.valueOf(idString);
+        this.id = (byte)idInt;
     }
-    public String getId(){
+
+    public byte getId(){
         return id;
     }
 

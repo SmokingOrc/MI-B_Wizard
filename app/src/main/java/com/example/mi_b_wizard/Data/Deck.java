@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Deck {
 
-    Map<String, Card> card = new HashMap<>();
+    Map<Byte, Card> card = new HashMap<>();
 
     public Deck() {
         resetDeck();
@@ -82,11 +82,11 @@ public class Deck {
      * Getter and Setter for testing
      */
 
-    public Map<String, Card> getCard() {
+    public Map<Byte, Card> getCard() {
         return card;
     }
 
-    public void setCard(Map<String, Card> card) {
+    public void setCard(Map<Byte, Card> card) {
         this.card = card;
     }
 

@@ -19,7 +19,7 @@ public class Hand {
 
 
     //adds a card to the hand
-    public void addCardToHand(String id, Card card){
+    public void addCardToHand(byte id, Card card){
         hand.add(card);
     }
 

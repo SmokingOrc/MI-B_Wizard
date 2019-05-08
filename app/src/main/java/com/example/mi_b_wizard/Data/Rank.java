@@ -10,7 +10,12 @@ public enum Rank {
     SIX(6),
     SEVEN(7),
     EIGHT(8),
-    MAGICIAN(9);
+    NINE(9),
+    TEN(10),
+    ELEVEN(11),
+    TWELVE(12),
+    THIRTEEN(13),
+    MAGICIAN(14);
 
     private int value;
 
