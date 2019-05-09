@@ -16,6 +16,12 @@ public class Server extends Thread{
     public final static byte START_GAME = 2;
     public final static byte GIVE_ME_CARDS = 3;
     public final static byte CARDS = 4;
+    public final static byte TRICKS = 5;
+    public final static byte ID = 6;
+    public final static byte WINNER = 7;
+    public final static byte YOUR_TURN = 8;
+
+
 
     public Server(Socket socket, Handler handler) {
         this.socket = socket;
@@ -25,6 +31,7 @@ public class Server extends Thread{
 
     private InputStream inputStream;
     private OutputStream outputStream;
+    byte [] myCards = new byte[21];
 
     @Override
     public void run() {
@@ -34,7 +41,7 @@ public class Server extends Thread{
             outputStream = socket.getOutputStream();
             byte[] buffer = new byte[1024];
             int bytes;
-            handler.obtainMessage(MessageHandler.HANDLE, this).sendToTarget();
+            handler.obtainMessage(MessageHandler.HANDLE,1,(int)getId(),this).sendToTarget();
 
             while (true) {
                 try {
@@ -65,6 +72,26 @@ public class Server extends Thread{
                             System.out.println("cards");
                             break;
 
+                        case ID:
+                            handler.obtainMessage(MessageHandler.GET_MY_ID, bytes, (int)getId(), buffer).sendToTarget();
+                            System.out.println("ID");
+                            break;
+
+                        case TRICKS:
+                            handler.obtainMessage(MessageHandler.SEND_CARDS, bytes, (int)getId(), buffer).sendToTarget();
+                            System.out.println("give me cards");
+                            break;
+
+                        case WINNER:
+                            handler.obtainMessage(MessageHandler.WINNER, bytes, (int)getId(), buffer).sendToTarget();
+                            System.out.println("winner");
+                            break;
+
+                        case YOUR_TURN:
+                            handler.obtainMessage(MessageHandler.YOUR_TURN, bytes, (int)getId(), buffer).sendToTarget();
+                            System.out.println("your turn");
+                            break;
+
                             default:
                                 handler.obtainMessage(MessageHandler.READ, bytes, (int)getId(), buffer).sendToTarget();
                                 System.out.println("default");
@@ -78,7 +105,7 @@ public class Server extends Thread{
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println(e);
+
         } finally {
             try {
                 socket.close();
@@ -108,7 +135,7 @@ public class Server extends Thread{
     public void event (byte whatEvent, byte card, byte cardColor, byte player){
         final byte[] buffer = {whatEvent,card,cardColor,player};
 
-       Thread thread1 = new Thread() {
+       Thread thread = new Thread() {
             @Override
             public void run() {
                 super.run();
@@ -120,8 +147,26 @@ public class Server extends Thread{
                 }
             }
         };
-        thread1.run();
+        thread.run();
     }
+
+    public void sendCards (byte[] cards){
+        myCards = cards;
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    outputStream.write(myCards);
+                    System.out.println("cards sent");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.run();
+    }
+
 
     @Override
     public long getId() {

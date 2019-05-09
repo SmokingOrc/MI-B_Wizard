@@ -20,6 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Cheating_Test"></activity>
+        <activity android:name=".WaitingLobby"></activity>
+        <activity android:name=".GameActivity"></activity>
         <activity
             android:name=".NewGameActivity"
             android:label="Create Game"

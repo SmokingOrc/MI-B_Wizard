@@ -17,6 +17,7 @@ public class Player{
     private Hand hand; //actual Hand of the player
     private Game game;
     private Card actualPlayedCard;
+    private int playerId;
 
     public Player(String playerName){
         setPlayerName(playerName);
@@ -28,6 +29,15 @@ public class Player{
     }
 
     //Getter-Setter
+
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
+    }
+
+    public int getPlayerId() {
+        return playerId;
+    }
 
     public void setPlayerName(String name){
         this.playerName = name;

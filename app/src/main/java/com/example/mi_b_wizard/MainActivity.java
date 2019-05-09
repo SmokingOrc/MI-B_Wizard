@@ -12,6 +12,7 @@ import com.example.mi_b_wizard.Data.Player;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static Player player;
     Button ButtonJoin = null;
     Button ButtonRegeln;
     Button ButtonCreate;
@@ -19,8 +20,11 @@ public class MainActivity extends AppCompatActivity {
     Button ButtonSpeech;
     EditText Userid;
     String user;
-    Player player;
 
+
+    public static Player getPlayer() {
+        return player;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
                 user = Userid.getText().toString();}
                 if(!user.isEmpty()) {
                     player = new Player(user);
-                    Instance.setPlayer(player);
                     Intent i = new Intent(MainActivity.this, JoinGameActivity.class);
                     startActivity(i);
                 }else {

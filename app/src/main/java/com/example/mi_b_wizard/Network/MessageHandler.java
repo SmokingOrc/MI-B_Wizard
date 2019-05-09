@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.example.mi_b_wizard.GameActivity;
-import com.example.mi_b_wizard.Instance;
 import com.example.mi_b_wizard.JoinGameActivity;
 import com.example.mi_b_wizard.Notifications;
 import com.example.mi_b_wizard.WaitingLobby;
@@ -18,10 +17,12 @@ public class MessageHandler implements Handler.Callback {
     Handler handler = new Handler(this);
     Context joingameContext;
     Notifications notifications;
-    WaitingLobby waitingLobby;
-    GameActivity gameActivity;
+    WaitingLobby waitingLobby = WaitingLobby.getWaitingLobby();
+    GameActivity gameActivity  = GameActivity.getGameActivity();
 
     private ArrayList<Server> Clients = new ArrayList<Server>();
+    private ArrayList<Integer> id = new ArrayList<Integer>();
+    private static MessageHandler messageHandler;
 
     public static final int HANDLE = 0x400 + 2;
     public static final int READ = 0x400 + 1;
@@ -29,7 +30,18 @@ public class MessageHandler implements Handler.Callback {
     public static final int START_GAME = 0x400 + 4;
     public static final int CARDS = 0x400 + 5;
     public static final int SEND_CARDS = 0x400 + 6;
+    public static final int PREDICTED_TRICKS = 0x400 + 7;
+    public static final int GET_MY_ID = 0x400 + 8;
+    public static final int YOUR_TURN = 0x400 + 9;
+    public static final int WINNER = 0x400 + 10;
+    public static final int POINTS = 0x400 + 11;
+    public static final int CHEAT = 0x400 + 12;
 
+
+
+    public ArrayList<Integer> getId() {
+        return id;
+    }
 
     public void setServer(Server server) {
         this.server = server;
@@ -39,6 +51,13 @@ public class MessageHandler implements Handler.Callback {
         return server;
     }
 
+    public static MessageHandler messageHandler(){
+        return messageHandler;
+    }
+
+    public static void setMessageHandler(MessageHandler messageHandler) {
+        MessageHandler.messageHandler = messageHandler;
+    }
 
     private void setNotifications(Notifications notifications) {
         this.notifications = notifications;
@@ -61,64 +80,114 @@ public class MessageHandler implements Handler.Callback {
     @Override
     public boolean handleMessage(Message msg) {
         if (waitingLobby == null) {
-            waitingLobby = Instance.waitingLobby;
+            waitingLobby = WaitingLobby.getWaitingLobby();
         }
         if (gameActivity == null) {
-            gameActivity = Instance.gameActivity;
+            gameActivity = GameActivity.getGameActivity();
         }
         switch (msg.what) {
             case READ:
                 byte[] read = (byte[]) msg.obj;
                 String s = new String(read, 0, msg.arg1);
                 System.out.println("message is : " + s);
-                // notifications.showMsg(s);
                 waitingLobby.addMsg(s);
                 notifications.showNotification("new message", s);
                 if (JoinGameActivity.owner) {
                     writeToAllExceptTheSender(s, msg.arg2);
                 }
                 break;
+
             case HANDLE:
                 System.out.println("setting server....");
                 Object obj = msg.obj;
                 setServer((Server) obj);
                 if (JoinGameActivity.owner) {
                     Clients.add((Server) obj);
+                    id.add(msg.arg2);
                 }
                 break;
+
             case START_GAME:
-                byte[] start = (byte[]) msg.obj;
-                if (JoinGameActivity.owner) {
-                    sendEventToAllExceptTheSender(start[0], start[1], start[2], start[3], msg.arg2);
-                }
+                gameActivity.start();
                 System.out.println("game started");
                 break;
 
             case SEND_CARDS:
-                byte[] card = (byte[]) msg.obj;
+                byte[] cards = (byte[]) msg.obj;
                 if (JoinGameActivity.owner) {
-                    sendEventToTheSender(Server.CARDS, card[1], card[2], card[3], msg.arg2);
+                    sendCardsToPlayer(cards, msg.arg2);
+                    System.out.println("cards sent to player");
                 }
-                // TODO Send cards from Game class.
-                System.out.println("Player wants a cards");
+                break;
+
+            case GET_MY_ID:
+                byte[] id = (byte[]) msg.obj;
+                if (JoinGameActivity.owner) {
+                    sendEventToTheSender(Server.ID, id[1], id[2], id[3], msg.arg2);
+                }
+                System.out.println("ID sent to player");
                 break;
 
             case MOVE:
                 byte[] move = (byte[]) msg.obj;
                 if (JoinGameActivity.owner) {
-                    sendEventToAllExceptTheSender(move[0], move[1], move[2], move[3], msg.arg2);
+                  gameActivity.playerMadeAMove(move[1], msg.arg2);
+                    System.out.println("Player made a new move");
                 }
-                System.out.println("Player made a new move");
+                break;
+
+            case PREDICTED_TRICKS:
+                byte[] tricks = (byte[]) msg.obj;
+                if (JoinGameActivity.owner) {
+                    sendEventToAllExceptTheSender(tricks[0], tricks[1], tricks[2], tricks[3], msg.arg2);
+                    System.out.println("Player predicted tricks");
+                }
                 break;
 
             case CARDS:
-                byte[] givenCard = (byte[]) msg.obj;
+                byte[] givenCards = (byte[]) msg.obj;
                 if (gameActivity != null){
-                    gameActivity.takeCards(givenCard[1], givenCard[2]);}
+                    gameActivity.takeCards(givenCards);}
                 else {
                     System.out.println("game is null");
                 }
                 System.out.println("Player got cards");
+                break;
+
+            case CHEAT:
+                if (gameActivity != null){
+                    gameActivity.setHaveICheated();}
+                else {
+                    System.out.println("game is null");
+                }
+                break;
+
+            case YOUR_TURN:
+                byte[] yourTurn = (byte[]) msg.obj;
+                if (gameActivity != null){
+                    sendEventToTheSender(yourTurn[0],yourTurn[1],yourTurn[2],yourTurn[3],msg.arg2);}
+                else {
+                    System.out.println("game is null");
+                }
+                System.out.println("Player got cards");
+                break;
+
+            case POINTS:
+                byte[] points = (byte[]) msg.obj;
+                if (gameActivity != null){
+                    gameActivity.showPoints(points);}
+                else {
+                    System.out.println("game is null");
+                }
+                System.out.println("Player got cards");
+                break;
+
+            case WINNER:
+                byte[] winner = (byte[]) msg.obj;
+                if (gameActivity != null){
+                    gameActivity.showWhoIsTheWinner();}
+                else {
+                    System.out.println("game is null"); }
                 break;
         }
         return true;
@@ -139,7 +208,6 @@ public class MessageHandler implements Handler.Callback {
 
     public void write(String msg) {
         System.out.println("New message sent");
-        System.out.println(Clients.size());
         if (Clients.size() >= 1) {
             for (Server Clients : Clients) {
                 Clients.write(msg);
@@ -162,7 +230,6 @@ public class MessageHandler implements Handler.Callback {
     }
 
     private void sendEventToAllExceptTheSender(byte whatEvent, byte card, byte cardColor, byte player, int id) {
-
         if (Clients.size() >= 1) {
             for (Server Clients : Clients) {
                 if ((int) Clients.getId() == id) {
@@ -174,6 +241,15 @@ public class MessageHandler implements Handler.Callback {
             }
         } else {
             server.event(whatEvent, card, cardColor, player);
+        }
+    }
+
+    public void sendCardsToPlayer(byte[] cards, int id) {
+        for (Server Clients : Clients) {
+            if ((int) Clients.getId() == id) {
+                System.out.println("sent to "+id);
+                Clients.sendCards(cards);
+            }
         }
     }
 

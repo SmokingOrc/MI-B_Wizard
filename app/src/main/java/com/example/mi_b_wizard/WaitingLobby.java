@@ -1,5 +1,6 @@
 package com.example.mi_b_wizard;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,15 +18,21 @@ import com.example.mi_b_wizard.Network.Server;
 public class WaitingLobby extends AppCompatActivity {
     boolean owner = JoinGameActivity.owner;
     Button send, start;
-    Player player = new Player(null);
+    Player player = MainActivity.getPlayer();
     TextView clientOrOwner, messages;
     EditText message;
+    private static WaitingLobby waitingLobby ;
     byte zero = 0;
 
     Server mServer;
     String user;
     String usermessage;
-    MessageHandler messageHandler = Instance.MH;
+    MessageHandler messageHandler;
+
+
+    public static WaitingLobby getWaitingLobby() {
+        return waitingLobby;
+    }
 
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
@@ -38,7 +45,6 @@ public class WaitingLobby extends AppCompatActivity {
         return messageHandler;
 
     }
-
     public void setmServer(Server mServer) {
         this.mServer = mServer;
     }
@@ -50,7 +56,8 @@ public class WaitingLobby extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_lobby);
-        player = Instance.player;
+        waitingLobby = this;
+        messageHandler = MessageHandler.messageHandler();
         user = player.getPlayerName();
         clientOrOwner =  findViewById(R.id.owner);
         messages = findViewById(R.id.messages);
@@ -58,7 +65,6 @@ public class WaitingLobby extends AppCompatActivity {
         start = findViewById(R.id.start);
         message = findViewById(R.id.message);
         messages.setMovementMethod(new ScrollingMovementMethod());
-        Instance.setWaitingLobby(this);
 
 
         if(owner){
@@ -118,7 +124,6 @@ public class WaitingLobby extends AppCompatActivity {
     }
 
     private void sendStartEvent() {
-        messageHandler.sendEvent(Server.START_GAME,zero,zero,zero);
         Intent i = new Intent(WaitingLobby.this, GameActivity.class);
         startActivity(i);
     }
