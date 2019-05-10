@@ -78,7 +78,7 @@ public class WaitingLobby extends AppCompatActivity {
                 if(messageHandler != null){
                      if (!owner) {
                          if (mServer == null) {
-                          mServer = messageHandler.getServer();
+                                 mServer = messageHandler.getServer();
                     }else{
                         mServer.write(usermessage);
                         addMsg(usermessage);

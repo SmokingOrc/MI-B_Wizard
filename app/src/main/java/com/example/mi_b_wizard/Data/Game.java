@@ -2,6 +2,7 @@ package com.example.mi_b_wizard.Data;
 
 import android.util.Pair;
 
+import com.example.mi_b_wizard.GameActivity;
 import com.example.mi_b_wizard.Network.MessageHandler;
 import com.example.mi_b_wizard.Network.Server;
 
@@ -15,12 +16,16 @@ import java.util.Map;
 public class Game {
     private String ID;
     private MessageHandler messageHandler;
+    private GameActivity gameActivity = GameActivity.getGameActivity();
     private ArrayList<Integer> ids = new ArrayList<Integer>();
     private List<Player> _players;
     private int round = 1;
+    private int roundsToGo = ids.size()+1;
+    private int playedRounds = 0;
     private int maxRounds;
     private int turns = 0;
-    private boolean rightNumberOfPlayers = false;
+    private byte n = 0;
+    private boolean rightNumberOfPlayers = true; // testing
     public static int timeToPlay = 0;
 
     private Deck _deck;
@@ -42,7 +47,7 @@ public class Game {
 
     //getter and setter for testing
     private void setMaxRounds(int numberOfPlayers){
-        if(numberOfPlayers < 7 && numberOfPlayers > 2){
+        if(numberOfPlayers < 7 && numberOfPlayers > 0){
             rightNumberOfPlayers = true;
         if(numberOfPlayers == 3){
             maxRounds = 20;}
@@ -111,17 +116,28 @@ public class Game {
 
     }
 
-
     public void whoIsNext(){
-        if(turns < ids.size() && turns != 0){
-           timeToPlay = ids.get(turns);
-           turns++;
+        System.out.println("turns : "+turns+" ids: "+ids.size());
+
+            if(turns < ids.size()){
+                int nextPlayer = ids.get(turns);
+            System.out.println(ids.get(turns));
+            messageHandler.sendEventToTheSender(Server.YOUR_TURN,n,n,n,nextPlayer);
+            System.out.println("other players turn");
         }else if (turns >= ids.size()){
-            timeToPlay = 0; // its hosts turn
+            turns = -1; // its hosts turn
+            gameActivity.MyTurn();
+            System.out.println("hosts turn");
         }
+        turns++;
     }
 
+    public void endOfTheRound(){
+
+    }
     //network method - receiving message from player with card
+
+
     public void addCardToCardsPlayed(Player player, Card card) {
         //this.cardsPlayed.put(player, card);
         this._cardsPlayed.put(player, card);
@@ -189,31 +205,39 @@ public class Game {
     }
 
     public void sendcards() {
+        byte[] host;// for testing
+        playedRounds++;
+        if(playedRounds <= roundsToGo && rightNumberOfPlayers){
         int playerId;
-        if(maxRounds == 0){setMaxRounds(ids.size());}
-        System.out.println(maxRounds);
-        if (round <= maxRounds && rightNumberOfPlayers) {
             for (int i = 0; i < ids.size(); i++) {
                 playerId = ids.get(i);
                 byte[] cardsToSend = new byte[21];
+                host = cardsToSend; // for testing
                 cardsToSend[0] = Server.CARDS;
 
                 for (int j = 1; j < round + 1; j++) {
                     cardsToSend[j] = 1; // random card...
                 }
                 messageHandler.sendCardsToPlayer(cardsToSend, playerId);
+                System.out.println("cards sent to players from game class");
+                gameActivity.takeCards(host);   //Host takes the cards from the card class
             }
             round++;
-        }
-    }
+    }else {
+            System.out.println("new round");
+            playedRounds = 0;
+            roundsToGo = (ids.size()+1)*round; // its a new round
+            sendcards();
+        }}
+
     public void moveMade(byte cardPlayed, int playerID){
         System.out.println("card "+cardPlayed+" played from player with id : "+playerID);
         whoIsNext();
     }
 
     public void hostMadeAMove(byte cardPlayed){
-        turns++;
         System.out.println("I played a card : "+cardPlayed);
+        whoIsNext();
     }
 
     //network - send
@@ -238,7 +262,5 @@ public class Game {
 
         return  points;
     }
-
-
 
 }

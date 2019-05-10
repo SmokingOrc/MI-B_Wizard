@@ -20,6 +20,7 @@ public class Server extends Thread{
     public final static byte ID = 6;
     public final static byte WINNER = 7;
     public final static byte YOUR_TURN = 8;
+    public final static byte SEND_POINTS = 9;
 
 
 

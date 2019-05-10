@@ -13,6 +13,8 @@ public class Deck {
 
     Map<String, Card> card = new HashMap<>();
 
+
+
     public Deck() {
         resetDeck();
     }
@@ -32,6 +34,9 @@ public class Deck {
 
     }
 
+    public void createDeck(){
+
+    }
 
     /**
      * getCards method takes the input currentRound

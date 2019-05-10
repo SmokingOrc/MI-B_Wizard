@@ -23,7 +23,7 @@ public class MessageHandler implements Handler.Callback {
     private ArrayList<Server> Clients = new ArrayList<Server>();
     private ArrayList<Integer> id = new ArrayList<Integer>();
     private static MessageHandler messageHandler;
-
+    byte  n = 0;
     public static final int HANDLE = 0x400 + 2;
     public static final int READ = 0x400 + 1;
     public static final int MOVE = 0x400 + 3;
@@ -132,7 +132,11 @@ public class MessageHandler implements Handler.Callback {
                 byte[] move = (byte[]) msg.obj;
                 if (JoinGameActivity.owner) {
                   gameActivity.playerMadeAMove(move[1], msg.arg2);
+                  sendEventToAllExceptTheSender(Server.MOVE,move[1],n,n,msg.arg2);
                     System.out.println("Player made a new move");
+                }else {
+                    System.out.println("host made a move");
+                    gameActivity.showMove(move[1]);
                 }
                 break;
 
@@ -163,9 +167,9 @@ public class MessageHandler implements Handler.Callback {
                 break;
 
             case YOUR_TURN:
-                byte[] yourTurn = (byte[]) msg.obj;
+                System.out.println("its your turn");
                 if (gameActivity != null){
-                    sendEventToTheSender(yourTurn[0],yourTurn[1],yourTurn[2],yourTurn[3],msg.arg2);}
+                   gameActivity.MyTurn();}
                 else {
                     System.out.println("game is null");
                 }
@@ -179,7 +183,6 @@ public class MessageHandler implements Handler.Callback {
                 else {
                     System.out.println("game is null");
                 }
-                System.out.println("Player got cards");
                 break;
 
             case WINNER:
@@ -229,7 +232,7 @@ public class MessageHandler implements Handler.Callback {
         }
     }
 
-    private void sendEventToAllExceptTheSender(byte whatEvent, byte card, byte cardColor, byte player, int id) {
+    public void sendEventToAllExceptTheSender(byte whatEvent, byte card, byte cardColor, byte player, int id) {
         if (Clients.size() >= 1) {
             for (Server Clients : Clients) {
                 if ((int) Clients.getId() == id) {
@@ -253,7 +256,7 @@ public class MessageHandler implements Handler.Callback {
         }
     }
 
-    private void sendEventToTheSender(byte whatEvent, byte card, byte cardColor, byte player, int id) {
+    public void sendEventToTheSender(byte whatEvent, byte card, byte cardColor, byte player, int id) {
         for (Server Clients : Clients) {
             if ((int) Clients.getId() == id) {
                 System.out.println("sent to "+id);

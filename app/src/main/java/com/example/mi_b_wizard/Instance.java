@@ -15,22 +15,30 @@ public class Instance {
 
 
     public static void setMh(MessageHandler mh){
-        Instance.MH = mh;
+        if(MH == null){
+        Instance.MH = mh;}
     }
 
     public static void setPlayer(Player player) {
-        Instance.player = player;
+        if(player == null){
+        Instance.player = player;}
     }
 
     public static void setWaitingLobby(WaitingLobby waitingLobby) {
-        Instance.waitingLobby = waitingLobby;
+        if(waitingLobby == null){
+        Instance.waitingLobby = waitingLobby;}
     }
 
     public static void setNotifications(Notifications notifications) {
-        Instance.notifications = notifications;
+        if (notifications == null) {
+            Instance.notifications = notifications;
+        }
     }
 
     public static void setGameActivity(GameActivity gameActivity) {
-        Instance.gameActivity = gameActivity;
+        if (gameActivity == null) {
+            Instance.gameActivity = gameActivity;
+        }
     }
+
 }
