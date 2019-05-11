@@ -8,11 +8,11 @@
     tools:context=".GameActivity">
 
     <Button
-        android:id="@+id/giveMe"
+        android:id="@+id/StartWithCards"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="198dp"
-        android:text="give me a card"
+        android:text="pointless button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,5 +25,15 @@
         android:text="card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/giveMe" />
+        app:layout_constraintTop_toBottomOf="@+id/StartWithCards" />
+
+    <Button
+        android:id="@+id/playacard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play a card"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="360dp"
+        tools:visibility="invisible" />
+
 </android.support.constraint.ConstraintLayout>
