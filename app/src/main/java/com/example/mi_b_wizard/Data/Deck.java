@@ -2,6 +2,8 @@ package com.example.mi_b_wizard.Data;
 
 
 
+import com.example.mi_b_wizard.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,12 +26,12 @@ public class Deck {
     public void resetDeck() {
 
 
+
         for (int rank = 0; rank <= 14; rank++)               //give rank IDs from 0 - 14
             for (int color = 0; color <= 3; color++) {       //give color IDs from 0 - 3
                 Card c = new Card(rank, color);             //create new Cards identified by rank and color
                 card.put(c.getId(), c);                     //add new created Cards into HashMap
             }
-
     }
 
 
@@ -89,7 +91,6 @@ public class Deck {
     public void setCard(Map<Byte, Card> card) {
         this.card = card;
     }
-
 
 }
 
