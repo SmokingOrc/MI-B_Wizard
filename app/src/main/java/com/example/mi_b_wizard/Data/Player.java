@@ -11,12 +11,13 @@ import java.util.Random;
 public class Player{
 
     private String playerName;
-    private int points;
-    private int madeTrick; // tricks, which were made (gemachte Stiche)
+    private int points = 0;
+    private int madeTrick = 0; // tricks, which were made (gemachte Stiche)
     private int predictedTrick; //tricks, which were predicted (angesagte Stiche)
     private Hand hand; //actual Hand of the player
     private Game game;
     private Card actualPlayedCard;
+    private int playerId;
 
     public Player(String playerName){
         setPlayerName(playerName);
@@ -28,6 +29,15 @@ public class Player{
     }
 
     //Getter-Setter
+
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
+    }
+
+    public int getPlayerId() {
+        return playerId;
+    }
 
     public void setPlayerName(String name){
         this.playerName = name;
@@ -45,6 +55,8 @@ public class Player{
         this.madeTrick = madeTrick;
     }
 
+    public void madeATrick(){ madeTrick ++;
+    }
     public int getPredictedTrick() {
         return predictedTrick;
     }
@@ -98,6 +110,16 @@ public class Player{
     public void updatePoints(int predictedTrick, int madeTrick){
         points = points + game.calculatePointsForOnePlayer(predictedTrick, madeTrick);
 
+    }
+
+    public void calculateMyPoints(){
+
+        if(predictedTrick == madeTrick){
+            points += 20 + madeTrick * 10;
+        }else{
+            points -= Math.abs(madeTrick - predictedTrick)*10;
+        }
+        resetForNewRound();
     }
 
     //Reset for new Round + Get the actual cards from Game and add it to the hand of the player

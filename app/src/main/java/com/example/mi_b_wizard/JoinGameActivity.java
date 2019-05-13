@@ -60,6 +60,8 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
     String user;
     public static boolean owner = false;
 
+    private static Context context;
+
 
     public void setUser(String user) {
         this.user = user;
@@ -81,6 +83,11 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
         return messageHandler;
     }
 
+
+    public static Context getAppContext() {
+        return JoinGameActivity.context;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -100,16 +107,15 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
         mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
         wifi = findViewById(R.id.wifi);
         lvAvailableGames = (ListView) findViewById(R.id.lvAvailableGames);
-
         btnDiscover = findViewById(R.id.btnDiscover);
         btnSend = findViewById(R.id.send);
         message = findViewById(R.id.message);
         messageHandler = new MessageHandler();
         messageHandler.setJoingameContext(this);
-        Instance.setMh(messageHandler);
-
+        MessageHandler.setMessageHandler(messageHandler);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        JoinGameActivity.context = getApplicationContext();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)

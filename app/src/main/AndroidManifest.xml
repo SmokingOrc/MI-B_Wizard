@@ -19,10 +19,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".GameActivity"></activity>
+        <activity android:name=".WaitingLobby"></activity>
+        <activity android:name=".Cheating_Test"></activity>
         <activity android:name=".PlayerTableActivity"></activity>
-        <activity android:name=".GameActivity" />
-        <activity android:name=".WaitingLobby" />
-        <activity android:name=".Cheating_Test" />
         <activity
             android:name=".NewGameActivity"
             android:label="Create Game"
@@ -40,7 +40,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".PredictedTricksActivity" />
+        <activity android:name=".PredictedTricksActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,6 +1,9 @@
 package com.example.mi_b_wizard;
 
+import com.example.mi_b_wizard.Data.Card;
+import com.example.mi_b_wizard.Data.Colour;
 import com.example.mi_b_wizard.Data.Deck;
+import com.example.mi_b_wizard.Data.Rank;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,6 +17,9 @@ import static org.junit.Assert.assertEquals;
 public class DeckTest {
 
     Deck deck;
+    Card card;
+    Colour colour;
+    Rank rank;
 
 
     @Before

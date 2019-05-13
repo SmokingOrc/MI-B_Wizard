@@ -35,6 +35,7 @@ public class Card {
         this.colour = Colour.values()[colour];
     }
 
+
     public boolean isMagician(){
         return this.rank == Rank.values()[14];
     }
