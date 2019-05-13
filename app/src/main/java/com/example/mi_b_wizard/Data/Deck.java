@@ -12,10 +12,6 @@ import java.util.Random;
 public class Deck {
 
     Map<Byte, Card> card = new HashMap<>();
-    List<Card> handCards = new ArrayList<Card>();
-
-    ViewCards viewCards;
-
 
 
     public Deck() {
@@ -28,20 +24,18 @@ public class Deck {
 
     public void resetDeck() {
 
-        for (int rank = 0; rank <= 14; rank++)               //give rank IDs from 0 - 14
-            for (int color = 0; color <= 3; color++) {       //give color IDs from 0 - 3
+
+        for (int rank = 0; rank < 10; rank++)               //give rank IDs from 0 - 9
+            for (int color = 0; color < 4; color++) {       //give color IDs from 0 - 3
                 Card c = new Card(rank, color);             //create new Cards identified by rank and color
                 card.put(c.getId(), c);                     //add new created Cards into HashMap
             }
 
-
-
     }
 
     public void createDeck(){
-        resetDeck();
-    }
 
+    }
 
     /**
      * getCards method takes the input currentRound
@@ -50,7 +44,7 @@ public class Deck {
      */
 
     public List<Card> getCards(int currentRound) {
-        //List<Card> handCards = new ArrayList<Card>();
+        List<Card> handCards = new ArrayList<Card>();
 
 
         int i = 0;
@@ -67,12 +61,6 @@ public class Deck {
 
         return handCards;
     }
-
-
-    public List<Card> getHandCards(){
-        return handCards;
-    }
-
 
 
     /**
@@ -105,6 +93,7 @@ public class Deck {
     public void setCard(Map<Byte, Card> card) {
         this.card = card;
     }
+
 
 }
 

@@ -49,16 +49,16 @@ public class Game {
     private void setMaxRounds(int numberOfPlayers){
         if(numberOfPlayers < 7 && numberOfPlayers > 0){
             rightNumberOfPlayers = true;
-        if(numberOfPlayers == 3){
-            maxRounds = 20;}
-        else if(numberOfPlayers == 4){
+            if(numberOfPlayers == 3){
+                maxRounds = 20;}
+            else if(numberOfPlayers == 4){
                 maxRounds = 15; }
-        else if(numberOfPlayers == 5) {
-            maxRounds = 12;
-        }else{
-            maxRounds = 10;
-        }
-    }}
+            else if(numberOfPlayers == 5) {
+                maxRounds = 12;
+            }else{
+                maxRounds = 10;
+            }
+        }}
 
     public void setIds() {
         this.ids = messageHandler.getId();
@@ -119,8 +119,8 @@ public class Game {
     public void whoIsNext(){
         System.out.println("turns : "+turns+" ids: "+ids.size());
 
-            if(turns < ids.size()){
-                int nextPlayer = ids.get(turns);
+        if(turns < ids.size()){
+            int nextPlayer = ids.get(turns);
             System.out.println(ids.get(turns));
             messageHandler.sendEventToTheSender(Server.YOUR_TURN,n,n,n,nextPlayer);
             System.out.println("other players turn");
@@ -208,7 +208,7 @@ public class Game {
         byte[] host;// for testing
         playedRounds++;
         if(playedRounds <= roundsToGo && rightNumberOfPlayers){
-        int playerId;
+            int playerId;
             for (int i = 0; i < ids.size(); i++) {
                 playerId = ids.get(i);
                 byte[] cardsToSend = new byte[21];
@@ -223,7 +223,7 @@ public class Game {
                 gameActivity.takeCards(host);   //Host takes the cards from the card class
             }
             round++;
-    }else {
+        }else {
             System.out.println("new round");
             playedRounds = 0;
             roundsToGo = (ids.size()+1)*round; // its a new round
