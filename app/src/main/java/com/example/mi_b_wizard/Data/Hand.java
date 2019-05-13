@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class Hand {
-
+public class Hand{
+    public int count=0;
 
     public List<Card> hand;
 
@@ -19,7 +19,8 @@ public class Hand {
 
 
     //adds a card to the hand
-    public void addCardToHand(byte id, Card card){
+    public void addCardToHand(Card card){
+        System.out.println("card "+card.getRank()+" in "+card.getColour()+" added to your hand");
         hand.add(card);
     }
 
@@ -32,6 +33,15 @@ public class Hand {
         //Methode only print the keys
         /*System.out.println("Keys: "+keys);*/
     }
+    public byte getFirstCardInHand(){  // for testing...
+        return hand.get(0).getId();
+
+    }
+
+    public void removeFristcard(){
+        hand.remove(0);
+    }
+
     public void clearHand(){
         hand.clear();
     }
@@ -40,6 +50,7 @@ public class Hand {
     }
     public void removeCardFromHand(Card playedcard){
         hand.remove(playedcard);
+        System.out.println("card removed");
     }
     public void setHand(List<Card> hand) {
         this.hand = hand;

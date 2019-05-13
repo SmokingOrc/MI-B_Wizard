@@ -47,8 +47,12 @@ public class Card {
     public void setId(int rank, int colour){
         String idString = Integer.toString(rank)+(colour);
         int idInt = Integer.valueOf(idString);
-        this.id = (byte)idInt;
+        int intID = (rank+1)+((colour+1)*15);
+        byte bID = (byte)intID;
+        this.id = bID;
     }
+
+
 
     public byte getId(){
         return id;
@@ -59,6 +63,10 @@ public class Card {
             return true;
         }else
             return false;
+    }
+
+    public Card returnThisCard(){
+        return this;
     }
 
     public void showCard(){

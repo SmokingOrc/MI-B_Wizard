@@ -21,7 +21,7 @@ public class Server extends Thread{
     public final static byte WINNER = 7;
     public final static byte YOUR_TURN = 8;
     public final static byte SEND_POINTS = 9;
-
+    public final static byte TRUMP = 10;
 
 
     public Server(Socket socket, Handler handler) {
@@ -56,6 +56,11 @@ public class Server extends Thread{
                         case MOVE:
                             handler.obtainMessage(MessageHandler.MOVE, bytes, (int)getId(), buffer).sendToTarget();
                             System.out.println("move");
+                            break;
+
+                        case TRUMP:
+                            handler.obtainMessage(MessageHandler.TRUMP, bytes, (int)getId(), buffer).sendToTarget();
+                            System.out.println("trump");
                             break;
 
                         case START_GAME:

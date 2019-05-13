@@ -36,6 +36,7 @@ public class MessageHandler implements Handler.Callback {
     public static final int WINNER = 0x400 + 10;
     public static final int POINTS = 0x400 + 11;
     public static final int CHEAT = 0x400 + 12;
+    public static final int TRUMP = 0x400 + 13;
 
 
 
@@ -140,6 +141,14 @@ public class MessageHandler implements Handler.Callback {
                 }
                 break;
 
+            case TRUMP:
+                byte[] trump = (byte[]) msg.obj;
+                if (JoinGameActivity.owner) {
+                    sendEvent(Server.TRUMP,trump[1],n,n);
+                }else {
+                    gameActivity.setTrump(trump[1]);
+                }
+                break;
             case PREDICTED_TRICKS:
                 byte[] tricks = (byte[]) msg.obj;
                 if (JoinGameActivity.owner) {

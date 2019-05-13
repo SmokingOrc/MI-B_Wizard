@@ -22,4 +22,5 @@ public enum Rank {
     Rank(int value) {
         this.value = value;
     }
+
 }
