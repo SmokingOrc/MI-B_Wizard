@@ -17,9 +17,6 @@ import static org.junit.Assert.assertEquals;
 public class DeckTest {
 
     Deck deck;
-    Card card;
-    Colour colour;
-    Rank rank;
 
 
     @Before
