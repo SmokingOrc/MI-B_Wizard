@@ -103,18 +103,18 @@ public class CardTest {
         assertFalse(card3.isJester());
     }
     @Test
-    public void testGetId(){
-        assertEquals(1,card.getId());
+    public void testGetId(){ // byte id
+        assertEquals(31,card.getId());
     }
     @Test
     public void testSetIdValide1(){
-        card.setId(2,1);
-        assertEquals(21,card.getId());
+        card.setId(2,1); // byte id
+        assertEquals(33,card.getId());
     }
     @Test
     public void testSetIdValide2(){
         card.setId(11,1);
-        assertEquals(111,card.getId());
+        assertEquals(42,card.getId());
     }
     @Test
     public void testEqualToOtherCardTrue(){

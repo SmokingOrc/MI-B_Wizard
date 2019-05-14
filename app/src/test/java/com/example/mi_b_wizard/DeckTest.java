@@ -1,9 +1,6 @@
 package com.example.mi_b_wizard;
 
-import com.example.mi_b_wizard.Data.Card;
-import com.example.mi_b_wizard.Data.Colour;
 import com.example.mi_b_wizard.Data.Deck;
-import com.example.mi_b_wizard.Data.Rank;
 
 import org.junit.After;
 import org.junit.Before;
@@ -78,9 +75,12 @@ public class DeckTest {
 
     //Test if Current Round number is too large
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void currentRoundNumberTooLarge() {
-        deck.getCards(61);
+        try{
+        deck.getCards(41);
+    }catch (IllegalArgumentException ile){
+            ile.printStackTrace();}
     }
 
 }

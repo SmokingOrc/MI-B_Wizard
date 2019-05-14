@@ -67,17 +67,17 @@ public class HandTest {
     }
     @Test
     public void testClearHandTwoCards(){
-        hand.addCardToHand(card1.getId(),card1);
-        hand.addCardToHand(card2.getId(),card2);
+        hand.addCardToHand(card1);
+        hand.addCardToHand(card2);
         assertEquals(2, hand.getHandSize());
         hand.clearHand();
         assertEquals(0,hand.getHandSize());
     }
     @Test
     public void testAddCardToHand(){
-        hand.addCardToHand(card1.getId(),card1);
+        hand.addCardToHand(card1);
         assertEquals(1, hand.getHandSize());
-        hand.addCardToHand(card2.getId(), card2);
+        hand.addCardToHand(card2);
         assertEquals(2, hand.getHandSize());
     }
     @Test

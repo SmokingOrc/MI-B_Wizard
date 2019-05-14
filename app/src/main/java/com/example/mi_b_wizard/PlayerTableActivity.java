@@ -104,4 +104,3 @@ public class PlayerTableActivity extends AppCompatActivity implements View.OnCli
 }
 
 
-

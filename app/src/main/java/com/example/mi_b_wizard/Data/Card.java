@@ -21,7 +21,7 @@ public class Card {
         if(rank <0|| rank >14){
             throw new RuntimeException("Rank must be between 0 and 14");
         }else
-        this.rank = Rank.values()[rank];
+            this.rank = Rank.values()[rank];
     }
 
     public Colour getColour(){
@@ -32,9 +32,8 @@ public class Card {
         if(colour <0|| colour >3){
             throw new RuntimeException("Colour must be between 0 and 3");
         }else
-        this.colour = Colour.values()[colour];
+            this.colour = Colour.values()[colour];
     }
-
 
     public boolean isMagician(){
         return this.rank == Rank.values()[14];
@@ -48,8 +47,12 @@ public class Card {
     public void setId(int rank, int colour){
         String idString = Integer.toString(rank)+(colour);
         int idInt = Integer.valueOf(idString);
-        this.id = (byte)idInt;
+        int intID = (rank+1)+((colour+1)*15);
+        byte bID = (byte)intID;
+        this.id = bID;
     }
+
+
 
     public byte getId(){
         return id;
@@ -60,6 +63,10 @@ public class Card {
             return true;
         }else
             return false;
+    }
+
+    public Card returnThisCard(){
+        return this;
     }
 
     public void showCard(){
