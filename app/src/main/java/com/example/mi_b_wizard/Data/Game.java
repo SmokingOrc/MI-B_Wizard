@@ -217,6 +217,7 @@ public class Game {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
 
         sendcards();
@@ -228,6 +229,7 @@ public class Game {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         playedCards.clear();
         playersPlayedThisRound = 0;
@@ -255,6 +257,7 @@ public class Game {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
 
             int playerId;
