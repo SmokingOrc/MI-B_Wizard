@@ -96,7 +96,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public int getColor(byte card){
-       return cardAdapter.getThisCard(card).getColour().ordinal();
+        return cardAdapter.getThisCard(card).getColour().ordinal();
     }
 
     private void notMyTurnAnymore(){
@@ -117,8 +117,8 @@ public class GameActivity extends AppCompatActivity {
     }
     public void showPoints(byte[] playerPoints){
         String s ="";
-            getPlayerPoints(playerPoints, s);
-            System.out.println("player "+me.getPlayerName() +" got points");
+        getPlayerPoints(playerPoints, s);
+        System.out.println("player "+me.getPlayerName() +" got points");
 
     }
 
@@ -178,10 +178,10 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (myTurn && JoinGameActivity.owner) {
-                  messageHandler.sendEvent(Server.MOVE,myHand.getFirstCardInHand(),zero,zero);
-                  notMyTurnAnymore();
-                  game.hostMadeAMove(myHand.getFirstCardInHand());
-                  myHand.removeFristcard();
+                    messageHandler.sendEvent(Server.MOVE,myHand.getFirstCardInHand(),zero,zero);
+                    notMyTurnAnymore();
+                    game.hostMadeAMove(myHand.getFirstCardInHand());
+                    myHand.removeFristcard();
 
                 }else if(myTurn){
                     messageHandler.sendEvent(Server.MOVE,myHand.getFirstCardInHand(),zero,zero);
@@ -214,5 +214,4 @@ public class GameActivity extends AppCompatActivity {
     public void toast(String s){
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
-    }
-
+}

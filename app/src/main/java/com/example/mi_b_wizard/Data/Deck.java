@@ -41,14 +41,14 @@ public class Deck {
         Object key = rand[new Random().nextInt(rand.length)];
         Card c = card.get(key);
         if(c.isMagician()){
-        while (true) {
-            rand = card.keySet().toArray();
-            key = rand[new Random().nextInt(rand.length)];
-            c = card.get(key);
-            if (!c.isMagician()) {
-                break;
+            while (true) {
+                rand = card.keySet().toArray();
+                key = rand[new Random().nextInt(rand.length)];
+                c = card.get(key);
+                if (!c.isMagician()) {
+                    break;
+                }
             }
-        }
         }
         return  c.getId();
     }
@@ -77,33 +77,33 @@ public class Deck {
     }
 
     public String getMyCardsToString(byte[] myByteCards){
-            String myCards = "";
-            for (int i = 1; i <myByteCards.length; i++) {
-                if (myByteCards[i] == 0) {
-                    break;
-                } else {
-                    myCards +=  card.get(myByteCards[i]).getColour()+" "+card.get(myByteCards[i]).getRank()+", ";
-                }
+        String myCards = "";
+        for (int i = 1; i <myByteCards.length; i++) {
+            if (myByteCards[i] == 0) {
+                break;
+            } else {
+                myCards +=  card.get(myByteCards[i]).getColour()+" "+card.get(myByteCards[i]).getRank()+", ";
             }
-            return myCards;
         }
+        return myCards;
+    }
 
 
-        public Hand getMyHand(byte[] myByteCards){
-         Hand myNewHand = new Hand();
-            for (int i = 1; i <myByteCards.length; i++) {
-                if (myByteCards[i] == 0) {
-                    break;
-                } else {
-                    myNewHand.addCardToHand(card.get(myByteCards[i]).returnThisCard());
-                }
+    public Hand getMyHand(byte[] myByteCards){
+        Hand myNewHand = new Hand();
+        for (int i = 1; i <myByteCards.length; i++) {
+            if (myByteCards[i] == 0) {
+                break;
+            } else {
+                myNewHand.addCardToHand(card.get(myByteCards[i]).returnThisCard());
             }
-            return myNewHand;
         }
+        return myNewHand;
+    }
 
-        public Card getThisCard(byte bytecard) {
-                return Objects.requireNonNull(card.get(bytecard)).returnThisCard();
-            }
+    public Card getThisCard(byte bytecard) {
+        return Objects.requireNonNull(card.get(bytecard)).returnThisCard();
+    }
 
     /**
      * to get Size of Deck - for testing
@@ -138,5 +138,3 @@ public class Deck {
 
 
 }
-
-
