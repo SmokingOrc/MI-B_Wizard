@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class Game {
     private String ID;
@@ -57,16 +58,16 @@ public class Game {
     private void setMaxRounds(int numberOfPlayers){
         if(numberOfPlayers < 7 && numberOfPlayers > 0){
             rightNumberOfPlayers = true;
-            if(numberOfPlayers == 3){
-                maxRounds = 20;}
-            else if(numberOfPlayers == 4){
+        if(numberOfPlayers == 3){
+            maxRounds = 20;}
+        else if(numberOfPlayers == 4){
                 maxRounds = 15; }
-            else if(numberOfPlayers == 5) {
-                maxRounds = 12;
-            }else{
-                maxRounds = 10;
-            }
-        }}
+        else if(numberOfPlayers == 5) {
+            maxRounds = 12;
+        }else{
+            maxRounds = 10;
+        }
+    }}
 
     public void setIds() {
         this.ids = messageHandler.getId();
@@ -197,15 +198,15 @@ public class Game {
         trump = _deck.getCards(1).get(0).getColour();
     }
 
-    private void whoIsNext(){
-        if(turnsCount == ((ids.size()+1)*round) && round < maxRounds) {
-            nextRound();
-        }else if (playersPlayedThisRound == ids.size()+1) {
-            nextTurn();
-        }else {
-            findNext();
-        }
-    }
+   private void whoIsNext(){
+       if(turnsCount == ((ids.size()+1)*round) && round < maxRounds) {
+           nextRound();
+       }else if (playersPlayedThisRound == ids.size()+1) {
+           nextTurn();
+       }else {
+           findNext();
+       }
+   }
 
     private void nextRound() {
         turnsCount = 0;
@@ -269,7 +270,7 @@ public class Game {
                 System.out.println("cards sent to players from game class");
             }
             gameActivity.takeCards(cardAdapter.getByteCards(round));   //Host takes the cards from the card class
-        }else {
+            }else {
             turnsToGo = (ids.size() + 1) * round;
             sendcards();
         }
@@ -331,36 +332,36 @@ public class Game {
         while (it.hasNext()){
             Map.Entry<Byte,Integer> nextCard = (Map.Entry)it.next();
 
-            for (int i = 0; i < magicians.length; i++) { // is the card a magician
-                if(nextCard.getKey() == magicians[i]){
-                    id = playedCards.get(magicians[i]);
-                    winner = true; }
-                if(winner){
-                    break;
-                }
-            }
-            if(!winner){ // is the card a trump
-                if(nextCard.getKey() > ((color+1)*15+2) && nextCard.getKey() < (((color+1)*15+1)+15)){
-                    if( highTrump < nextCard.getKey()){
-                        highTrump = nextCard.getKey();
-                        id = nextCard.getValue();
-                        playedTrump = true;
-                    }
-                }else if(nextCard.getKey() > ((otherCardColor+1)*15+2) && nextCard.getKey() < ((((otherCardColor+1)*15+1)+15)) && !playedTrump){
-                    if(highCard < nextCard.getKey()){
-                        highCard = nextCard.getKey();
-                        id = nextCard.getValue();
-                    }
-                } }else{
+        for (int i = 0; i < magicians.length; i++) { // is the card a magician
+            if(nextCard.getKey() == magicians[i]){
+                id = playedCards.get(magicians[i]);
+                winner = true; }
+            if(winner){
                 break;
             }
-        } winner(id);
+        }
+        if(!winner){ // is the card a trump
+          if(nextCard.getKey() > ((color+1)*15+2) && nextCard.getKey() < (((color+1)*15+1)+15)){
+              if( highTrump < nextCard.getKey()){
+                  highTrump = nextCard.getKey();
+                  id = nextCard.getValue();
+                  playedTrump = true;
+              }
+          }else if(nextCard.getKey() > ((otherCardColor+1)*15+2) && nextCard.getKey() < ((((otherCardColor+1)*15+1)+15)) && !playedTrump){
+              if(highCard < nextCard.getKey()){
+                  highCard = nextCard.getKey();
+                  id = nextCard.getValue();
+              }
+          } }else{
+            break;
+        }
+     } winner(id);
         playedCards.clear();
     }
 
     private void winner(int id) {
         if(id != 0){
-            messageHandler.sendEventToTheSender(Server.WINNER,n,n,n,id);
+        messageHandler.sendEventToTheSender(Server.WINNER,n,n,n,id);
             setTurnCounter(id);
         }else{
             gameActivity.showWhoIsTheWinner();
@@ -370,9 +371,9 @@ public class Game {
 
     private void setTurnCounter(int id) {
         for (int i = 0; i < ids.size(); i++) {
-            if(ids.get(i) == id){
-                turns = i+1;
-            }
+         if(ids.get(i) == id){
+             turns = i+1;
+         }
         }
     }
 
@@ -397,6 +398,18 @@ public class Game {
         }
 
         return  points;
+    }
+
+    public String getCardsOfRandomPlayer() {
+        String returnValue = "";
+        Random r = new Random();
+
+        /*get the cards from a randomPlayer
+        send the player name and the cards to the player who wants to cheat
+        _players.get(r.nextInt(_players.size())).getHand();
+        */
+        returnValue = "Hans;Blue_5,Yellow_9,Blue_0,Red_3";
+        return returnValue;
     }
 
 }

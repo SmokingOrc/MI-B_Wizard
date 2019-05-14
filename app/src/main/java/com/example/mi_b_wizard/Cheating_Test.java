@@ -1,18 +1,33 @@
 package com.example.mi_b_wizard;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.mi_b_wizard.Data.Game;
+
+import java.security.Policy;
+
 public class Cheating_Test extends AppCompatActivity implements SensorEventListener {
     private SensorManager mySensorManager;
     private long lastUpdate;
+    private Game testGame;
+    private String enemyCards;
+    private AlertDialog.Builder myBuilder;
+    private AlertDialog myDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +35,8 @@ public class Cheating_Test extends AppCompatActivity implements SensorEventListe
         setContentView(R.layout.activity_cheating__test);
         mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         lastUpdate = System.currentTimeMillis();
+        testGame = new Game();
+        enemyCards = "";
     }
 
     @Override
@@ -45,9 +62,35 @@ public class Cheating_Test extends AppCompatActivity implements SensorEventListe
                 return;
             }
             lastUpdate = actualTime;
-            //flag must be set here so someone can report the cheat!
-            Toast.makeText(this, "Ohh you are cheater :O", Toast.LENGTH_SHORT)
-                    .show();
+            enemyCards = testGame.getCardsOfRandomPlayer();
+            String[] splitted = enemyCards.split(";");
+
+            /*Camera cam = Camera.open();
+            Camera.Parameters parameters = cam.getParameters();
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+            cam.setParameters(parameters);
+            cam.startPreview();*/
+
+
+
+            myBuilder = new AlertDialog.Builder(Cheating_Test.this);
+            myBuilder.setTitle("Cards from: " + splitted[0]);
+            myBuilder.setMessage(splitted[1]);
+            myBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    /*if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
+                        Camera cam = Camera.open();
+                        Camera.Parameters parameters = cam.getParameters();
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        cam.setParameters(parameters);
+                        cam.stopPreview();
+                        cam.release();
+                    }*/
+                }
+            });
+            myBuilder.setIcon(android.R.drawable.ic_dialog_info);
+            myDialog = myBuilder.create();
+            myDialog.show();
 
         }
     }
