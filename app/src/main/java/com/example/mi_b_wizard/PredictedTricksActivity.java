@@ -17,13 +17,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import java.util.ArrayList;
 
 import com.example.mi_b_wizard.Data.Player;
 
-import java.util.ArrayList;
 
 
-public class PredictedTricksActivity extends AppCompatActivity implements RecognitionListener {
+public class PredictedTricksActivity extends AppCompatActivity implements RecognitionListener, PredictedTricksDialogFragment.NoticeDialogListener {
 
     private TextView speechText;
     private Button speechButton;
@@ -48,8 +48,8 @@ public class PredictedTricksActivity extends AppCompatActivity implements Recogn
 
         //Checks the permission- User has to accept the permission by the first use
         String[] PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
-        if(!checkForPermission(this, PERMISSIONS)) {
-            ActivityCompat.requestPermissions(this, PERMISSIONS, REQUEST_PERMISSION_KEY);
+        if(!checkForPermission(PredictedTricksActivity.this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(PredictedTricksActivity.this, PERMISSIONS, REQUEST_PERMISSION_KEY);
         }
 
         progressBar.setVisibility(View.INVISIBLE);
@@ -103,8 +103,6 @@ public class PredictedTricksActivity extends AppCompatActivity implements Recogn
     @Override
     public void onPartialResults(Bundle partialR) {
         Log.d(LOG_TAG, "onPartialResults");
-        /*ArrayList<String> resultList = partialR.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        String result = resultList.get(0);*/
     }
     @Override
     public void onResults(Bundle results) {
@@ -112,21 +110,29 @@ public class PredictedTricksActivity extends AppCompatActivity implements Recogn
         ArrayList<String> resultList = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String result = resultList.get(0);
         speechText.setText(result);
-
+        //Updates the predicted tricks of the player
         player.updatePredictedTricks(result);
-        //sendPredictedTricks();
+        builtDialog();
     }
 
-    private void sendPredictedTricks() {
+    private void builtDialog() {
         // TODO: send predicted tricks of player to hosting device
         // if I am host of the game, then send to all
         // else send to host
+        String predictedTricksS = "" + player.getPredictedTrick();
+        //To create an instance of the PredictedTricksDialogFragment
+        DialogFragment dialogFragment = new PredictedTricksDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("PREDICTEDTRICKS", predictedTricksS);
+        dialogFragment.setArguments(bundle);
+        //shows the dialog Fragment
+        dialogFragment.show(getSupportFragmentManager(), "PredictedTricksDialogFragment");
+
     }
 
     @Override
     public void onError(int error) {
         Log.d(LOG_TAG, "onError " + error);
-
         String errorM = getErrorMessage(error);
         progressBar.setVisibility(View.INVISIBLE);
         speechText.setText(errorM);
@@ -196,5 +202,19 @@ public class PredictedTricksActivity extends AppCompatActivity implements Recogn
             }
             return true;
         }
-
+        //Through the .onAttach() callback methode in the Fragment,
+        //the dialog fragement gets a reference to this activity.
+        //to call these methodes defined in the .NoticeDialogListener interface
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        String predictedTricks = "" + player.getPredictedTrick();
+        byte[] predictedTricksBytes = predictedTricks.getBytes();
+        // TODO - send to all if host, else to host
+        Log.d(LOG_TAG,"positive click");
+        //senPredictedTricks();
     }
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        Log.d(LOG_TAG,"negative click");
+    }
+}
