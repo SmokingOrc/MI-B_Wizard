@@ -56,6 +56,7 @@ public class Player{
     }
 
     public void madeATrick(){ madeTrick ++;
+        System.out.println("You made a trick");
     }
     public int getPredictedTrick() {
         return predictedTrick;

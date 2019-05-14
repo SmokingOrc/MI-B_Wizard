@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 
 public class Deck {
 
     Map<Byte, Card> card = new HashMap<>();
-
 
 
     public Deck() {
@@ -25,19 +25,33 @@ public class Deck {
 
     public void resetDeck() {
 
-
-        for (int rank = 0; rank < 10; rank++)               //give rank IDs from 0 - 9
+        for (int rank = 0; rank < 15; rank++)               //give rank IDs from 0 - 9
             for (int color = 0; color < 4; color++) {       //give color IDs from 0 - 3
                 Card c = new Card(rank, color);             //create new Cards identified by rank and color
                 card.put(c.getId(), c);                     //add new created Cards into HashMap
             }
-
     }
 
     public void createDeck(){
 
     }
 
+    public Byte getTrump(){
+        Object[] rand = card.keySet().toArray();
+        Object key = rand[new Random().nextInt(rand.length)];
+        Card c = card.get(key);
+        if(c.isMagician()){
+        while (true) {
+            rand = card.keySet().toArray();
+            key = rand[new Random().nextInt(rand.length)];
+            c = card.get(key);
+            if (!c.isMagician()) {
+                break;
+            }
+        }
+        }
+        return  c.getId();
+    }
     /**
      * getCards method takes the input currentRound
      * to generate a List<String> with the number of
@@ -59,10 +73,37 @@ public class Deck {
             i++;
         }
 
-
         return handCards;
     }
 
+    public String getMyCardsToString(byte[] myByteCards){
+            String myCards = "";
+            for (int i = 1; i <myByteCards.length; i++) {
+                if (myByteCards[i] == 0) {
+                    break;
+                } else {
+                    myCards +=  card.get(myByteCards[i]).getColour()+" "+card.get(myByteCards[i]).getRank()+", ";
+                }
+            }
+            return myCards;
+        }
+
+
+        public Hand getMyHand(byte[] myByteCards){
+         Hand myNewHand = new Hand();
+            for (int i = 1; i <myByteCards.length; i++) {
+                if (myByteCards[i] == 0) {
+                    break;
+                } else {
+                    myNewHand.addCardToHand(card.get(myByteCards[i]).returnThisCard());
+                }
+            }
+            return myNewHand;
+        }
+
+        public Card getThisCard(byte bytecard) {
+                return Objects.requireNonNull(card.get(bytecard)).returnThisCard();
+            }
 
     /**
      * to get Size of Deck - for testing

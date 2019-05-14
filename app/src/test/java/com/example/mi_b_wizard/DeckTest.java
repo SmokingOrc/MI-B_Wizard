@@ -31,14 +31,14 @@ public class DeckTest {
     //Test if Deck is full
     @Test
     public void fullDeck(){
-        assertEquals(40,deck.availableCards());
+        assertEquals(60,deck.availableCards());
     }
 
 
     //Test if Deck is empty
     @Test
     public void deckIsEmpty(){
-        deck.getCards(40);
+        deck.getCards(60);
         assertEquals(0, deck.availableCards());
     }
 
@@ -75,9 +75,12 @@ public class DeckTest {
 
     //Test if Current Round number is too large
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void currentRoundNumberTooLarge() {
+        try{
         deck.getCards(41);
+    }catch (IllegalArgumentException ile){
+            ile.printStackTrace();}
     }
 
 }
