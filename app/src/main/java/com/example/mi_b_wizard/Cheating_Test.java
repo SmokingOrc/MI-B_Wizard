@@ -10,6 +10,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +25,7 @@ import java.security.Policy;
 
 public class Cheating_Test extends AppCompatActivity implements SensorEventListener {
     private SensorManager mySensorManager;
+    private Vibrator myVibrator;
     private long lastUpdate;
     private Game testGame;
     private String enemyCards;
@@ -37,6 +41,7 @@ public class Cheating_Test extends AppCompatActivity implements SensorEventListe
         lastUpdate = System.currentTimeMillis();
         testGame = new Game();
         enemyCards = "";
+        myVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
     }
 
     @Override
@@ -70,6 +75,14 @@ public class Cheating_Test extends AppCompatActivity implements SensorEventListe
             parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
             cam.setParameters(parameters);
             cam.startPreview();*/
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                myVibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                myVibrator.vibrate(500);
+            }
+
+
 
 
 
