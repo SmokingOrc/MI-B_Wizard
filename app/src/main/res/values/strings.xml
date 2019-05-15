@@ -4,4 +4,6 @@
     <string name="spielregeln">Spielregeln</string>
     <string name="lehrlingsname">Lehrlingsname</string>
     <string name="create_game">Create Game</string>
+    <string name="title_activity_player">PlayerActivity</string>
+    <string name="title_activity_player_table">PlayerTableActivity</string>
 </resources>
