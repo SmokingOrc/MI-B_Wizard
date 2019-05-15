@@ -111,7 +111,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public int getColor(byte card){
-       return cardAdapter.getThisCard(card).getColour().ordinal();
+        return cardAdapter.getThisCard(card).getColour().ordinal();
     }
 
     private void notMyTurnAnymore(){
@@ -132,8 +132,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
     public void showPoints(byte[] playerPoints){
         String s ="";
-            getPlayerPoints(playerPoints, s);
-            System.out.println("player "+me.getPlayerName() +" got points");
+        getPlayerPoints(playerPoints, s);
+        System.out.println("player "+me.getPlayerName() +" got points");
 
     }
 
@@ -162,9 +162,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         playACard.setVisibility(View.INVISIBLE);
         messageHandler = MessageHandler.messageHandler();
         layout = (ViewGroup) startAndSendCards.getParent();
-        mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        lastUpdate = System.currentTimeMillis();
-        myVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         if (JoinGameActivity.owner) {
             game = new Game();
             game.setMessageHandler(messageHandler);
@@ -173,6 +170,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         }else{
             server = messageHandler.getServer();
         }
+        mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        lastUpdate = System.currentTimeMillis();
+        myVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
 
         startAndSendCards.setOnClickListener(new View.OnClickListener() {
@@ -196,10 +196,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 if (myTurn && JoinGameActivity.owner) {
-                  messageHandler.sendEvent(Server.MOVE,myHand.getFirstCardInHand(),zero,zero);
-                  notMyTurnAnymore();
-                  game.hostMadeAMove(myHand.getFirstCardInHand());
-                  myHand.removeFristcard();
+                    messageHandler.sendEvent(Server.MOVE,myHand.getFirstCardInHand(),zero,zero);
+                    notMyTurnAnymore();
+                    game.hostMadeAMove(myHand.getFirstCardInHand());
+                    myHand.removeFristcard();
 
                 }else if(myTurn){
                     messageHandler.sendEvent(Server.MOVE,myHand.getFirstCardInHand(),zero,zero);
@@ -270,17 +270,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             if(!isPopUpActive) {
                 isPopUpActive = true;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    myVibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                    myVibrator.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
                 } else {
                     //deprecated in API 26
                     myVibrator.vibrate(1000);
                     //myVibrator.cancel();
                 }
-
-
-
-
-
                 myBuilder = new AlertDialog.Builder(GameActivity.this);
                 myBuilder.setTitle("Cards from: ");
                 myBuilder.setMessage("some cards");
@@ -294,7 +289,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                         cam.stopPreview();
                         cam.release();
                     }*/
-                        //myVibrator.cancel();
+                        myVibrator.cancel();
                         isPopUpActive = false;
                     }
                 });
@@ -302,11 +297,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 myDialog = myBuilder.create();
                 myDialog.show();
             }
-
-
-
         }
     }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -330,4 +323,3 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         mySensorManager.unregisterListener(this);
     }
 }
-
