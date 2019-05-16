@@ -84,7 +84,7 @@ public class Server extends Thread{
                             break;
 
                         case TRICKS:
-                            handler.obtainMessage(MessageHandler.SEND_CARDS, bytes, (int)getId(), buffer).sendToTarget();
+                            handler.obtainMessage(MessageHandler.PREDICTED_TRICKS, bytes, (int)getId(), buffer).sendToTarget();
                             System.out.println("give me cards");
                             break;
 

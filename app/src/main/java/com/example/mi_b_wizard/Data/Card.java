@@ -21,7 +21,7 @@ public class Card {
         if(rank <0|| rank >14){
             throw new RuntimeException("Rank must be between 0 and 14");
         }else
-            this.rank = Rank.values()[rank];
+        this.rank = Rank.values()[rank];
     }
 
     public Colour getColour(){
@@ -32,7 +32,7 @@ public class Card {
         if(colour <0|| colour >3){
             throw new RuntimeException("Colour must be between 0 and 3");
         }else
-            this.colour = Colour.values()[colour];
+        this.colour = Colour.values()[colour];
     }
 
     public boolean isMagician(){
