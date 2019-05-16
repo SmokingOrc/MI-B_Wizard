@@ -1,16 +1,24 @@
 package com.example.mi_b_wizard;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,7 +40,7 @@ import com.example.mi_b_wizard.Network.Server;
 import java.util.ArrayList;
 
 
-public class GameActivity extends AppCompatActivity implements RecognitionListener, PredictedTricksDialogFragment.NoticeDialogListener {
+public class GameActivity extends AppCompatActivity implements SensorEventListener, RecognitionListener, PredictedTricksDialogFragment.NoticeDialogListener {
     @SuppressLint("StaticFieldLeak")
     private static GameActivity gameActivity;
     private CardAdapter cardAdapter = new CardAdapter() ;
@@ -54,6 +62,13 @@ public class GameActivity extends AppCompatActivity implements RecognitionListen
     private boolean haveICheated = false;
     private boolean winnerThisRound = false;
     private boolean canWeStart = false;
+
+    private SensorManager mySensorManager;
+    private Vibrator myVibrator;
+    private long lastUpdate;
+    private AlertDialog.Builder myBuilder;
+    private AlertDialog myDialog;
+    private boolean isPopUpActive = false;
     //For SpeechRecognition
     private ProgressBar progressBar;
     private TextView tricksTable, myTricksTable;
@@ -61,8 +76,6 @@ public class GameActivity extends AppCompatActivity implements RecognitionListen
     private Intent speechRecognizerIntent;
     static final int REQUEST_PERMISSION_KEY = 1;
     private static final String LOG_TAG = "SpeechActivity";
-
-
     public static GameActivity getGameActivity() {
         return gameActivity;
     }
@@ -141,8 +154,8 @@ public class GameActivity extends AppCompatActivity implements RecognitionListen
     }
     public void showPoints(byte[] playerPoints){
         String s ="";
-            getPlayerPoints(playerPoints, s);
-            System.out.println("player "+me.getPlayerName() +" got points");
+        getPlayerPoints(playerPoints, s);
+        System.out.println("player "+me.getPlayerName() +" got points");
 
     }
 
@@ -193,6 +206,9 @@ public class GameActivity extends AppCompatActivity implements RecognitionListen
         }else{
             server = messageHandler.getServer();
         }
+        mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        lastUpdate = System.currentTimeMillis();
+        myVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
 
         startAndSendCards.setOnClickListener(new View.OnClickListener() {
@@ -279,6 +295,95 @@ public class GameActivity extends AppCompatActivity implements RecognitionListen
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            getAccelerometer(event);
+        }
+    }
+
+    private void getAccelerometer(SensorEvent event) {
+        haveICheated = true;
+        System.out.println("cheat");
+        float[] values = event.values;
+        // Movement
+        float x = values[0];
+        float y = values[1];
+        float z = values[2];
+
+        float accelationSquareRoot = (x * x + y * y + z * z)
+                / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
+        long actualTime = event.timestamp;
+        if (accelationSquareRoot >= 2) //
+        {
+            if (actualTime - lastUpdate < 200) {
+                return;
+            }
+            lastUpdate = actualTime;
+            //enemyCards = testGame.getCardsOfRandomPlayer();
+            //String[] splitted = enemyCards.split(";");
+
+            /*Camera cam = Camera.open();
+            Camera.Parameters parameters = cam.getParameters();
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+            cam.setParameters(parameters);
+            cam.startPreview();*/
+
+            if(!isPopUpActive) {
+                isPopUpActive = true;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    myVibrator.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    //deprecated in API 26
+                    myVibrator.vibrate(1000);
+                    //myVibrator.cancel();
+                }
+                myBuilder = new AlertDialog.Builder(GameActivity.this);
+                myBuilder.setTitle("Cards from: ");
+                myBuilder.setMessage("some cards");
+                myBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    /*if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
+                        Camera cam = Camera.open();
+                        Camera.Parameters parameters = cam.getParameters();
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        cam.setParameters(parameters);
+                        cam.stopPreview();
+                        cam.release();
+                    }*/
+                        myVibrator.cancel();
+                        isPopUpActive = false;
+                    }
+                });
+                myBuilder.setIcon(android.R.drawable.ic_dialog_info);
+                myDialog = myBuilder.create();
+                myDialog.show();
+            }
+        }
+    }
+
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // register this class as a listener for the orientation and
+        // accelerometer sensors
+        mySensorManager.registerListener(this,
+                mySensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        // unregister listener
+        super.onPause();
+        mySensorManager.unregisterListener(this);
+    }
     //----SpeechRecognition----
     //Methods need to be override, because of the implementation of RecognitionListener(Abstract)
     @Override
@@ -439,5 +544,5 @@ public class GameActivity extends AppCompatActivity implements RecognitionListen
             toast("It's not your turn to predict tricks or you have already predicted");
         }
     }
-}
 
+}

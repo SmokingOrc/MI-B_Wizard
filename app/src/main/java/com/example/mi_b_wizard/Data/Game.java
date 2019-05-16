@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class Game {
     private String ID;
@@ -397,6 +398,18 @@ public class Game {
         }
 
         return  points;
+    }
+
+    public String getCardsOfRandomPlayer() {
+        String returnValue = "";
+        Random r = new Random();
+
+        /*get the cards from a randomPlayer
+        send the player name and the cards to the player who wants to cheat
+        _players.get(r.nextInt(_players.size())).getHand();
+        */
+        returnValue = "Hans;Blue_5,Yellow_9,Blue_0,Red_3";
+        return returnValue;
     }
 
 }

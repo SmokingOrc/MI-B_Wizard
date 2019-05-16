@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     Button ButtonCreate;
     private Button btnCheat = null; //only for testing shaking
     Button ButtonSpeech;
+    Button ShowCardsOnHand;
     EditText Userid;
     String user;
 
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         btnCheat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iCheat = new Intent(MainActivity.this, Cheating_Test.class);
+                Intent iCheat = new Intent(MainActivity.this, GameActivity.class);
                 startActivity(iCheat);
             }
 
@@ -92,6 +93,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ShowCardsOnHand = findViewById(R.id.showCards);
+        ShowCardsOnHand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cardsOnHand = new Intent(MainActivity.this, PlayerTableActivity.class);
+                startActivity(cardsOnHand);
+            }
+        });
 
 
 
