@@ -111,7 +111,7 @@ public class PredictedTricksActivity extends AppCompatActivity implements Recogn
         String result = resultList.get(0);
         speechText.setText(result);
         //Updates the predicted tricks of the player
-        player.updatePredictedTricks(result);
+        //player.updatePredictedTricks(result);
         builtDialog();
     }
 

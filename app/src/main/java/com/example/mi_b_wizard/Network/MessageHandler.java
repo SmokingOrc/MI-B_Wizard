@@ -154,6 +154,9 @@ public class MessageHandler implements Handler.Callback {
                 if (JoinGameActivity.owner) {
                     sendEventToAllExceptTheSender(tricks[0], tricks[1], tricks[2], tricks[3], msg.arg2);
                     System.out.println("Player predicted tricks");
+                    gameActivity.showPredictedTricks(tricks[1],msg.arg2);
+                }else{
+                    gameActivity.showPredictedTricks(tricks[1],msg.arg2);
                 }
                 break;
 
