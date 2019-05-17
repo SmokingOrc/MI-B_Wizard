@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,8 +45,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     @SuppressLint("StaticFieldLeak")
     private static GameActivity gameActivity;
     private CardAdapter cardAdapter = new CardAdapter() ;
-    Button startAndSendCards, playACard, predictTricksBtn;
-    TextView myCard, trumpView;
+    Button startAndSendCards, playACard, predictTricksBtn, writeTricksBtn;
+    TextView myCard, trumpView, pointsTable;
     Hand myHand;
     Card playedcard;
     String card;
@@ -69,13 +70,17 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private AlertDialog.Builder myBuilder;
     private AlertDialog myDialog;
     private boolean isPopUpActive = false;
-    //For SpeechRecognition
+    //For SpeechRecognition and manuel tricks input
     private ProgressBar progressBar;
     private TextView tricksTable, myTricksTable;
     private SpeechRecognizer speechRecognizer = null;
     private Intent speechRecognizerIntent;
     static final int REQUEST_PERMISSION_KEY = 1;
     private static final String LOG_TAG = "SpeechActivity";
+
+    private NumberPicker numberPicker;
+    private AlertDialog alertDialog;
+
     public static GameActivity getGameActivity() {
         return gameActivity;
     }
@@ -156,12 +161,18 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         String s ="";
         getPlayerPoints(playerPoints, s);
         System.out.println("player "+me.getPlayerName() +" got points");
+       // toast("Player"+ me.getPlayerName());
 
     }
 
-    public void showMyPoints(){
+    /*public void showMyPoints(byte points, int id){
+        toast("Player with ID: "+id+"has"+points+"points");
+        pointsTable.append("\n"+"Points Player:"+id+": "+points);
 
     }
+    public void sendMyPoints(){
+        messageHandler.sendEvent(Server.SEND_POINTS,(byte)me.getPoints(),zero,zero);
+    }*/
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
 
@@ -197,6 +208,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         tricksTable = findViewById(R.id.tricksTable);
         myTricksTable = findViewById(R.id.myTricksTable);
         messageHandler = MessageHandler.messageHandler();
+        writeTricksBtn = findViewById(R.id.writeTricksbtn);
+       // pointsTable = findViewById(R.id.pointstable);
+
         layout = (ViewGroup) startAndSendCards.getParent();
         if (JoinGameActivity.owner) {
             game = new Game();
@@ -272,7 +286,38 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        numberPicker = new NumberPicker(GameActivity.this);
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(20);
 
+        writeTricksBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
+                alertDialogBuilder.setTitle("Please predict your tricks ")
+                        .setView(numberPicker)
+                        .setMessage("Choose a value")
+                        .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                byte predictedTricks = (byte)numberPicker.getValue();
+                                me.updatePredictedTricks(predictedTricks);
+                                sendPredictedTricks();
+                                Log.d(LOG_TAG,predictedTricks+"");
+                                myTricksTable.append("\n"+"My Tricks: "+me.getPredictedTrick());
+                                alertDialog.dismiss();
+
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                alertDialog.dismiss();
+                            }
+                        });
+                alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+        });
     }
 
     private void getPlayerPoints(byte[] playerPoints, String s) {
