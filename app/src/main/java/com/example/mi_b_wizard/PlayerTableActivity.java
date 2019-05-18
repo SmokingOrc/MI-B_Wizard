@@ -22,6 +22,7 @@ public class PlayerTableActivity extends AppCompatActivity implements View.OnCli
     Deck deck;
 
 
+
     LinearLayout cardHand;
 
 
@@ -35,6 +36,9 @@ public class PlayerTableActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void getThoseCards(int currentRound, List<Card> cards1) {
+
+
+
 
         for (int i = 0; i < currentRound; i++) {
             card = cards1.get(i);
@@ -68,10 +72,11 @@ public class PlayerTableActivity extends AppCompatActivity implements View.OnCli
         List<Card> cards2 = new ArrayList<Card>();
 
 
+
         //TODO insert getCards(currentRound) method instead of creating new Cards manually
 
 
-        cards2.add(new Card(0,0));
+        /*cards2.add(new Card(0,0));
         cards2.add(new Card(1,1));
         cards2.add(new Card(2,2));
         cards2.add(new Card(3,3));
@@ -85,13 +90,17 @@ public class PlayerTableActivity extends AppCompatActivity implements View.OnCli
         cards2.add(new Card(11,3));
         cards2.add(new Card(12,0));
         cards2.add(new Card(13,1));
-        cards2.add(new Card(14,2));
+        cards2.add(new Card(14,2));*/
 
 
 
-        //cards2.add(new Card(card.getRank(),card.getColour()));
+        //cards2 = (new Card(rank.getRank(),colour.getColour()));
 
-        //cards2.addAll(deck.getCards(currentRound));
+
+
+        cards2.addAll(deck.getCards(currentRound));
+
+
 
 
 
