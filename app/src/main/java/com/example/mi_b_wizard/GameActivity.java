@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -25,6 +26,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,10 +37,12 @@ import com.example.mi_b_wizard.Data.CardAdapter;
 import com.example.mi_b_wizard.Data.Game;
 import com.example.mi_b_wizard.Data.Hand;
 import com.example.mi_b_wizard.Data.Player;
+import com.example.mi_b_wizard.Data.ViewCards;
 import com.example.mi_b_wizard.Network.MessageHandler;
 import com.example.mi_b_wizard.Network.Server;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class GameActivity extends AppCompatActivity implements SensorEventListener, RecognitionListener, PredictedTricksDialogFragment.NoticeDialogListener {
@@ -62,6 +67,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private boolean haveICheated = false;
     private boolean winnerThisRound = false;
     private boolean canWeStart = false;
+
+    ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
+    Card nextCard;
+
 
     private SensorManager mySensorManager;
     private Vibrator myVibrator;
@@ -88,6 +97,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
         trumpView.setText("TRUMP IS : "+trump.getColour()+" "+trump.getRank());
+
+        LinearLayout trumpPos = findViewById(R.id.trumpPosition);
+        trumpPos.removeAllViews();
+        ViewCards cardview = new ViewCards(GameActivity.this,this,trump);
+        trumpPos.addView(cardview.view);
     }
 
     public void showMove(Byte cardPlayed){
@@ -120,17 +134,70 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         me.madeATrick();
         myTurn = true;
         setTricks();
+
+        showCardsInHand();
     }
 
     public void takeCards(byte[] cards){
         String s = cardAdapter.myStringCards(cards);
         setMyHand(cards);
+
+        showCardsInHand();
+
         myCard.setText(s);
         if(JoinGameActivity.owner){
             System.out.println("host got his cards");
         }else{
             System.out.println("player "+me.getPlayerName() +" got his cards");}
     }
+
+
+    //To show cards/images in Hand
+
+    private void showCardsInHand(){
+        LinearLayout cardHand = findViewById(R.id.cardHand1);
+        cardHand.removeAllViews();
+        handCards.clear();
+
+        List<Card> cards = myHand.getHand();
+        for (int i = 0; i<myHand.getHandSize(); i++){
+            addImageToScrollView(cardHand, cards.get(i));
+        }
+    }
+
+    //To add images in ScrollView and give them a border, when a card is chosen
+
+    private void addImageToScrollView(LinearLayout cardHandView, Card card) {
+        ViewCards cardview = new ViewCards(GameActivity.this,this,card);
+        handCards.add(cardview);
+        final int index = handCards.indexOf(cardview);
+        cardview.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewCards cardview = GameActivity.this.handCards.get(index);
+
+                if(!cardview.isActive){
+                    cardview.view.setBackgroundColor(Color.WHITE);
+                    cardview.view.setPadding(3,3,3,3);
+                    GameActivity.this.setNextCard(cardview.card);
+                    cardview.isActive = true;
+                }
+                else {
+                    cardview.view.setPadding(0,0,0,0);
+                    cardview.view.setBackgroundColor(Color.TRANSPARENT);
+                    GameActivity.this.setNextCard(null);
+                    cardview.isActive = false;
+                }
+            }
+        });
+        cardHandView.addView(cardview.view);
+
+    }
+
+    private void setNextCard(Card card){
+        nextCard = card;
+    }
+
 
     public int getColor(byte card){
        return cardAdapter.getThisCard(card).getColour().ordinal();
@@ -231,15 +298,20 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         playACard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (myTurn && JoinGameActivity.owner) {
-                  messageHandler.sendEvent(Server.MOVE,myHand.getFirstCardInHand(),zero,zero);
+                if(nextCard == null){
+                    toast("Please select card first");
+
+                } else if (myTurn && JoinGameActivity.owner) {
+                  messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
                   notMyTurnAnymore();
                   game.hostMadeAMove(myHand.getFirstCardInHand());
-                  myHand.removeFristcard();
+                  myHand.removeCardFromHand(nextCard);
+                  showCardsInHand();
 
-                }else if(myTurn){
-                    messageHandler.sendEvent(Server.MOVE,myHand.getFirstCardInHand(),zero,zero);
-                    myHand.removeFristcard();
+                } else if(myTurn){
+                    messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
+                    myHand.removeCardFromHand(nextCard);
+                    showCardsInHand();
                     notMyTurnAnymore();
                 } else {
                     toast("Its not your turn to play");
