@@ -241,7 +241,6 @@ public class ViewCards {
                     break;
             }
         }
-        //this.view.setBackground(draw);
         this.view.setImageDrawable(draw);
     }
 }

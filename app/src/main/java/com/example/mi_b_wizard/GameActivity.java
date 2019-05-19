@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -69,6 +70,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
     Card nextCard;
+
 
     private SensorManager mySensorManager;
     private Vibrator myVibrator;
@@ -153,12 +155,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         handCards.clear();
 
         List<Card> cards = myHand.getHand();
-        for (int i=0;i<myHand.getHandSize();i++){
+        for (int i = 0; i<myHand.getHandSize(); i++){
             addImageToScrollView(cardHand, cards.get(i));
         }
     }
 
-    //To add images in ScrollView and give them a border, when they a card is choosen
+    //To add images in ScrollView and give them a border, when a card is chosen
 
     private void addImageToScrollView(LinearLayout cardHandView, Card card) {
         ViewCards cardview = new ViewCards(GameActivity.this,this,card);
@@ -171,12 +173,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
                 if(!cardview.isActive){
                     cardview.view.setBackgroundColor(Color.WHITE);
-                    //this.view.setPadding(1,1,1,1);
+                    cardview.view.setPadding(3,3,3,3);
                     GameActivity.this.setNextCard(cardview.card);
                     cardview.isActive = true;
                 }
                 else {
-                    //this.view.setPadding(0,0,0,0);
+                    cardview.view.setPadding(0,0,0,0);
                     cardview.view.setBackgroundColor(Color.TRANSPARENT);
                     GameActivity.this.setNextCard(null);
                     cardview.isActive = false;
