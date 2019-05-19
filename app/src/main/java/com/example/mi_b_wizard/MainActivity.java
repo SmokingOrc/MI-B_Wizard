@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         btnCheat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iCheat = new Intent(MainActivity.this, Cheating_Test.class);
+                Intent iCheat = new Intent(MainActivity.this, GameActivity.class);
                 startActivity(iCheat);
             }
 
