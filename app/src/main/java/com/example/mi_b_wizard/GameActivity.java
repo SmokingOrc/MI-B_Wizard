@@ -97,6 +97,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
         trumpView.setText("TRUMP IS : "+trump.getColour()+" "+trump.getRank());
+
+        LinearLayout trumpPos = findViewById(R.id.trumpPosition);
+        trumpPos.removeAllViews();
+        ViewCards cardview = new ViewCards(GameActivity.this,this,trump);
+        trumpPos.addView(cardview.view);
     }
 
     public void showMove(Byte cardPlayed){
