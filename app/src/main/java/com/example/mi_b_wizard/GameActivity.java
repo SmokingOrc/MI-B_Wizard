@@ -130,14 +130,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void takeCards(byte[] cards){
         String s = cardAdapter.myStringCards(cards);
         cardArray= new String[cards.length];
-
+        /*
         for(int i=0; i<cards.length; i++){
             cardArray[i] = cardAdapter.myStringCards(cards);
 
         }
         ArrayAdapter<String> adapter= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, cardArray);
         myCards.setAdapter(adapter);
-
+        */
         setMyHand(cards);
         myCard.setText(s);
         if(JoinGameActivity.owner){
@@ -210,7 +210,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         progressBar.setVisibility(View.INVISIBLE);
         tricksTable = findViewById(R.id.tricksTable);
         myTricksTable = findViewById(R.id.myTricksTable);
-        myCards=findViewById(R.id.myCards);
+      //  myCards=findViewById(R.id.myCards);
         messageHandler = MessageHandler.messageHandler();
         layout = (ViewGroup) startAndSendCards.getParent();
         if (JoinGameActivity.owner) {
