@@ -53,8 +53,8 @@
         android:text="Play a card"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/StartWithCards"
         tools:visibility="invisible" />
+
     <Button
         android:id="@+id/predictTricksbtn"
         android:layout_width="wrap_content"
@@ -117,9 +117,9 @@
         android:id="@+id/playerHand1"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -135,4 +135,13 @@
 
         </LinearLayout>
     </HorizontalScrollView>
+
+    <ListView
+        android:id="@+id/myCards"
+        android:layout_width="395dp"
+        android:layout_height="168dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playacard" />
 </android.support.constraint.ConstraintLayout>

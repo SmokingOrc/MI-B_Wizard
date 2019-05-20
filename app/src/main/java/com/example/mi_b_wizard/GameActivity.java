@@ -24,7 +24,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +60,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     boolean tricks = false;
     Player me = MainActivity.getPlayer();
     MessageHandler messageHandler;
+    ListView myCards;
+    String[] cardArray;
     private boolean firstRound = true;
     private boolean myTurn = false;
     private boolean haveICheated = false;
@@ -124,6 +129,15 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void takeCards(byte[] cards){
         String s = cardAdapter.myStringCards(cards);
+        cardArray= new String[cards.length];
+
+        for(int i=0; i<cards.length; i++){
+            cardArray[i] = cardAdapter.myStringCards(cards);
+
+        }
+        ArrayAdapter<String> adapter= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, cardArray);
+        myCards.setAdapter(adapter);
+
         setMyHand(cards);
         myCard.setText(s);
         if(JoinGameActivity.owner){
@@ -196,6 +210,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         progressBar.setVisibility(View.INVISIBLE);
         tricksTable = findViewById(R.id.tricksTable);
         myTricksTable = findViewById(R.id.myTricksTable);
+        myCards=findViewById(R.id.myCards);
         messageHandler = MessageHandler.messageHandler();
         layout = (ViewGroup) startAndSendCards.getParent();
         if (JoinGameActivity.owner) {
@@ -272,6 +287,31 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        // wähle karte und spiele diese
+     /*   myCards.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int itemPosition = position;
+
+
+                if (myTurn && JoinGameActivity.owner) {
+                    messageHandler.sendEvent(Server.MOVE,myHand.getCardInHand(itemPosition),zero,zero);
+                    notMyTurnAnymore();
+                    game.hostMadeAMove(myHand.getFirstCardInHand());
+                    myHand.removeFristcard();
+
+                }else if(myTurn){
+                    messageHandler.sendEvent(Server.MOVE,myHand.getCardInHand(itemPosition),zero,zero);
+                    myHand.removeFristcard();
+                    notMyTurnAnymore();
+                } else {
+                    toast("Its not your turn to play");
+                }
+            }
+
+        });
+            */
 
     }
 
@@ -544,5 +584,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             toast("It's not your turn to predict tricks or you have already predicted");
         }
     }
+
+
 
 }

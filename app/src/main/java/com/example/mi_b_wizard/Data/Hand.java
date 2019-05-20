@@ -58,4 +58,8 @@ public class Hand{
     public List<Card> getHand(){
         return hand;
     }
+
+    public byte getCardInHand(int i){
+        return hand.get(i).getId();
+    }
 }
