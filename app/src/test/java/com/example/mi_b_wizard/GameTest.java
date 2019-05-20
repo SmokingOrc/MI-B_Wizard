@@ -19,7 +19,7 @@ public class GameTest {
         testGame = new Game();
     }
 
-
+/*
 
     @Test
     public void testAddPlayer() {

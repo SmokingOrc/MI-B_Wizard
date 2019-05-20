@@ -98,6 +98,7 @@ public class Deck {
                 myNewHand.addCardToHand(card.get(myByteCards[i]).returnThisCard());
             }
         }
+        System.out.println("my hand "+myNewHand.getHand());
         return myNewHand;
     }
 
