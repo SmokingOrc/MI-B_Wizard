@@ -280,7 +280,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             game.setIds();
             startAndSendCards.setText("GIVE OUT CARDS"); // for the first round.
         }else{
-            server = messageHandler.getServer();
+            //server = messageHandler.getServer();
         }
         mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         lastUpdate = System.currentTimeMillis();
@@ -444,12 +444,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             lastUpdate = actualTime;
             //enemyCards = testGame.getCardsOfRandomPlayer();
             //String[] splitted = enemyCards.split(";");
+            String[] cardsFromOtherPlayer = {"2_Blue", "7_Green", "8_Yellow"};
+            if(JoinGameActivity.owner) {
+                //messageHandler.sendEvent();
+            } else {
 
-            /*Camera cam = Camera.open();
-            Camera.Parameters parameters = cam.getParameters();
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-            cam.setParameters(parameters);
-            cam.startPreview();*/
+            }
+
 
             if(!isPopUpActive) {
                 isPopUpActive = true;
@@ -457,24 +458,16 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     myVibrator.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
                 } else {
                     //deprecated in API 26
-                    myVibrator.vibrate(1000);
-                    //myVibrator.cancel();
+                    myVibrator.vibrate(5000);
                 }
                 myBuilder = new AlertDialog.Builder(GameActivity.this);
                 myBuilder.setTitle("Cards from: ");
-                myBuilder.setMessage("some cards");
-                myBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                myBuilder.setItems(cardsFromOtherPlayer, null);
+
+                myBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                    /*if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
-                        Camera cam = Camera.open();
-                        Camera.Parameters parameters = cam.getParameters();
-                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                        cam.setParameters(parameters);
-                        cam.stopPreview();
-                        cam.release();
-                    }*/
-                        myVibrator.cancel();
-                        isPopUpActive = false;
+                    myVibrator.cancel();
+                    isPopUpActive = false;
                     }
                 });
                 myBuilder.setIcon(android.R.drawable.ic_dialog_info);
