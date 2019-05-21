@@ -33,13 +33,8 @@ public class Hand{
         //Methode only print the keys
         /*System.out.println("Keys: "+keys);*/
     }
-    public byte getFirstCardInHand(){  // for testing...
-        return hand.get(0).getId();
-
-    }
 
     public void removeFirstCard(){
-        System.out.println("removed : "+hand.get(0));
         hand.remove(0);
     }
 
