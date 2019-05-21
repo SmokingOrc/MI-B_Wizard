@@ -142,7 +142,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
         showCardsInHand();
 
-        myCard.setText(s);
         if(JoinGameActivity.owner){
             System.out.println("host got his cards");
         }else{
@@ -303,20 +302,17 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     toast("Please select card first");
 
                 } else if (myTurn && JoinGameActivity.owner) {
-                  messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
-                  notMyTurnAnymore();
-                  game.hostMadeAMove(myHand.getFirstCardInHand());
-                  myHand.removeCardFromHand(nextCard);
-                  showCardsInHand();
+                    messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
+                    notMyTurnAnymore();
+                    game.hostMadeAMove(myHand.getFirstCardInHand());
+                    myHand.removeCardFromHand(nextCard);
+                    showCardsInHand();
 
                 } else if(myTurn){
                     messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
                     myHand.removeCardFromHand(nextCard);
                     showCardsInHand();
                     notMyTurnAnymore();
-                    messageHandler.sendEvent(Server.MOVE,myHand.getFirstCardInHand(),zero,zero);
-                    myHand.removeFirstCard();
-                    myCard.setText(myHand.getHand().toString());
                 } else {
                     toast("Its not your turn to play");
                 }

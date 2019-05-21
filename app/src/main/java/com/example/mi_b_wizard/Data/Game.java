@@ -7,10 +7,7 @@ import com.example.mi_b_wizard.Network.Server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class Game {
     private int turnsCount = 0;
@@ -95,9 +92,7 @@ public class Game {
         round++;
         playersPlayedThisRound = 0;
         whoWonThisRound();
-
         waitALittleBit();
-
         sendCards();
     }
 
