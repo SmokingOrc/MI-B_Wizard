@@ -67,7 +67,7 @@ public class Cheating_Test extends AppCompatActivity implements SensorEventListe
                 return;
             }
             lastUpdate = actualTime;
-            enemyCards = testGame.getCardsOfRandomPlayer();
+          //  enemyCards = testGame.getCardsOfRandomPlayer();
             String[] splitted = enemyCards.split(";");
 
             /*Camera cam = Camera.open();

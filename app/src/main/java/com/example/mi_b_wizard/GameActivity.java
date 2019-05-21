@@ -111,7 +111,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void showMove(Byte cardPlayed){
         playedcard = cardAdapter.getThisCard(cardPlayed);
-        toast("Card : "+ playedcard.getRank()+" in "+playedcard.getColour()+" was played ");
+        toast("Card : "+ playedcard.getColour()+" "+playedcard.getRank()+" was played ");
     }
     public void isFirstRound(){
         if(firstRound && JoinGameActivity.owner){
@@ -121,7 +121,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             firstRound = false;
         }
     }
-
     public void start(){
         canWeStart = true;
         layout.removeView(startAndSendCards);
@@ -144,12 +143,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void takeCards(byte[] cards){
-        String s = cardAdapter.myStringCards(cards);
         setMyHand(cards);
 
         showCardsInHand();
 
-        myCard.setText(s);
         if(JoinGameActivity.owner){
             System.out.println("host got his cards");
         }else{
@@ -219,7 +216,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             game.hostMadeAMove(cardPlayed);
             messageHandler.sendEvent(Server.MOVE,cardPlayed,zero,zero);
             myTurn = false;
-            me.updateMadeTricks();
         }else if (myTurn){
             myHand.removeCardFromHand(cardAdapter.getThisCard(cardPlayed));
             messageHandler.sendEvent(Server.MOVE,cardPlayed,zero,zero);
@@ -230,7 +226,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         String s ="";
         getPlayerPoints(playerPoints, s);
         System.out.println("player "+me.getPlayerName() +" got points");
-       // toast("Player"+ me.getPlayerName());
 
     }
 
@@ -298,7 +293,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 if (JoinGameActivity.owner) {
                     PlayersStart();
                     messageHandler.sendEvent(Server.START_GAME,zero,zero,zero);
-                    game.sendcards();
+                    try{
+                    game.sendCards();}
+                    catch (IllegalStateException e){
+                        toast("Wrong number of players");
+                    }
                     layout.removeView(startAndSendCards);
                     playACard.setVisibility(View.VISIBLE);
                     isFirstRound();
@@ -312,15 +311,15 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         playACard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nextCard == null ){
+                if(nextCard == null){
                     toast("Please select card first");
 
                 } else if (myTurn && JoinGameActivity.owner) {
-                  messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
-                  notMyTurnAnymore();
-                  game.hostMadeAMove(myHand.getFirstCardInHand());
-                  myHand.removeCardFromHand(nextCard);
-                  showCardsInHand();
+                    messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
+                    notMyTurnAnymore();
+                    game.hostMadeAMove(myHand.getFirstCardInHand());
+                    myHand.removeCardFromHand(nextCard);
+                    showCardsInHand();
 
                 } else if(myTurn){
                     messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
@@ -427,7 +426,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     private void getAccelerometer(SensorEvent event) {
         haveICheated = true;
-        //System.out.println("cheat");
+       // System.out.println("cheat");
         float[] values = event.values;
         // Movement
         float x = values[0];

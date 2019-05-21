@@ -112,10 +112,10 @@ public class Player{
 
 
     //updates the points from a player
-    public void updatePoints(int predictedTrick, int madeTrick){
-        points = points + game.calculatePointsForOnePlayer(predictedTrick, madeTrick);
+ /*   public void updatePoints(int predictedTrick, int madeTrick){
+      points = points + game.calculatePointsForOnePlayer(predictedTrick, madeTrick);
 
-    }
+    } */
 
     public void calculateMyPoints(){
 
@@ -127,18 +127,22 @@ public class Player{
         resetForNewRound();
     }
 
+    public Hand getMyCards(){
+        return hand;
+    }
+
     //Reset for new Round + Get the actual cards from Game and add it to the hand of the player
     public void giveCards(List<Card> playReadyCardsFromGame){
         resetForNewRound();
         hand.setHand(playReadyCardsFromGame);
     }
-
+/*
     //Updates made Tricks per round
     public void updateMadeTricks(){
         if(game.calculateWhoWonTheRound().equals(playerName)){
             madeTrick++;
         }
-    }
+    }*/
 
     //<---------------Action Player-------------------->
 
