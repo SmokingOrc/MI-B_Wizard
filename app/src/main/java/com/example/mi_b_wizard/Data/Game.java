@@ -27,10 +27,11 @@ public class Game {
     private int turns = 0;
     private byte n = 0;
     private int host = 0;
-    private int minPlayers = 3;  // when testing with 2 devices change the value of minPlayers.
+    private int minPlayers = 1;  // when testing with 2 devices change the value of minPlayers.
     private int maxPlayers = 6;
     private boolean rightNumberOfPlayers = false;
     private Map<Byte, Integer> playedCards = new HashMap<>();
+    public static Map<Integer, String> outHandedCards = new HashMap<>();
 
     // Setters&Getters for tests
     public void setIdsTest(ArrayList<Integer> id) {
@@ -80,6 +81,7 @@ public class Game {
     private void whoIsNext() {
         if (turnsCount == ((ids.size() + 1) * round) && round < maxRounds) {
             nextRound();
+            outHandedCards.clear();
         } else if (playersPlayedThisRound == ids.size() + 1) {
             nextTurn();
         } else {
@@ -137,6 +139,7 @@ public class Game {
                 playerId = ids.get(i);
                 byte[] cardsToSend;
                 cardsToSend = cardAdapter.getByteCards(round);
+                outHandedCards.put(playerId, cardsToSend.toString());
                 messageHandler.sendCardsToPlayer(cardsToSend, playerId);
                 System.out.println("cards sent to players from game class");
             }
