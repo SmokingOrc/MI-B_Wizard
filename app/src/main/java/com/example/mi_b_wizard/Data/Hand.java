@@ -38,7 +38,8 @@ public class Hand{
 
     }
 
-    public void removeFristcard(){
+    public void removeFirstCard(){
+        System.out.println("removed : "+hand.get(0));
         hand.remove(0);
     }
 
@@ -50,7 +51,6 @@ public class Hand{
     }
     public void removeCardFromHand(Card playedcard){
         hand.remove(playedcard);
-        System.out.println("card removed");
     }
     public void setHand(List<Card> hand) {
         this.hand = hand;

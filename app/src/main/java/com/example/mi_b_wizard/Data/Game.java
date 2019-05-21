@@ -7,71 +7,270 @@ import com.example.mi_b_wizard.Network.Server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class Game {
-    private String ID;
     private int turnsCount = 0;
-    byte[] magicians = {30,45,60,75};
+    private byte[] magicians = {30, 45, 60, 75};
     private int playersPlayedThisRound = 0;
     private MessageHandler messageHandler;
-    private CardAdapter cardAdapter = new CardAdapter() ;
+    private CardAdapter cardAdapter = new CardAdapter();
     private Deck deck = new Deck();
     private GameActivity gameActivity = GameActivity.getGameActivity();
     private ArrayList<Integer> ids = new ArrayList<Integer>();
-    private List<Player> _players;
     private byte firstCardThisTurn = 0;
     private byte trumpThisRound;
     private int round = 1;
-    private int turnsToGo = ids.size()+1;
+    private int turnsToGo = ids.size() + 1;
     private int playedRounds = 0;
     private int maxRounds;
     private int turns = 0;
     private byte n = 0;
     private int host = 0;
-    private boolean rightNumberOfPlayers = true; // testing with 2 devices
-    public static int timeToPlay = 0;
-    Map<Byte,Integer> playedCards = new HashMap<>();
+    private int minPlayers = 3;  // when testing with 2 devices change the value of minPlayers.
+    private int maxPlayers = 6;
+    private boolean rightNumberOfPlayers = false;
+    private Map<Byte, Integer> playedCards = new HashMap<>();
 
+    // Setters&Getters for tests
+    public void setIdsTest(ArrayList<Integer> id) {
+        ids = id;
+    }
+
+    public void setTrumpThisRound(byte trumpThisRound) {
+        this.trumpThisRound = trumpThisRound;
+    }
+
+    public Map<Byte, Integer> getPlayedCards() {
+        return playedCards;
+    }
+
+    public void setGameActivity(GameActivity gameActivity) {
+        this.gameActivity = gameActivity;
+    }
+
+    public void setIds() {
+        this.ids = messageHandler.getId();
+    }
+
+
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
+    }
+    public boolean isRightNumberOfPlayers(){
+        return rightNumberOfPlayers;
+    }
+
+
+    private void setMaximalRounds(int numberOfPlayers) {
+        if (numberOfPlayers <= maxPlayers && numberOfPlayers >= minPlayers) {
+            rightNumberOfPlayers = true;
+            if (numberOfPlayers == 3) {
+                maxRounds = 20;
+            } else if (numberOfPlayers == 4) {
+                maxRounds = 15;
+            } else if (numberOfPlayers == 5) {
+                maxRounds = 12;
+            } else {
+                maxRounds = 10;
+            }
+        }
+    }
+
+    private void whoIsNext() {
+        if (turnsCount == ((ids.size() + 1) * round) && round < maxRounds) {
+            nextRound();
+        } else if (playersPlayedThisRound == ids.size() + 1) {
+            nextTurn();
+        } else {
+            findNext();
+        }
+    }
+
+    private void nextRound() {
+        turnsCount = 0;
+        round++;
+        playersPlayedThisRound = 0;
+        whoWonThisRound();
+        waitALittleBit();
+        sendCards();
+    }
+
+    private void waitALittleBit() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void nextTurn() {
+        whoWonThisRound();
+        waitALittleBit();
+        playedCards.clear();
+        playersPlayedThisRound = 0;
+        firstCardThisTurn = 0;
+    }
+
+    private void findNext() {
+        if (turns < ids.size()) {
+            messageHandler.sendEventToTheSender(Server.YOUR_TURN, n, n, n, ids.get(turns));
+            System.out.println("other players turn");
+            turns++;
+        } else {
+            gameActivity.MyTurn();
+            turns = 0;
+        }
+    }
+
+    public void sendCards() {
+        setMaxRounds();
+        if (rightNumberOfPlayers) {
+            playedRounds++;
+            findAndSendTrump();
+
+            waitALittleBit();
+
+            int playerId;
+            for (int i = 0; i < ids.size(); i++) {
+                playerId = ids.get(i);
+                byte[] cardsToSend;
+                cardsToSend = cardAdapter.getByteCards(round);
+                messageHandler.sendCardsToPlayer(cardsToSend, playerId);
+                System.out.println("cards sent to players from game class");
+            }
+            gameActivity.takeCards(cardAdapter.getByteCards(round));
+
+        } else if (round != 1) {
+            turnsToGo = (ids.size() + 1) * round;
+            sendCards();
+        } else {
+            System.out.println("Wrong number of players");
+            throw new IllegalStateException();
+        }
+    }
+
+    private void setMaxRounds() {
+        if (maxRounds == 0) {
+            setMaximalRounds(ids.size() + 1);
+        }
+    }
+
+    private void findAndSendTrump() {
+        trumpThisRound = cardAdapter.getTrump();
+        gameActivity.setTrump(trumpThisRound);
+        messageHandler.sendEvent(Server.TRUMP, trumpThisRound, n, n);
+    }
+
+    public void moveMade(byte cardPlayed, int playerID) {
+        System.out.println("card " + cardPlayed + " played from player with id : " + playerID);
+        playedCards.put(cardPlayed, playerID);
+        setFirstCard(cardPlayed);
+        findNextPlayer();
+    }
+
+    private void setFirstCard(byte cardPlayed) {
+        if (playersPlayedThisRound == 0) {
+            if(cardPlayed != (byte)31 || cardPlayed != (byte)46 || cardPlayed != (byte)61 || cardPlayed != (byte)16 ){
+            firstCardThisTurn = cardPlayed;
+            System.out.println("new first/high card");}
+        }
+    }
+
+    public void hostMadeAMove(byte cardPlayed) {
+        System.out.println("I played a card : " + cardPlayed);
+        playedCards.put(cardPlayed, host);
+        setFirstCard(cardPlayed);
+        findNextPlayer();
+    }
+
+    private void findNextPlayer() {
+        playersPlayedThisRound++;
+        turnsCount++;
+        whoIsNext();
+    }
+
+    private void whoWonThisRound() {
+        int id = 0;
+        byte highTrump = 0;
+        byte highCard = 0;
+        int color = gameActivity.getColor(trumpThisRound);
+        int otherCardColor = gameActivity.getColor(firstCardThisTurn);
+        boolean winner = false;
+        boolean playedTrump = false;
+        boolean highCardPlayed = false;
+        int playedFirstCard =0;
+
+        Iterator it = playedCards.entrySet().iterator();
+
+        while (it.hasNext()) {
+            Map.Entry<Byte, Integer> nextCard = (Map.Entry) it.next();
+            System.out.println(playedCards);
+
+            for (int i = 0; i < magicians.length; i++) { // is the card a magician
+                if (nextCard.getKey() == magicians[i]) {
+                    id = playedCards.get(magicians[i]);
+                    System.out.println(id);
+                    winner = true;
+                    System.out.println("magician");
+                }
+            }
+            if (!winner) {
+                if (nextCard.getKey() > ((color + 1) * 15 + 2) && nextCard.getKey() < (((color + 1) * 15 + 1) + 15)) {
+                    if (highTrump < nextCard.getKey()) {
+                        highTrump = nextCard.getKey();
+                        id = nextCard.getValue();
+                        playedTrump = true;
+                        System.out.println("trump");
+                    }
+                } else if (nextCard.getKey() > ((otherCardColor + 1) * 15 + 2) && nextCard.getKey() < ((((otherCardColor + 1) * 15 + 1) + 15)) && !playedTrump) {
+                    if (highCard < nextCard.getKey()) {
+                        highCard = nextCard.getKey();
+                        id = nextCard.getValue();
+                        System.out.println("high");
+                        highCardPlayed = true;
+                    }
+                }
+            }
+        }
+        if (!playedTrump && !highCardPlayed && !winner){
+            id = playedFirstCard;
+            System.out.println("jester");
+        }
+        winner(id);
+        playedCards.clear();
+    }
+
+    private void winner(int id) {
+        if (id != 0) {
+            messageHandler.sendEventToTheSender(Server.WINNER, n, n, n, id);
+            setTurnCounter(id);
+        } else {
+            gameActivity.showWhoIsTheWinner();
+            turns = 0;
+        }
+    }
+
+    private void setTurnCounter(int id) {
+        for (int i = 0; i < ids.size(); i++) {
+            if (ids.get(i) == id) {
+                turns = i + 1;
+            }
+        }
+    }
+
+    /********************************* OLD ******************************************************
+     *+++++++++++++++++++++++++++++++ NOT IN USE ************************************************/
+/*
     private Deck _deck;
-
+    private String ID;
+    private List<Player> _players;
     private Colour trump;
 
     private int currentRound;
 
     private Map<Player, Card> _cardsPlayed;
-
-    public Game() {
-
-        _cardsPlayed = new LinkedHashMap<Player, Card>();
-        _deck = new Deck();
-        _players = new ArrayList<Player>();
-
-
-    }
-
-    //getter and setter for testing
-
-    private void setMaxRounds(int numberOfPlayers){
-        if(numberOfPlayers < 7 && numberOfPlayers > 0){
-            rightNumberOfPlayers = true;
-        if(numberOfPlayers == 3){
-            maxRounds = 20;}
-        else if(numberOfPlayers == 4){
-                maxRounds = 15; }
-        else if(numberOfPlayers == 5) {
-            maxRounds = 12;
-        }else{
-            maxRounds = 10;
-        }
-    }}
-
-    public void setIds() {
-        this.ids = messageHandler.getId();
-    }
 
     public Colour getTrump() {
         return trump;
@@ -88,11 +287,6 @@ public class Game {
     public void setID(String ID) {
         this.ID = ID;
     }
-
-    public void setMessageHandler(MessageHandler messageHandler) {
-        this.messageHandler = messageHandler;
-    }
-
     public List<Player> get_players() {
         return _players;
     }
@@ -110,6 +304,15 @@ public class Game {
     }
 
     //end of Getter/Setter
+
+
+    public Game() {
+
+        _cardsPlayed = new LinkedHashMap<Player, Card>();
+        _deck = new Deck();
+        _players = new ArrayList<Player>();
+
+    }
 
 
     public void addPlayerToPlayers(Player toAdd) {
@@ -187,9 +390,7 @@ public class Game {
     }
     //Network method - send message here
     public void handOutCardsAndSetTrump() {
-        /*
-        needs to be updated when "Deck" and "Player" are implemented
-         */
+
         for(Player player : _players) {
             player.getHand().setHand(_deck.getCards(currentRound));
             //Network - send
@@ -197,184 +398,12 @@ public class Game {
         //network - send
         trump = _deck.getCards(1).get(0).getColour();
     }
+    public String getCardsOfRandomPlayer() {
+        String returnValue = "";
+        Random r = new Random();
 
-   private void whoIsNext(){
-       if(turnsCount == ((ids.size()+1)*round) && round < maxRounds) {
-           nextRound();
-       }else if (playersPlayedThisRound == ids.size()+1) {
-           nextTurn();
-       }else {
-           findNext();
-       }
-   }
-
-    private void nextRound() {
-        turnsCount = 0;
-        round++;
-        playersPlayedThisRound = 0;
-        whoWonThisRound();
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        }
-
-        sendcards();
-    }
-
-    private void nextTurn() {
-        whoWonThisRound();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        }
-        playedCards.clear();
-        playersPlayedThisRound = 0;
-        firstCardThisTurn = 0;
-    }
-
-    private void findNext() {
-        if(turns < ids.size()){
-            messageHandler.sendEventToTheSender(Server.YOUR_TURN,n,n,n,ids.get(turns));
-            System.out.println("other players turn");
-            turns++;
-        }else {
-            gameActivity.MyTurn();
-            turns = 0;
-        }
-    }
-
-    public void sendcards() {
-        setMaxRounds();
-        if(rightNumberOfPlayers){
-            playedRounds++;
-            findAndSendTrump();
-
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            }
-
-            int playerId;
-            for (int i = 0; i < ids.size(); i++) {
-                playerId = ids.get(i);
-                byte[] cardsToSend;
-                cardsToSend = cardAdapter.getByteCards(round);
-                messageHandler.sendCardsToPlayer(cardsToSend, playerId);
-                System.out.println("cards sent to players from game class");
-            }
-            gameActivity.takeCards(cardAdapter.getByteCards(round));   //Host takes the cards from the card class
-            }else {
-            turnsToGo = (ids.size() + 1) * round;
-            sendcards();
-        }
-    }
-
-    private void setMaxRounds() {
-        if(maxRounds == 0){
-            setMaxRounds(ids.size()+1);
-        }
-    }
-
-    private void findAndSendTrump() {
-        trumpThisRound = cardAdapter.getTrump();
-        gameActivity.setTrump(trumpThisRound);
-        messageHandler.sendEvent(Server.TRUMP, trumpThisRound, n, n);
-    }
-
-    public void moveMade(byte cardPlayed, int playerID){
-        System.out.println("card "+cardPlayed+" played from player with id : "+playerID);
-        playedCards.put(cardPlayed,playerID);
-        setFirstCard(cardPlayed);
-        findNextPlayer();
-    }
-
-    private void setFirstCard(byte cardPlayed) {
-        if (playersPlayedThisRound == 0) {
-            firstCardThisTurn = cardPlayed;
-            System.out.println("new first card");
-        }
-    }
-
-    public void hostMadeAMove(byte cardPlayed){
-        System.out.println("I played a card : "+cardPlayed);
-        playedCards.put(cardPlayed,host);
-        setFirstCard(cardPlayed);
-        findNextPlayer();
-
-
-    }
-
-    private void findNextPlayer() {
-        playersPlayedThisRound++;
-        turnsCount++;
-        whoIsNext();
-    }
-
-    public void whoWonThisRound(){
-        int id = 0;
-        byte highTrump = 0;
-        byte highCard = 0;
-        int color = gameActivity.getColor(trumpThisRound);
-        int otherCardColor = gameActivity.getColor(firstCardThisTurn);
-        boolean winner = false;
-        boolean playedTrump = false;
-
-        Iterator it = playedCards.entrySet().iterator();
-        System.out.println("trump color "+ color+" first : "+otherCardColor);
-
-        while (it.hasNext()){
-            Map.Entry<Byte,Integer> nextCard = (Map.Entry)it.next();
-
-        for (int i = 0; i < magicians.length; i++) { // is the card a magician
-            if(nextCard.getKey() == magicians[i]){
-                id = playedCards.get(magicians[i]);
-                winner = true; }
-            if(winner){
-                break;
-            }
-        }
-        if(!winner){ // is the card a trump
-          if(nextCard.getKey() > ((color+1)*15+2) && nextCard.getKey() < (((color+1)*15+1)+15)){
-              if( highTrump < nextCard.getKey()){
-                  highTrump = nextCard.getKey();
-                  id = nextCard.getValue();
-                  playedTrump = true;
-              }
-          }else if(nextCard.getKey() > ((otherCardColor+1)*15+2) && nextCard.getKey() < ((((otherCardColor+1)*15+1)+15)) && !playedTrump){
-              if(highCard < nextCard.getKey()){
-                  highCard = nextCard.getKey();
-                  id = nextCard.getValue();
-              }
-          } }else{
-            break;
-        }
-     } winner(id);
-        playedCards.clear();
-    }
-
-    private void winner(int id) {
-        if(id != 0){
-        messageHandler.sendEventToTheSender(Server.WINNER,n,n,n,id);
-            setTurnCounter(id);
-        }else{
-            gameActivity.showWhoIsTheWinner();
-            turns = 0;
-        }
-    }
-
-    private void setTurnCounter(int id) {
-        for (int i = 0; i < ids.size(); i++) {
-         if(ids.get(i) == id){
-             turns = i+1;
-         }
-        }
+        returnValue = "Hans;Blue_5,Yellow_9,Blue_0,Red_3";
+        return returnValue;
     }
 
     //network - send
@@ -385,6 +414,8 @@ public class Game {
             System.out.println("Points for " + p.getPlayerName() + ": " + p.getPoints());
         }
     }
+
+
 
     public int calculatePointsForOnePlayer(int predicted, int made) {
         int points = 0;
@@ -400,16 +431,5 @@ public class Game {
         return  points;
     }
 
-    public String getCardsOfRandomPlayer() {
-        String returnValue = "";
-        Random r = new Random();
-
-        /*get the cards from a randomPlayer
-        send the player name and the cards to the player who wants to cheat
-        _players.get(r.nextInt(_players.size())).getHand();
-        */
-        returnValue = "Hans;Blue_5,Yellow_9,Blue_0,Red_3";
-        return returnValue;
-    }
-
+*/
 }
