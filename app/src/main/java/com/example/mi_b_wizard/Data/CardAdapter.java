@@ -9,15 +9,16 @@ public class CardAdapter {
     Deck deck = new Deck();
     List<Card> handCards = new ArrayList<Card>();
 
+    public void resetDeck(){
+        deck.resetDeck();
+    }
 
     public byte[] getByteCards(int round){
-        deck.resetDeck();
         System.out.println(round);
         byte[] cards = new byte[round+2];
 
         handCards = deck.getCards(round);
         System.out.println(handCards);
-        System.out.println(handCards.size());
         cards[0] = Server.CARDS;
         for (int i = 1; i <handCards.size()+1 ; i++) {
             cards[i] = handCards.get(i-1).getId();

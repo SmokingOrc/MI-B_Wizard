@@ -10,15 +10,18 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 
 import com.example.mi_b_wizard.Data.Player;
+import com.example.mi_b_wizard.Network.Server;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.Result;
+
 
 public class ResultActivity extends AppCompatActivity {
     List<Matrix> resultList;
     List<Matrix> playerList;
+    GameActivity gameActivity;
+    Server server;
     int rows, columns;
 
     @Override
@@ -27,11 +30,11 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         //test spalten und zeilen
-        rows=2;
+        rows=1;
         columns=4;
 
         GridView players=(GridView) findViewById(R.id.players);
-        players.setAdapter(new MatricAdapter(getApplicationContext(),playerList));
+
 
         List<Matrix> playerList=new ArrayList<>();
         for (int i=0;i<rows;i++)
@@ -41,6 +44,10 @@ public class ResultActivity extends AppCompatActivity {
                 playerList.add(new Matrix(i,j));
             }
         }
+
+        players.setAdapter(new MatricAdapter(getApplicationContext(),playerList));
+        players.setNumColumns(columns);
+
 
         GridView result = (GridView) findViewById(R.id.result);
         result.setAdapter(new MatricAdapter(this,resultList));

@@ -83,27 +83,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
     });
-        //Go to speech input currently only for Testing the speech recognition needs to be updated
-        ButtonSpeech =  findViewById(R.id.btnSpeech);
-        ButtonSpeech.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i3 = new Intent(MainActivity.this, PredictedTricksActivity.class);
-                startActivity(i3);
-            }
-        });
-
-        ShowCardsOnHand = findViewById(R.id.showCards);
-        ShowCardsOnHand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cardsOnHand = new Intent(MainActivity.this, PlayerTableActivity.class);
-                startActivity(cardsOnHand);
-            }
-        });
-
-
-
     }
 
 }

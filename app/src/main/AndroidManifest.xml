@@ -12,9 +12,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -24,11 +23,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ResultActivity"></activity>
-        <activity android:name=".GameActivity" />
-        <activity android:name=".WaitingLobby" />
-        <activity android:name=".Cheating_Test" />
-        <activity android:name=".PlayerTableActivity" />
+        <activity android:name=".GameActivity"></activity>
+        <activity android:name=".WaitingLobby"></activity>
+        <activity android:name=".Cheating_Test"></activity>
         <activity
             android:name=".NewGameActivity"
             android:label="Create Game"
@@ -46,7 +43,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".PredictedTricksActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

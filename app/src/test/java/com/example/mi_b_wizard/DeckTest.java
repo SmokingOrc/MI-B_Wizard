@@ -1,20 +1,25 @@
 package com.example.mi_b_wizard;
 
+import com.example.mi_b_wizard.Data.Card;
 import com.example.mi_b_wizard.Data.Deck;
+import com.example.mi_b_wizard.Data.Hand;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
+import org.mockito.Mock;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
 
 public class DeckTest {
 
     Deck deck;
-
 
     @Before
     public void setUp(){
@@ -57,6 +62,7 @@ public class DeckTest {
         System.out.println("Size of Deck: " + deck.deckSize());
         System.out.println("Cards: " + deck.getCards(5));
         System.out.println("Size of Deck: " + deck.availableCards());
+        assertEquals(deck.deckSize(),55);
     }
 
 
@@ -67,9 +73,11 @@ public class DeckTest {
         System.out.println("Size of Deck: " + deck.deckSize());
         System.out.println("Cards: " + deck.getCards(5));
         System.out.println("Size of Deck: " + deck.availableCards());
+        assertEquals(deck.deckSize(),55);
         System.out.println("----- Reset Deck -----");
         deck.resetDeck();
         System.out.println("Size of Deck: " + deck.deckSize());
+        assertEquals(deck.deckSize(),60);
     }
 
 
@@ -83,4 +91,34 @@ public class DeckTest {
             ile.printStackTrace();}
     }
 
+    @Test
+    public void getMyHandFromByteArrayTest(){
+        byte[] ba = {0,50};
+        Card c = new Card(4,2);
+        Hand myhand = new Hand();
+        myhand.addCardToHand(c);
+        Hand hand = new Hand();
+        hand = deck.getMyHand(ba);
+        assertEquals(myhand.getHand().toString(),myhand.getHand().toString());
+
+
+    }
+
+    @Test
+    public void getByteCardToStringTest(){
+        byte[] ba = {0,50};
+        String cardString = deck.getMyCardsToString(ba);
+        assertEquals("YELLOW FOUR, ", cardString );
+
+
+    }
+
+    @Test
+    public void getByteCardTest(){
+        byte card = 50;
+        Card c = deck.getThisCard(card);
+       assertEquals("FOUR in YELLOW",c.toString());
+
+
+    }
 }

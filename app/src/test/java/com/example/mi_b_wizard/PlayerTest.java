@@ -67,13 +67,14 @@ public class PlayerTest {
         assertEquals(0, player.getPredictedTrick());
         assertEquals(0, player.getMadeTrick());
     }
+    /*
     @Test
     public void testUpdatePoints(){
         player.updatePoints(5,2);
         assertEquals(-30, player.getPoints());
         player.updatePoints(3,3);
         assertEquals(20,player.getPoints());
-    }
+    } */
     @Test
     public void testPlayCard(){
         Card card = new Card(1,2);
@@ -169,11 +170,107 @@ public class PlayerTest {
         player.checkPredictedTricks("10 hallo how and nine ");
         assertEquals(10, player.getCheckedPredictedTricks());
     }
-
+    @Test
+    public void testCheckPredictedtricks11(){
+        player.checkPredictedTricks("elf");
+        assertEquals(11, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("11 Uhr");
+        assertEquals(11, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("11 hallo how and nine ");
+        assertEquals(11, player.getCheckedPredictedTricks());
+    }
+    @Test
+    public void testCheckPredictedtricks12(){
+        player.checkPredictedTricks("zwölf");
+        assertEquals(12, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("12 Uhr");
+        assertEquals(12, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("12 hallo how and nine ");
+        assertEquals(12, player.getCheckedPredictedTricks());
+    }
+    @Test
+    public void testCheckPredictedtricks13(){
+        player.checkPredictedTricks("dreizehn");
+        assertEquals(13, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("13 Uhr");
+        assertEquals(13, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("13 its time to play ");
+        assertEquals(13, player.getCheckedPredictedTricks());
+    }
+    @Test
+    public void testCheckPredictedtricks14(){
+        player.checkPredictedTricks("vierzehn");
+        assertEquals(14, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("14 Uhr");
+        assertEquals(14, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("14 hallo");
+        assertEquals(14, player.getCheckedPredictedTricks());
+    }
+    @Test
+    public void testCheckPredictedtricks15(){
+        player.checkPredictedTricks("fünfzehn");
+        assertEquals(15, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("15 Uhr");
+        assertEquals(15, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("15 and nine ");
+        assertEquals(15, player.getCheckedPredictedTricks());
+    }
+    @Test
+    public void testCheckPredictedtricks16(){
+        player.checkPredictedTricks("sechzehn");
+        assertEquals(16, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("16 Uhr");
+        assertEquals(16, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("16 how and nine ");
+        assertEquals(16, player.getCheckedPredictedTricks());
+    }
+    @Test
+    public void testCheckPredictedtricks17(){
+        player.checkPredictedTricks("siebzehn");
+        assertEquals(17, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("17 Uhr");
+        assertEquals(17, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("17 and nine ");
+        assertEquals(17, player.getCheckedPredictedTricks());
+    }
+    @Test
+    public void testCheckPredictedtricks18(){
+        player.checkPredictedTricks("achtzehn");
+        assertEquals(18, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("18 Uhr");
+        assertEquals(18, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("hi i will predicht 18 ");
+        assertEquals(18, player.getCheckedPredictedTricks());
+    }
+    @Test
+    public void testCheckPredictedtricks19(){
+        player.checkPredictedTricks("neunzehn");
+        assertEquals(19, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("19 Uhr");
+        assertEquals(19, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("predict tricks 19");
+        assertEquals(19, player.getCheckedPredictedTricks());
+    }
+    @Test
+    public void testCheckPredictedtricks20(){
+        player.checkPredictedTricks("zwanzig");
+        assertEquals(20, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("20 Uhr");
+        assertEquals(20, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("my tricks are 20");
+        assertEquals(20, player.getCheckedPredictedTricks());
+    }
     @Test
     public void updatedPredictedTricks(){
         player.updatePredictedTricks((byte)5);
         assertEquals((byte)5, player.getPredictedTrick());
     }
+    @Test
+    public void CalculatePointsTest(){
 
+        player.setPredictedTrick((byte)1);
+        player.madeATrick();
+        player.calculateMyPoints();
+        assertEquals(30,player.getPoints());
+    }
 }

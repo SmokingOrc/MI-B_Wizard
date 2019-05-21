@@ -33,12 +33,8 @@ public class Hand{
         //Methode only print the keys
         /*System.out.println("Keys: "+keys);*/
     }
-    public byte getFirstCardInHand(){  // for testing...
-        return hand.get(0).getId();
 
-    }
-
-    public void removeFristcard(){
+    public void removeFirstCard(){
         hand.remove(0);
     }
 
@@ -50,7 +46,6 @@ public class Hand{
     }
     public void removeCardFromHand(Card playedcard){
         hand.remove(playedcard);
-        System.out.println("card removed");
     }
     public void setHand(List<Card> hand) {
         this.hand = hand;
