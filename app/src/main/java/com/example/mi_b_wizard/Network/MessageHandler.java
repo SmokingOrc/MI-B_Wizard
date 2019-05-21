@@ -191,7 +191,9 @@ public class MessageHandler implements Handler.Callback {
             case POINTS:
                 byte[] points = (byte[]) msg.obj;
                 if (gameActivity != null){
-                    gameActivity.showPoints(points);}
+                    gameActivity.showPoints(points);
+                    gameActivity.madeTrickUpdate();
+                }
                 else {
                     System.out.println("game is null");
                 }
@@ -200,7 +202,9 @@ public class MessageHandler implements Handler.Callback {
             case WINNER:
                 byte[] winner = (byte[]) msg.obj;
                 if (gameActivity != null){
-                    gameActivity.showWhoIsTheWinner();}
+                    gameActivity.showWhoIsTheWinner();
+                    gameActivity.madeTrickUpdate();
+                }
                 else {
                     System.out.println("game is null"); }
                 break;
