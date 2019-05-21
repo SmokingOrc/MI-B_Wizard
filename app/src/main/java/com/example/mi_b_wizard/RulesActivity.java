@@ -9,8 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class RulesActivity extends AppCompatActivity {
-    
-    Button ButtonCreateGame;
+
     Button ButtonJoinGame;
 
     @Override
@@ -21,14 +20,6 @@ public class RulesActivity extends AppCompatActivity {
         WebView webView = findViewById(R.id.webView1);
         webView.loadUrl("file:///android_asset/regeln.html");
 
-        ButtonCreateGame = findViewById(R.id.btn_create);
-        ButtonCreateGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(RulesActivity.this, NewGameActivity.class);
-                startActivity(i);
-            }
-        });
 
         ButtonJoinGame = findViewById(R.id.btn_join);
         ButtonJoinGame.setOnClickListener(new View.OnClickListener() {

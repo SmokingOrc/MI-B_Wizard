@@ -103,7 +103,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
-        trumpView.setText("TRUMP IS : "+trump.getColour()+" "+trump.getRank());
+        //trumpView.setText("TRUMP IS : "+trump.getColour()+" "+trump.getRank());
 
         LinearLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
@@ -186,7 +186,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     toast("Please predict tricks first");
                 }else if(!cardview.isActive){
                     cardview.view.setBackgroundColor(Color.WHITE);
-                    cardview.view.setPadding(3,3,3,3);
+                    cardview.view.setPadding(5,5,5,5);
                     GameActivity.this.setNextCard(cardview.card);
                     cardview.isActive = true;
                 }
@@ -264,7 +264,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_game);
         gameActivity = this;
         startAndSendCards = findViewById(R.id.StartWithCards);
-        myCard = findViewById(R.id.mycard);
+        //myCard = findViewById(R.id.mycard);
         trumpView =findViewById(R.id.trump);
         playACard = findViewById(R.id.playacard);
         playACard.setVisibility(View.INVISIBLE);

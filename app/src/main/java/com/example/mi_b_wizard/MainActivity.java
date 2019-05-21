@@ -15,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
     private static Player player;
     Button ButtonJoin = null;
     Button ButtonRegeln;
-    Button ButtonCreate;
     private Button btnCheat = null; //only for testing shaking
     Button ButtonSpeech;
     Button ShowCardsOnHand;
@@ -58,21 +57,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ButtonCreate = findViewById(R.id.btnCreate);//Wechsel zu Create Game
-        ButtonCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(user.isEmpty()){
-                    user = Userid.getText().toString();}
-                if(!user.isEmpty()) {
-                player = new Player(user);
-                Intent i3 = new Intent(MainActivity.this, NewGameActivity.class);
-                startActivity(i3);
-            }else {
-                Toast.makeText(getApplicationContext(), "You need a name to create a game..", Toast.LENGTH_SHORT).show();
-            }
-            }
-        });
 
         btnCheat = findViewById(R.id.btnCheat);
         btnCheat.setOnClickListener(new View.OnClickListener() {
