@@ -266,4 +266,16 @@ public class PlayerTest {
         assertEquals((byte)5, player.getPredictedTrick());
     }
 
+    @Test
+    public void testCalculatePoints(){
+        assertEquals(0, player.getMadeTrick());
+        assertEquals(0,player.getPoints());
+        assertEquals(0, player.getPredictedTrick());
+        byte b = 1;
+        player.updatePredictedTricks(b);
+        player.madeATrick();
+        player.calculateMyPoints();
+        assertEquals(30, player.getPoints());
+    }
+
 }

@@ -135,11 +135,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void showWhoIsTheWinner(){
         toast("You won!");
         messageHandler.write(me.getPlayerName()+" won this round");
-        me.madeATrick();
+        //me.madeATrick();
         myTurn = true;
-        setTricks();
+        //setTricks();
 
         showCardsInHand();
+    }
+    public void madeTrickUpdate(){
+        me.madeATrick();
     }
 
     public void takeCards(byte[] cards){
@@ -231,6 +234,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void showMyPoints(){
         pointsTable.setText("My actual points: "+"\n"+me.getPoints());
+        toast("My points: "+me.getPoints());
 
     }
     public void PlayersStart(){
@@ -365,9 +369,15 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
-                alertDialogBuilder.setTitle("Please predict your tricks ")
-                        .setView(numberPicker)
-                        .setMessage("Choose a value")
+                alertDialogBuilder.setTitle("Please predict your tricks ");
+                //to remove numberpicker from its parents (Otherwise Exception child already has a parent)
+                if(numberPicker.getParent() != null){
+                    ((ViewGroup)numberPicker.getParent()).removeView(numberPicker);
+                    alertDialogBuilder.setView(numberPicker);
+                }else {
+                    alertDialogBuilder.setView(numberPicker);
+                }
+                alertDialogBuilder.setMessage("Choose a value")
                         .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 byte predictedTricks = (byte)numberPicker.getValue();
@@ -406,12 +416,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private void setMyHand(byte[] cards) {
         myHand = new Hand();
         myHand = cardAdapter.getMyhand(cards);
+        tricks = false;
         predictTricksBtn.setVisibility(View.VISIBLE);
         writeTricksBtn.setVisibility(View.VISIBLE);
         showMyPoints();
         myTricksTable.setText("Predicted Tricks this round");
         tricksTable.setText("");
-        tricks = false;
     }
     public void toast(String s){
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
