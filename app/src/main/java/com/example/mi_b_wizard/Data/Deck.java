@@ -88,6 +88,12 @@ public class Deck {
             return myCards;
         }
 
+    public String getMyCardToString(byte myByteCards){
+        String myCards = "";
+
+        myCards =  card.get(myByteCards).getColour()+" "+card.get(myByteCards).getRank()+", ";
+        return myCards;
+    }
 
         public Hand getMyHand(byte[] myByteCards){
          Hand myNewHand = new Hand();

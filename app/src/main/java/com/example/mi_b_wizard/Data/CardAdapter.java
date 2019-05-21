@@ -37,6 +37,13 @@ public class CardAdapter {
         return mycard;
     }
 
+    public String myStringCard(byte myByteCard){
+        String myCard;
+        myCard= deck.getMyCardToString(myByteCard);
+        return myCard;
+
+    }
+
     public Hand getMyhand(byte[] cards){
         return deck.getMyHand(cards);
     }

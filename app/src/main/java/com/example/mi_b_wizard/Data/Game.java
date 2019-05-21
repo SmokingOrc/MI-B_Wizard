@@ -31,6 +31,7 @@ public class Game {
     private int maxPlayers = 6;
     private boolean rightNumberOfPlayers = false;
     private Map<Byte, Integer> playedCards = new HashMap<>();
+    public static Map<Integer, String> outHandedCards = new HashMap<>();
 
     // Setters&Getters for tests
     public void setIdsTest(ArrayList<Integer> id) {
@@ -80,6 +81,7 @@ public class Game {
     private void whoIsNext() {
         if (turnsCount == ((ids.size() + 1) * round) && round < maxRounds) {
             nextRound();
+            outHandedCards.clear();
         } else if (playersPlayedThisRound == ids.size() + 1) {
             nextTurn();
         } else {
@@ -138,6 +140,7 @@ public class Game {
                 playerId = ids.get(i);
                 byte[] cardsToSend;
                 cardsToSend = cardAdapter.getByteCards(round);
+                outHandedCards.put(playerId, cardsToSend.toString());
                 messageHandler.sendCardsToPlayer(cardsToSend, playerId);
                 System.out.println("cards sent to players from game class");
             }

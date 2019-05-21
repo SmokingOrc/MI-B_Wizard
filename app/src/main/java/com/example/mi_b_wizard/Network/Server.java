@@ -22,6 +22,8 @@ public class Server extends Thread{
     public final static byte YOUR_TURN = 8;
     public final static byte SEND_POINTS = 9;
     public final static byte TRUMP = 10;
+    public final static byte CHEAT = 11;
+    public final static  byte GIVE_ME_YOUR_CARDS = 12;
 
 
     public Server(Socket socket, Handler handler) {
@@ -50,7 +52,7 @@ public class Server extends Thread{
                     if (bytes == -1) {
                         break;
                     }
-
+                    //System.out.println();
                     System.out.println("event id is : "+buffer[0]);
                     switch (buffer[0]){
                         case MOVE:
@@ -98,7 +100,13 @@ public class Server extends Thread{
                             System.out.println("your turn");
                             break;
 
+                        case CHEAT:
+                            handler.obtainMessage(MessageHandler.GOT_CARDS, bytes, (int)getId(), buffer).sendToTarget();
+
+                            break;
+
                             default:
+
                                 handler.obtainMessage(MessageHandler.READ, bytes, (int)getId(), buffer).sendToTarget();
                                 System.out.println("default");
                                 break;

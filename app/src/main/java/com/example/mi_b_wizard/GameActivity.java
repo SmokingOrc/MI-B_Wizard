@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -68,6 +69,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private boolean haveICheated = false;
     private boolean winnerThisRound = false;
     private boolean canWeStart = false;
+    public String cheatString = "";
 
     ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
     Card nextCard;
@@ -446,7 +448,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         float accelationSquareRoot = (x * x + y * y + z * z)
                 / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
         long actualTime = event.timestamp;
-        if (accelationSquareRoot >= 2) //
+        if (accelationSquareRoot >= 3) //
         {
             if (actualTime - lastUpdate < 200) {
                 return;
@@ -454,12 +456,23 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             lastUpdate = actualTime;
             //enemyCards = testGame.getCardsOfRandomPlayer();
             //String[] splitted = enemyCards.split(";");
+            String[] cardsFromOtherPlayer = {"2_Blue", "7_Green", "8_Yellow"};
 
-            /*Camera cam = Camera.open();
-            Camera.Parameters parameters = cam.getParameters();
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-            cam.setParameters(parameters);
-            cam.startPreview();*/
+            /*
+            if(JoinGameActivity.owner) {
+                //cheatString = Game.outHandedCards.get(0);
+                cheatString = "hosttest";
+                openCheatPopUp(Game.outHandedCards.get(0));
+            } else {
+                messageHandler.sendEvent(Server.CHEAT,zero,zero,zero);
+            }
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+
 
             if(!isPopUpActive) {
                 isPopUpActive = true;
@@ -467,24 +480,16 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     myVibrator.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
                 } else {
                     //deprecated in API 26
-                    myVibrator.vibrate(1000);
-                    //myVibrator.cancel();
+                    myVibrator.vibrate(5000);
                 }
                 myBuilder = new AlertDialog.Builder(GameActivity.this);
                 myBuilder.setTitle("Cards from: ");
-                myBuilder.setMessage("some cards");
-                myBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                myBuilder.setItems(cardsFromOtherPlayer, null);
+                //myBuilder.setMessage(cheatString);
+                myBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                    /*if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
-                        Camera cam = Camera.open();
-                        Camera.Parameters parameters = cam.getParameters();
-                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                        cam.setParameters(parameters);
-                        cam.stopPreview();
-                        cam.release();
-                    }*/
-                        myVibrator.cancel();
-                        isPopUpActive = false;
+                    myVibrator.cancel();
+                    isPopUpActive = false;
                     }
                 });
                 myBuilder.setIcon(android.R.drawable.ic_dialog_info);
@@ -492,6 +497,35 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 myDialog.show();
             }
         }
+    }
+
+    public void openCheatPopUp(String value) {
+        if(!isPopUpActive) {
+            isPopUpActive = true;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                myVibrator.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                myVibrator.vibrate(5000);
+            }
+            myBuilder = new AlertDialog.Builder(GameActivity.this);
+            myBuilder.setTitle("Cards from: ");
+            //myBuilder.setItems(cardsFromOtherPlayer, null);
+            myBuilder.setMessage(value);
+            myBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    myVibrator.cancel();
+                    isPopUpActive = false;
+                }
+            });
+            myBuilder.setIcon(android.R.drawable.ic_dialog_info);
+            myDialog = myBuilder.create();
+            myDialog.show();
+        }
+    }
+
+    public void sendMyHand() {
+
     }
 
 
@@ -680,5 +714,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             toast("It's not your turn to predict tricks or you have already predicted");
         }
     }
+public void sendCardsToPeer(){
 
+}
 }

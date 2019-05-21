@@ -2,9 +2,11 @@ package com.example.mi_b_wizard.Network;
 
 import android.content.Context;
 
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
 
+import com.example.mi_b_wizard.Data.Game;
 import com.example.mi_b_wizard.GameActivity;
 import com.example.mi_b_wizard.JoinGameActivity;
 import com.example.mi_b_wizard.Notifications;
@@ -37,6 +39,7 @@ public class MessageHandler implements Handler.Callback {
     public static final int POINTS = 0x400 + 11;
     public static final int CHEAT = 0x400 + 12;
     public static final int TRUMP = 0x400 + 13;
+    public static final int GOT_CARDS =  0x400 + 14;
 
 
 
@@ -171,12 +174,18 @@ public class MessageHandler implements Handler.Callback {
                 break;
 
             case CHEAT:
-                if (gameActivity != null){
-                    gameActivity.setHaveICheated();}
-                else {
-                    System.out.println("game is null");
+                byte[] cheat = (byte[]) msg.obj;
+                if(JoinGameActivity.owner) {
+                    //Game.outHandedCards
+                    //writeToTheSender(Game.outHandedCards.get(0),msg.arg2);
+                    writeToTheSender(Server.CHEAT+"asdfd",msg.arg2);
                 }
                 break;
+
+            case GOT_CARDS:
+                gameActivity.openCheatPopUp(msg.obj.toString());
+                break;
+
 
             case YOUR_TURN:
                 System.out.println("its your turn");
@@ -219,6 +228,17 @@ public class MessageHandler implements Handler.Callback {
                 if ((int) Clients.getId() == id) {
                     System.out.println(" CLient with id : " + id + " has sent a message");
                 } else {
+                    Clients.write(s);
+                }
+            }
+        }
+    }
+
+    private void writeToTheSender(String s, int id) {
+        System.out.println(Clients.size());
+        if (Clients.size() >= 1) {
+            for (Server Clients : Clients) {
+                if ((int) Clients.getId() == id) {
                     Clients.write(s);
                 }
             }
