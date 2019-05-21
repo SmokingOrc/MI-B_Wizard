@@ -176,5 +176,12 @@ public class PlayerTest {
         player.updatePredictedTricks((byte)5);
         assertEquals((byte)5, player.getPredictedTrick());
     }
+    @Test
+    public void CalculatePointsTest(){
 
+        player.setPredictedTrick((byte)1);
+        player.madeATrick();
+        player.calculateMyPoints();
+        assertEquals(30,player.getPoints());
+    }
 }

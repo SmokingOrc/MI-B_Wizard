@@ -304,7 +304,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 } else if (myTurn && JoinGameActivity.owner) {
                     messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
                     notMyTurnAnymore();
-                    game.hostMadeAMove(myHand.getFirstCardInHand());
                     myHand.removeCardFromHand(nextCard);
                     showCardsInHand();
 
