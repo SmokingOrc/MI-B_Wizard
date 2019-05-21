@@ -26,6 +26,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.NumberPicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -48,8 +50,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     @SuppressLint("StaticFieldLeak")
     private static GameActivity gameActivity;
     private CardAdapter cardAdapter = new CardAdapter() ;
-    Button startAndSendCards, playACard, predictTricksBtn;
-    TextView myCard, trumpView;
+    Button startAndSendCards, playACard, predictTricksBtn, writeTricksBtn;
+    TextView myCard, trumpView, pointsTable;
     Hand myHand;
     Card playedcard;
     String card;
@@ -77,13 +79,17 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private AlertDialog.Builder myBuilder;
     private AlertDialog myDialog;
     private boolean isPopUpActive = false;
-    //For SpeechRecognition
+    //For SpeechRecognition and manuel tricks input
     private ProgressBar progressBar;
     private TextView tricksTable, myTricksTable;
     private SpeechRecognizer speechRecognizer = null;
     private Intent speechRecognizerIntent;
     static final int REQUEST_PERMISSION_KEY = 1;
     private static final String LOG_TAG = "SpeechActivity";
+
+    private NumberPicker numberPicker;
+    private AlertDialog alertDialog;
+
     public static GameActivity getGameActivity() {
         return gameActivity;
     }
@@ -95,7 +101,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
-        trumpView.setText("TRUMP IS : "+trump.getColour()+" "+trump.getRank());
+        //trumpView.setText("TRUMP IS : "+trump.getColour()+" "+trump.getRank());
 
         LinearLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
@@ -129,11 +135,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void showWhoIsTheWinner(){
         toast("You won!");
         messageHandler.write(me.getPlayerName()+" won this round");
-        me.madeATrick();
+        //me.madeATrick();
         myTurn = true;
-        setTricks();
+        //setTricks();
 
         showCardsInHand();
+    }
+    public void madeTrickUpdate(){
+        me.madeATrick();
     }
 
     public void takeCards(byte[] cards){
@@ -171,10 +180,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 ViewCards cardview = GameActivity.this.handCards.get(index);
-
-                if(!cardview.isActive){
+                if(!tricks){
+                    toast("Please predict tricks first");
+                }else if(!cardview.isActive){
                     cardview.view.setBackgroundColor(Color.WHITE);
-                    cardview.view.setPadding(3,3,3,3);
+                    cardview.view.setPadding(5,5,5,5);
                     GameActivity.this.setNextCard(cardview.card);
                     cardview.isActive = true;
                 }
@@ -223,12 +233,15 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void showMyPoints(){
+        pointsTable.setText("My actual points: "+"\n"+me.getPoints());
+        toast("My points: "+me.getPoints());
 
     }
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
 
     }
+
     public void MyTurn(){
         myTurn = true;
         toast("its your turn");
@@ -249,16 +262,21 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_game);
         gameActivity = this;
         startAndSendCards = findViewById(R.id.StartWithCards);
-        myCard = findViewById(R.id.mycard);
+        //myCard = findViewById(R.id.mycard);
         trumpView =findViewById(R.id.trump);
         playACard = findViewById(R.id.playacard);
         playACard.setVisibility(View.INVISIBLE);
         predictTricksBtn = findViewById(R.id.predictTricksbtn);
+        predictTricksBtn.setVisibility(View.INVISIBLE);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
         tricksTable = findViewById(R.id.tricksTable);
         myTricksTable = findViewById(R.id.myTricksTable);
         messageHandler = MessageHandler.messageHandler();
+        writeTricksBtn = findViewById(R.id.writeTricksbtn);
+        writeTricksBtn.setVisibility(View.INVISIBLE);
+        pointsTable = findViewById(R.id.pointstable);
+
         layout = (ViewGroup) startAndSendCards.getParent();
         if (JoinGameActivity.owner) {
             game = new Game();
@@ -303,7 +321,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 } else if (myTurn && JoinGameActivity.owner) {
                     messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
                     notMyTurnAnymore();
-                    game.hostMadeAMove(myHand.getFirstCardInHand());
+                    game.hostMadeAMove(nextCard.getId());
                     myHand.removeCardFromHand(nextCard);
                     showCardsInHand();
 
@@ -343,7 +361,44 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        numberPicker = new NumberPicker(GameActivity.this);
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(20);
 
+        writeTricksBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
+                alertDialogBuilder.setTitle("Please predict your tricks ");
+                //to remove numberpicker from its parents (Otherwise Exception child already has a parent)
+                if(numberPicker.getParent() != null){
+                    ((ViewGroup)numberPicker.getParent()).removeView(numberPicker);
+                    alertDialogBuilder.setView(numberPicker);
+                }else {
+                    alertDialogBuilder.setView(numberPicker);
+                }
+                alertDialogBuilder.setMessage("Choose a value")
+                        .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                byte predictedTricks = (byte)numberPicker.getValue();
+                                me.updatePredictedTricks(predictedTricks);
+                                sendPredictedTricks();
+                                Log.d(LOG_TAG,predictedTricks+"");
+                                myTricksTable.append("\n"+"My Tricks: "+me.getPredictedTrick());
+                                alertDialog.dismiss();
+
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                alertDialog.dismiss();
+                            }
+                        });
+                alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+        });
     }
 
     private void getPlayerPoints(byte[] playerPoints, String s) {
@@ -361,6 +416,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private void setMyHand(byte[] cards) {
         myHand = new Hand();
         myHand = cardAdapter.getMyhand(cards);
+        tricks = false;
+        predictTricksBtn.setVisibility(View.VISIBLE);
+        writeTricksBtn.setVisibility(View.VISIBLE);
+        showMyPoints();
+        myTricksTable.setText("Predicted Tricks this round");
+        tricksTable.setText("");
     }
     public void toast(String s){
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
@@ -595,7 +656,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         Byte confirmedPredictedTricks = me.getCheckedPredictedTricks();
         me.updatePredictedTricks(confirmedPredictedTricks);
         Log.d(LOG_TAG,"positive click: " + confirmedPredictedTricks);
-        myTricksTable.append("\n"+"My Tricks: "+me.getPredictedTrick());
+        myTricksTable.setText("Predicted Tricks this round"+"\n"+"My Tricks: "+me.getPredictedTrick());
         sendPredictedTricks();
     }
     @Override
@@ -605,12 +666,16 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     //sends the predicted tricks to the other players
     public void sendPredictedTricks(){
-        if(JoinGameActivity.owner ){
+        if(JoinGameActivity.owner && !tricks){
             messageHandler.sendEvent(Server.TRICKS,me.getPredictedTrick(),zero,zero);
             tricks = true;
+            predictTricksBtn.setVisibility(View.INVISIBLE);
+            writeTricksBtn.setVisibility(View.INVISIBLE);
         }else if(!tricks){
             messageHandler.sendEvent(Server.TRICKS,me.getPredictedTrick(),zero,zero);
             tricks = true;
+            predictTricksBtn.setVisibility(View.INVISIBLE);
+            writeTricksBtn.setVisibility(View.INVISIBLE);
         }else {
             toast("It's not your turn to predict tricks or you have already predicted");
         }
