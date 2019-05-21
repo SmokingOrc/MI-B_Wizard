@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 
 import com.example.mi_b_wizard.R;
@@ -19,6 +20,10 @@ public class ViewCards {
         this.view = new ImageView(context);
         this.view.setTag(this);
         this.updatePictureOfCard();
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(180,300);
+        layoutParams.setMargins(10,10,10,10);
+        view.setLayoutParams(layoutParams);
 
     }
 
