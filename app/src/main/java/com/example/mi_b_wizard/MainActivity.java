@@ -93,17 +93,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ShowCardsOnHand = findViewById(R.id.showCards);
-        ShowCardsOnHand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cardsOnHand = new Intent(MainActivity.this, PlayerTableActivity.class);
-                startActivity(cardsOnHand);
-            }
-        });
-
-
-
     }
 
 }

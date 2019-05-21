@@ -2,20 +2,22 @@ package com.example.mi_b_wizard.Data;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
-import com.example.mi_b_wizard.PlayerTableActivity;
+
 import com.example.mi_b_wizard.R;
 
 public class ViewCards {
     public Card card;
     public ImageView view;
+    public boolean isActive = false;
 
 
-    public ViewCards(Context context, PlayerTableActivity screen, Card card) {
+    public ViewCards(Context context, AppCompatActivity screen, Card card) {
         this.card = card;
         this.view = new ImageView(context);
-        this.view.setTag(this);             //to get Information from the view itself - OnClickListener can be used for every button
+        this.view.setTag(this);
         this.updatePictureOfCard();
 
     }
@@ -26,7 +28,7 @@ public class ViewCards {
      */
     public void updatePictureOfCard() {
         if (this.card == null) {
-            this.view.setBackground(this.view.getResources().getDrawable(R.drawable.red1,null));
+            this.view.setBackground(this.view.getResources().getDrawable(R.drawable.back,null));
             return;
 
         }
@@ -239,6 +241,6 @@ public class ViewCards {
                     break;
             }
         }
-        this.view.setBackground(draw);
+        this.view.setImageDrawable(draw);
     }
 }

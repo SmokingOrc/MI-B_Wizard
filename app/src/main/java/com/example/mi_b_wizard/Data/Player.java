@@ -13,11 +13,12 @@ public class Player{
     private String playerName;
     private int points = 0;
     private int madeTrick = 0; // tricks, which were made (gemachte Stiche)
-    private int predictedTrick; //tricks, which were predicted (angesagte Stiche)
+    private byte predictedTrick; //tricks, which were predicted (angesagte Stiche)
     private Hand hand; //actual Hand of the player
     private Game game;
     private Card actualPlayedCard;
     private int playerId;
+    private byte checkedPredictedTricks;
 
     public Player(String playerName){
         setPlayerName(playerName);
@@ -58,11 +59,11 @@ public class Player{
     public void madeATrick(){ madeTrick ++;
         System.out.println("You made a trick");
     }
-    public int getPredictedTrick() {
+    public byte getPredictedTrick() {
         return predictedTrick;
     }
 
-    public void setPredictedTrick(int predictedTrick) {
+    public void setPredictedTrick(byte predictedTrick) {
         this.predictedTrick = predictedTrick;
     }
 
@@ -84,6 +85,9 @@ public class Player{
 
     public void setActualPlayedCard(Card actualPlayedCard) {
         this.actualPlayedCard = actualPlayedCard;
+    }
+    public byte getCheckedPredictedTricks(){
+        return checkedPredictedTricks;
     }
 
    // <------------------------------------------->
@@ -151,73 +155,75 @@ public class Player{
 
     }
 
-    //update Set Predicted Tricks (currently per default set to 2 tricks, needs to be updated with speech input)
-    public void updatePredictedTricks(String predictedTrickS){
-
-        //checks the String speech input and turn it into an int
-        //contains is need if the input is for e.g. 9 Uhr
-        if (predictedTrickS.contains("0")|| predictedTrickS.equals("null")){
-            predictedTrick = 0;
+    //update Predicted Tricks
+    public void updatePredictedTricks(Byte predictedTrickS){
+        predictedTrick = predictedTrickS;
+    }
+    //checks the String speech input and turn it into an int
+    //contains is need if the input is for e.g. 9 Uhr
+    public void checkPredictedTricks(String predictedTrickS) {
+        if (predictedTrickS.contains("0") || predictedTrickS.equals("null")) {
+            checkedPredictedTricks = 0;
         }
-        if(predictedTrickS.contains("1") || predictedTrickS.equals("eins")){
-            predictedTrick = 1;
+        if (predictedTrickS.contains("1") || predictedTrickS.equals("eins")) {
+            checkedPredictedTricks = 1;
         }
-        if(predictedTrickS.contains("2") || predictedTrickS.equals("zwei")){
-            predictedTrick = 2;
+        if (predictedTrickS.contains("2") || predictedTrickS.equals("zwei")) {
+            checkedPredictedTricks = 2;
         }
-        if(predictedTrickS.contains("3") || predictedTrickS.equals("drei")){
-            predictedTrick = 3;
+        if (predictedTrickS.contains("3") || predictedTrickS.equals("drei")) {
+            checkedPredictedTricks = 3;
         }
-        if(predictedTrickS.contains("4") || predictedTrickS.equals("vier")){
-            predictedTrick = 4;
+        if (predictedTrickS.contains("4") || predictedTrickS.equals("vier")) {
+            checkedPredictedTricks = 4;
         }
-        if(predictedTrickS.contains("5") || predictedTrickS.equals("fünf")){
-            predictedTrick = 5;
+        if (predictedTrickS.contains("5") || predictedTrickS.equals("fünf")) {
+            checkedPredictedTricks = 5;
         }
-        if(predictedTrickS.contains("6") || predictedTrickS.equals("sechs")){
-            predictedTrick = 6;
+        if (predictedTrickS.contains("6") || predictedTrickS.equals("sechs")) {
+            checkedPredictedTricks = 6;
         }
-        if(predictedTrickS.contains("7") || predictedTrickS.equals("sieben")){
-            predictedTrick = 7;
+        if (predictedTrickS.contains("7") || predictedTrickS.equals("sieben")) {
+            checkedPredictedTricks = 7;
         }
-        if(predictedTrickS.contains("8") || predictedTrickS.equals("acht")){
-            predictedTrick = 8;
+        if (predictedTrickS.contains("8") || predictedTrickS.equals("acht")) {
+            checkedPredictedTricks = 8;
         }
-        if(predictedTrickS.contains("9") || predictedTrickS.equals("neun")){
-            predictedTrick = 9;
+        if (predictedTrickS.contains("9") || predictedTrickS.equals("neun")) {
+            checkedPredictedTricks = 9;
         }
-        if(predictedTrickS.contains("10") || predictedTrickS.equals("zehn")){
-            predictedTrick = 10;
+        if (predictedTrickS.contains("10") || predictedTrickS.equals("zehn")) {
+            checkedPredictedTricks = 10;
         }
-        if(predictedTrickS.contains("11") || predictedTrickS.equals("elf")){
-            predictedTrick = 11;
+        if (predictedTrickS.contains("11") || predictedTrickS.equals("elf")) {
+            checkedPredictedTricks = 11;
         }
-        if(predictedTrickS.contains("12") || predictedTrickS.equals("zwölf")){
-            predictedTrick = 12;
+        if (predictedTrickS.contains("12") || predictedTrickS.equals("zwölf")) {
+            checkedPredictedTricks = 12;
         }
-        if(predictedTrickS.contains("13") || predictedTrickS.equals("dreizehn")){
-            predictedTrick = 13;
+        if (predictedTrickS.contains("13") || predictedTrickS.equals("dreizehn")) {
+            checkedPredictedTricks = 13;
         }
-        if(predictedTrickS.contains("14") || predictedTrickS.equals("vierzehn")){
-            predictedTrick = 14;
+        if (predictedTrickS.contains("14") || predictedTrickS.equals("vierzehn")) {
+            checkedPredictedTricks = 14;
         }
-        if(predictedTrickS.contains("15") || predictedTrickS.equals("fünfzehn")){
-            predictedTrick = 15;
+        if (predictedTrickS.contains("15") || predictedTrickS.equals("fünfzehn")) {
+            checkedPredictedTricks = 15;
         }
-        if(predictedTrickS.contains("16") || predictedTrickS.equals("sechzehn")){
-            predictedTrick = 16;
+        if (predictedTrickS.contains("16") || predictedTrickS.equals("sechzehn")) {
+            checkedPredictedTricks = 16;
         }
-        if(predictedTrickS.contains("17") || predictedTrickS.equals("siebzehn")){
-            predictedTrick = 17;
+        if (predictedTrickS.contains("17") || predictedTrickS.equals("siebzehn")) {
+            checkedPredictedTricks = 17;
         }
-        if(predictedTrickS.contains("18") || predictedTrickS.equals("achtzehn")){
-            predictedTrick = 18;
+        if (predictedTrickS.contains("18") || predictedTrickS.equals("achtzehn")) {
+            checkedPredictedTricks = 18;
         }
-        if(predictedTrickS.contains("19") || predictedTrickS.equals("neunzehn")){
-            predictedTrick = 19;
+        if (predictedTrickS.contains("19") || predictedTrickS.equals("neunzehn")) {
+            checkedPredictedTricks = 19;
         }
-        if(predictedTrickS.contains("20") || predictedTrickS.equals("zwanzig")){
-            predictedTrick = 20;
+        if (predictedTrickS.contains("20") || predictedTrickS.equals("zwanzig")) {
+            checkedPredictedTricks = 20;
         }
     }
 
