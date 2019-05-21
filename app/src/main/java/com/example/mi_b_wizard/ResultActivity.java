@@ -22,6 +22,7 @@ public class ResultActivity extends AppCompatActivity {
     List<Matrix> playerList;
     GameActivity gameActivity;
     Server server;
+    int playercount;
     int rows, columns;
 
     @Override
@@ -95,4 +96,9 @@ public class ResultActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    public void setPlayercount(int playercount){
+        this.playercount=playercount;
+    }
+
 }
