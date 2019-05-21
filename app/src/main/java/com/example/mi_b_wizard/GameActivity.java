@@ -438,7 +438,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         float accelationSquareRoot = (x * x + y * y + z * z)
                 / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
         long actualTime = event.timestamp;
-        if (accelationSquareRoot >= 2) //
+        if (accelationSquareRoot >= 3) //
         {
             if (actualTime - lastUpdate < 200) {
                 return;
