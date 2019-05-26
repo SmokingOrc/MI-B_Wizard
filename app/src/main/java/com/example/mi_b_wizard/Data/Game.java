@@ -96,7 +96,6 @@ public class Game {
         whoWonThisRound();
         waitALittleBit();
         sendCards();
-        gameActivity.showMyPoints();
     }
 
     private void waitALittleBit() {
@@ -252,7 +251,6 @@ public class Game {
             setTurnCounter(id);
         } else {
             gameActivity.showWhoIsTheWinner();
-            gameActivity.madeTrickUpdate();
             turns = 0;
         }
     }
