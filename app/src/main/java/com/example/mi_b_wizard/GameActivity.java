@@ -51,7 +51,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     @SuppressLint("StaticFieldLeak")
     private static GameActivity gameActivity;
     private CardAdapter cardAdapter = new CardAdapter() ;
-    Button startAndSendCards, playACard, predictTricksBtn, writeTricksBtn;
+    Button startAndSendCards, playACard, predictTricksBtn, writeTricksBtn, pointsBtn;
     TextView myCard, trumpView, pointsTable;
     Hand myHand;
     Card playedcard;
@@ -69,6 +69,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private boolean haveICheated = false;
     private boolean winnerThisRound = false;
     private boolean canWeStart = false;
+    private boolean correctPoints = false;
     public String cheatString = "";
 
     ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
@@ -90,7 +91,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private static final String LOG_TAG = "SpeechActivity";
 
     private NumberPicker numberPicker;
-    private AlertDialog alertDialog;
+    private AlertDialog alertDialog, alertDialog2;
+    private TextView pointsView;
 
     public static GameActivity getGameActivity() {
         return gameActivity;
@@ -137,14 +139,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void showWhoIsTheWinner(){
         toast("You won!");
         messageHandler.write(me.getPlayerName()+" won this round");
-        //me.madeATrick();
+        me.madeATrick();
         myTurn = true;
         //setTricks();
 
         showCardsInHand();
-    }
-    public void madeTrickUpdate(){
-        me.madeATrick();
     }
 
     public void takeCards(byte[] cards){
@@ -234,10 +233,32 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    public void showMyPoints(){
-        pointsTable.setText("My actual points: "+"\n"+me.getPoints());
-        toast("My points: "+me.getPoints());
+    public void sendMyPoints(int points) {
+        if (JoinGameActivity.owner) {
+            messageHandler.sendEvent(Server.SEND_POINTS, (byte) points, zero, zero);
+        } else {
+            messageHandler.sendEvent(Server.SEND_POINTS, (byte) points, zero, zero);
+            toast("My points: " + points);
+        }
+    }
 
+    //Methode to show my points in pointsTable and set my points in TextView of the Dialog (CorrectPoints to start with calculation at the end of the first round)
+    public void showMyPoints(){
+        if (!correctPoints){
+            correctPoints = true;
+        }else{
+            me.calculateMyPoints();
+        }
+        int p = me.getPoints();
+        pointsTable.setText("My actual points: "+ p);
+        sendMyPoints(p);
+        pointsView = new TextView(GameActivity.this);
+        pointsView.setText("My points: "+ p);
+    }
+    //Methode to set the points of the other players in the Pointsview to show them in the dialog
+    public void setPointsInDialog(byte points, int id){
+        String messageTricksP = "Points player ID "+id +": "+points;
+        pointsView.append("\n"+messageTricksP);
     }
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
@@ -278,6 +299,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         writeTricksBtn = findViewById(R.id.writeTricksbtn);
         writeTricksBtn.setVisibility(View.INVISIBLE);
         pointsTable = findViewById(R.id.pointstable);
+        pointsBtn = findViewById(R.id.pointsButton);
 
         layout = (ViewGroup) startAndSendCards.getParent();
         if (JoinGameActivity.owner) {
@@ -399,6 +421,32 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                         });
                 alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
+            }
+        });
+
+        //OnClickListener to open Alert Dialog to show the actual points of the players
+        pointsView = new TextView(GameActivity.this);
+
+        pointsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder alertDialogBuilder2 = new AlertDialog.Builder(GameActivity.this);
+                alertDialogBuilder2.setTitle("Actual points of all palyers ");
+                //to remove textView from its parents (Otherwise Exception child already has a parent)
+                if(pointsView.getParent() != null){
+                    ((ViewGroup)pointsView.getParent()).removeView(pointsView);
+                    alertDialogBuilder2.setView(pointsView);
+                }else {
+                    alertDialogBuilder2.setView(pointsView);
+                }
+                alertDialogBuilder2.setMessage("")
+                        .setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                alertDialog2.dismiss();
+                            }
+                        });
+                alertDialog2 = alertDialogBuilder2.create();
+                alertDialog2.show();
             }
         });
     }

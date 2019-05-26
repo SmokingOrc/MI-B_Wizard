@@ -103,6 +103,7 @@ public class WaitingLobby extends AppCompatActivity {
                     if (!owner) {
                         if (mServer == null) {
                             mServer = messageHandler.getServer();
+                            sendStartEvent();
                         } else {
                             sendStartEvent();
                         }

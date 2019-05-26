@@ -90,6 +90,11 @@ public class Server extends Thread{
                             System.out.println("give me cards");
                             break;
 
+                        case SEND_POINTS:
+                            handler.obtainMessage(MessageHandler.POINTS, bytes, (int)getId(), buffer).sendToTarget();
+                            System.out.println("points");
+                            break;
+
                         case WINNER:
                             handler.obtainMessage(MessageHandler.WINNER, bytes, (int)getId(), buffer).sendToTarget();
                             System.out.println("winner");
