@@ -28,6 +28,7 @@ public class Server extends Thread{
     public final static byte NEW_ROUND = 120;
     public final static byte READ = 114;
     public final static byte GOT_CARDS = 124;
+    public final static byte NOTIFICATION  = 32;
 
     public final static  byte GIVE_ME_YOUR_CARDS = 12;
 
@@ -64,44 +65,41 @@ public class Server extends Thread{
                     }
                     System.out.println("event id is : "+buffer[0]);
                     switch (buffer[0]){
+
                         case READ:
                             handler.obtainMessage(MessageHandler.READ, bytes, id, buffer).sendToTarget();
-                            System.out.println("read");
+                            break;
+
+                        case NOTIFICATION:
+                            handler.obtainMessage(MessageHandler.NOTIFICATION, bytes, id, buffer).sendToTarget();
                             break;
 
                         case MOVE:
                             handler.obtainMessage(MessageHandler.MOVE, bytes, id, buffer).sendToTarget();
-                            System.out.println("move ");
                             break;
 
                         case WINNER:
                             handler.obtainMessage(MessageHandler.WINNER, bytes, id, buffer).sendToTarget();
-                            System.out.println("win");
                             break;
 
                         case TRUMP:
                             handler.obtainMessage(MessageHandler.TRUMP, bytes, id, buffer).sendToTarget();
-                            System.out.println("trump");
                             break;
 
                         case START_GAME:
                             handler.obtainMessage(MessageHandler.START_GAME, bytes, id, buffer).sendToTarget();
-                            System.out.println("start");
                             break;
 
                         case GIVE_ME_CARDS:
                             handler.obtainMessage(MessageHandler.SEND_CARDS, bytes, id, buffer).sendToTarget();
-                            System.out.println("give me cards");
                             break;
 
                         case CARDS:
                             handler.obtainMessage(MessageHandler.CARDS, bytes, id, buffer).sendToTarget();
-                            System.out.println("cards");
                             break;
 
                         case ID:
                             handler.obtainMessage(MessageHandler.GET_MY_ID, bytes, id , buffer).sendToTarget();
-                            System.out.println("ID");
                             break;
 
                         case TRICKS:

@@ -104,11 +104,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void newRound(){
         me.calculateMyPoints();
         showMyPoints();
+        haveICheated = false;
     }
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
-        //trumpView.setText("TRUMP IS : "+trump.getColour()+" "+trump.getRank());
-
         LinearLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
         ViewCards cardview = new ViewCards(GameActivity.this,this,trump);
@@ -134,17 +133,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         toast("game has started");
 
     }
-    public void setHaveICheated(){
-        haveICheated = true;
-    }
 
     public void showWhoIsTheWinner(){
         toast("You won!");
-        //messageHandler.write(me.getPlayerName()+" won this round");
+        messageHandler.write(Server.NOTIFICATION,me.getPlayerName()+" made a trick");
         myTurn = true;
         madeTrickUpdate();
-
-        //showCardsInHand();
     }
     public void madeTrickUpdate(){
         me.madeATrick();
@@ -153,11 +147,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void takeCards(byte[] cards){
         setMyHand(cards);
         showCardsInHand();
-
-        if(JoinGameActivity.owner){
-            System.out.println("host got his cards");
-        }else{
-            System.out.println("player "+me.getPlayerName() +" got his cards");}
     }
 
 
@@ -166,6 +155,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public String getPlayerHand(){
         return game.getPlayedCards();
     }
+
     private void showCardsInHand(){
         LinearLayout cardHand = findViewById(R.id.cardHand1);
         cardHand.removeAllViews();
@@ -220,18 +210,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         myTurn =false;
     }
 
-    private void playACard(byte cardPlayed){
-        if(myTurn && JoinGameActivity.owner){
-            myHand.removeCardFromHand(cardAdapter.getThisCard(cardPlayed));
-            game.hostMadeAMove(cardPlayed);
-            messageHandler.sendEvent(Server.MOVE,cardPlayed,zero,zero);
-            myTurn = false;
-        }else if (myTurn){
-            myHand.removeCardFromHand(cardAdapter.getThisCard(cardPlayed));
-            messageHandler.sendEvent(Server.MOVE,cardPlayed,zero,zero);
-            myTurn = false;
-        }
-    }
+
     public void showPoints(byte[] playerPoints){
         String s ="";
         getPlayerPoints(playerPoints, s);
@@ -259,9 +238,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         String messageTricks = "Tricks Player "+id+": "+trick;
         tricksTable.append("\n"+messageTricks);
     }
-    public void setTricks(){
-        tricks = false;
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -718,7 +695,4 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             toast("It's not your turn to predict tricks or you have already predicted");
         }
     }
-public void sendCardsToPeer(){
-
-}
 }

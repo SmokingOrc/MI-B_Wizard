@@ -36,8 +36,6 @@ public class WaitingLobby extends AppCompatActivity {
 
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
-        System.out.println("setting messageHandler"+messageHandler);
-        System.out.println(messageHandler+" "+this.messageHandler);
     }
 
     public MessageHandler getMessageHandler() {
@@ -112,7 +110,7 @@ public class WaitingLobby extends AppCompatActivity {
         System.out.println("Server is null....");
     }
 
-    private void sendStartEvent() {
+    public void sendStartEvent() {
         Intent i = new Intent(WaitingLobby.this, GameActivity.class);
         startActivity(i);
     }
