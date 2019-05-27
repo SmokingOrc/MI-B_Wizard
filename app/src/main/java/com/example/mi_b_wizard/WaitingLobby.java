@@ -75,24 +75,11 @@ public class WaitingLobby extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 usermessage = (user+" says: "+ message.getText().toString());
-                if(messageHandler != null){
-                     if (!owner) {
-                         if (mServer == null) {
-                                 mServer = messageHandler.getServer();
-                    }else{
-                        mServer.write(usermessage);
+                if(messageHandler != null) {
+                        messageHandler.write(Server.READ, usermessage);
                         addMsg(usermessage);
-                        message.setText(""); }
-                }else{
-                    messageHandler.write(usermessage);
-                    addMsg(usermessage);
-                    message.setText(""); }
-
-                if (mServer == null && !owner) {
-                    serverIsNull();
-                }}else{
-                    messageHandler = getMessageHandler();
-                }
+                        message.setText("");
+                    }
             }
         });
 
@@ -103,6 +90,7 @@ public class WaitingLobby extends AppCompatActivity {
                     if (!owner) {
                         if (mServer == null) {
                             mServer = messageHandler.getServer();
+                            sendStartEvent();
                         } else {
                             sendStartEvent();
                         }
@@ -113,6 +101,7 @@ public class WaitingLobby extends AppCompatActivity {
                         serverIsNull();
                     }}else{
                     messageHandler = getMessageHandler();
+
                 }
             }
         });

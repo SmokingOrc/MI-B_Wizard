@@ -101,6 +101,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         showMove(cardPlayed);
         messageHandler.sendEventToAllExceptTheSender(Server.MOVE,cardPlayed,zero,zero,playerID);
     }
+    public void newRound(){
+        me.calculateMyPoints();
+        showMyPoints();
+    }
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
         //trumpView.setText("TRUMP IS : "+trump.getColour()+" "+trump.getRank());
@@ -136,12 +140,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void showWhoIsTheWinner(){
         toast("You won!");
-        messageHandler.write(me.getPlayerName()+" won this round");
-        //me.madeATrick();
+        //messageHandler.write(me.getPlayerName()+" won this round");
         myTurn = true;
-        //setTricks();
+        madeTrickUpdate();
 
-        showCardsInHand();
+        //showCardsInHand();
     }
     public void madeTrickUpdate(){
         me.madeATrick();
@@ -149,7 +152,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void takeCards(byte[] cards){
         setMyHand(cards);
-
         showCardsInHand();
 
         if(JoinGameActivity.owner){
@@ -161,6 +163,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     //To show cards/images in Hand
 
+    public String getPlayerHand(){
+        return game.getPlayedCards();
+    }
     private void showCardsInHand(){
         LinearLayout cardHand = findViewById(R.id.cardHand1);
         cardHand.removeAllViews();
@@ -264,7 +269,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_game);
         gameActivity = this;
         startAndSendCards = findViewById(R.id.StartWithCards);
-        //myCard = findViewById(R.id.mycard);
         trumpView =findViewById(R.id.trump);
         playACard = findViewById(R.id.playacard);
         playACard.setVisibility(View.INVISIBLE);
@@ -454,9 +458,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 return;
             }
             lastUpdate = actualTime;
+            if(!JoinGameActivity.owner){
+            messageHandler.sendEvent(Server.CHEAT,zero,zero,zero);}
+            else{openCheatPopUp(game.getPlayedCards());}
+
             //enemyCards = testGame.getCardsOfRandomPlayer();
             //String[] splitted = enemyCards.split(";");
-            String[] cardsFromOtherPlayer = {"2_Blue", "7_Green", "8_Yellow"};
+            // String[] cardsFromOtherPlayer = {"2_Blue", "7_Green", "8_Yellow"};
 
             /*
             if(JoinGameActivity.owner) {
@@ -473,7 +481,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 e.printStackTrace();
             }*/
 
-
+/*
             if(!isPopUpActive) {
                 isPopUpActive = true;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -495,7 +503,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 myBuilder.setIcon(android.R.drawable.ic_dialog_info);
                 myDialog = myBuilder.create();
                 myDialog.show();
-            }
+            } */
         }
     }
 
@@ -522,10 +530,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             myDialog = myBuilder.create();
             myDialog.show();
         }
-    }
-
-    public void sendMyHand() {
-
     }
 
 

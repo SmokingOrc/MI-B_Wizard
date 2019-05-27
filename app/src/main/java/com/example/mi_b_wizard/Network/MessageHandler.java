@@ -39,6 +39,7 @@ public class MessageHandler implements Handler.Callback {
     public static final int POINTS = 0x400 + 11;
     public static final int CHEAT = 0x400 + 12;
     public static final int TRUMP = 0x400 + 13;
+    public static final int ROUND = 0x400 + 17;
     public static final int GOT_CARDS =  0x400 + 14;
 
 
@@ -62,7 +63,6 @@ public class MessageHandler implements Handler.Callback {
     public static void setMessageHandler(MessageHandler messageHandler) {
         MessageHandler.messageHandler = messageHandler;
     }
-
     private void setNotifications(Notifications notifications) {
         this.notifications = notifications;
     }
@@ -83,17 +83,16 @@ public class MessageHandler implements Handler.Callback {
 
     @Override
     public boolean handleMessage(Message msg) {
-        if (waitingLobby == null) {
-            waitingLobby = WaitingLobby.getWaitingLobby();
-        }
-        if (gameActivity == null) {
+        if(gameActivity == null){
             gameActivity = GameActivity.getGameActivity();
+        }
+        if(waitingLobby == null){
+            waitingLobby = WaitingLobby.getWaitingLobby();
         }
         switch (msg.what) {
             case READ:
-                byte[] read = (byte[]) msg.obj;
-                String s = new String(read, 0, msg.arg1);
-                System.out.println("message is : " + s);
+                String s = new String((byte[]) msg.obj, 1, msg.arg1);
+                System.out.println(msg.arg2);
                 waitingLobby.addMsg(s);
                 notifications.showNotification("new message", s);
                 if (JoinGameActivity.owner) {
@@ -102,7 +101,6 @@ public class MessageHandler implements Handler.Callback {
                 break;
 
             case HANDLE:
-                System.out.println("setting server....");
                 Object obj = msg.obj;
                 setServer((Server) obj);
                 if (JoinGameActivity.owner) {
@@ -113,23 +111,13 @@ public class MessageHandler implements Handler.Callback {
 
             case START_GAME:
                 gameActivity.start();
-                System.out.println("game started");
                 break;
 
             case SEND_CARDS:
                 byte[] cards = (byte[]) msg.obj;
                 if (JoinGameActivity.owner) {
                     sendCardsToPlayer(cards, msg.arg2);
-                    System.out.println("cards sent to player");
                 }
-                break;
-
-            case GET_MY_ID:
-                byte[] id = (byte[]) msg.obj;
-                if (JoinGameActivity.owner) {
-                    sendEventToTheSender(Server.ID, id[1], id[2], id[3], msg.arg2);
-                }
-                System.out.println("ID sent to player");
                 break;
 
             case MOVE:
@@ -137,9 +125,9 @@ public class MessageHandler implements Handler.Callback {
                 if (JoinGameActivity.owner) {
                   gameActivity.playerMadeAMove(move[1], msg.arg2);
                   sendEventToAllExceptTheSender(Server.MOVE,move[1],n,n,msg.arg2);
-                    System.out.println("Player made a new move");
+                    System.out.println("Player made a new move"+ move[1]);
                 }else {
-                    System.out.println("host made a move");
+                    System.out.println("host made a move "+ move[1]);
                     gameActivity.showMove(move[1]);
                 }
                 break;
@@ -152,11 +140,11 @@ public class MessageHandler implements Handler.Callback {
                     gameActivity.setTrump(trump[1]);
                 }
                 break;
+
             case PREDICTED_TRICKS:
                 byte[] tricks = (byte[]) msg.obj;
                 if (JoinGameActivity.owner) {
                     sendEventToAllExceptTheSender(tricks[0], tricks[1], tricks[2], tricks[3], msg.arg2);
-                    System.out.println("Player predicted tricks");
                     gameActivity.showPredictedTricks(tricks[1],msg.arg2);
                 }else{
                     gameActivity.showPredictedTricks(tricks[1],msg.arg2);
@@ -170,25 +158,22 @@ public class MessageHandler implements Handler.Callback {
                 else {
                     System.out.println("game is null");
                 }
-                System.out.println("Player got cards");
                 break;
 
             case CHEAT:
                 byte[] cheat = (byte[]) msg.obj;
                 if(JoinGameActivity.owner) {
-                    //Game.outHandedCards
-                    //writeToTheSender(Game.outHandedCards.get(0),msg.arg2);
-                    writeToTheSender(Server.CHEAT+"asdfd",msg.arg2);
+                  writeToTheSender(Server.GOT_CARDS,gameActivity.getPlayerHand(),msg.arg2);
                 }
                 break;
 
             case GOT_CARDS:
-                gameActivity.openCheatPopUp(msg.obj.toString());
+                String cardsfromplayer = new String((byte[])msg.obj,1,msg.arg1);
+                gameActivity.openCheatPopUp(cardsfromplayer);
+                System.out.println("cards "+cardsfromplayer);
                 break;
 
-
             case YOUR_TURN:
-                System.out.println("its your turn");
                 if (gameActivity != null){
                    gameActivity.MyTurn();}
                 else {
@@ -208,15 +193,25 @@ public class MessageHandler implements Handler.Callback {
                 }
                 break;
 
+            case ROUND:
+                if (gameActivity != null){
+                    gameActivity.newRound();
+                }
+                else {
+                    System.out.println("game is null");
+                }
+                break;
+
             case WINNER:
                 byte[] winner = (byte[]) msg.obj;
                 if (gameActivity != null){
                     gameActivity.showWhoIsTheWinner();
-                    gameActivity.madeTrickUpdate();
                 }
                 else {
                     System.out.println("game is null"); }
                 break;
+
+
         }
         return true;
     }
@@ -225,34 +220,34 @@ public class MessageHandler implements Handler.Callback {
         System.out.println(Clients.size());
         if (Clients.size() >= 1) {
             for (Server Clients : Clients) {
-                if ((int) Clients.getId() == id) {
+                if (Clients.getMyId() == id) {
                     System.out.println(" CLient with id : " + id + " has sent a message");
                 } else {
-                    Clients.write(s);
+                    Clients.write(Server.READ,s);
+                    System.out.println(" sent id : " + id +" "+Clients.getMyId());
                 }
             }
         }
     }
 
-    private void writeToTheSender(String s, int id) {
-        System.out.println(Clients.size());
+    private void writeToTheSender(byte event,String s, int id) {
         if (Clients.size() >= 1) {
             for (Server Clients : Clients) {
-                if ((int) Clients.getId() == id) {
-                    Clients.write(s);
+                if (Clients.getMyId() == id) {
+                    Clients.write(event,s);
                 }
             }
         }
     }
 
-    public void write(String msg) {
+    public void write(byte event,String msg) {
         System.out.println("New message sent");
         if (Clients.size() >= 1) {
             for (Server Clients : Clients) {
-                Clients.write(msg);
+                Clients.write(event,msg);
             }
         } else {
-            server.write(msg);
+            server.write(event,msg);
         }
     }
 
@@ -271,7 +266,7 @@ public class MessageHandler implements Handler.Callback {
     public void sendEventToAllExceptTheSender(byte whatEvent, byte card, byte cardColor, byte player, int id) {
         if (Clients.size() >= 1) {
             for (Server Clients : Clients) {
-                if ((int) Clients.getId() == id) {
+                if (Clients.getMyId() == id) {
                     System.out.println(" CLient with id : " + id + " has sent a event");
                 } else {
                     Clients.event(whatEvent, card, cardColor, player);
@@ -285,7 +280,7 @@ public class MessageHandler implements Handler.Callback {
 
     public void sendCardsToPlayer(byte[] cards, int id) {
         for (Server Clients : Clients) {
-            if ((int) Clients.getId() == id) {
+            if (Clients.getMyId() == id) {
                 System.out.println("sent to "+id);
                 Clients.sendCards(cards);
             }
@@ -294,7 +289,7 @@ public class MessageHandler implements Handler.Callback {
 
     public void sendEventToTheSender(byte whatEvent, byte card, byte cardColor, byte player, int id) {
         for (Server Clients : Clients) {
-            if ((int) Clients.getId() == id) {
+            if (Clients.getMyId() == id) {
                 System.out.println("sent to "+id);
                 Clients.event(whatEvent, card, cardColor, player);
             }
