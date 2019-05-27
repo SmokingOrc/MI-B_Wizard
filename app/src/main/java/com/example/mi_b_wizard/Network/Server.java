@@ -108,6 +108,10 @@ public class Server extends Thread{
 
                         case YOUR_TURN:
                             handler.obtainMessage(MessageHandler.YOUR_TURN, bytes, id, buffer).sendToTarget();
+                        
+                        case SEND_POINTS:
+                            handler.obtainMessage(MessageHandler.POINTS, bytes, id, buffer).sendToTarget();
+                            System.out.println("points");
                             break;
 
                         case NEW_ROUND:

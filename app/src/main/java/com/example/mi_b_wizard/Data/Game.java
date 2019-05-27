@@ -97,7 +97,6 @@ public class Game {
         whoWonThisRound();
         waitALittleBit();
         sendCards();
-        gameActivity.showMyPoints();
     }
 
     private void waitALittleBit() {
