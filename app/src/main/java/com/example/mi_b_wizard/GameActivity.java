@@ -31,6 +31,7 @@ import android.widget.NumberPicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,7 +106,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
 
-        LinearLayout trumpPos = findViewById(R.id.trumpPosition);
+        RelativeLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
         ViewCards cardview = new ViewCards(GameActivity.this,this,trump);
         trumpPos.addView(cardview.view);
