@@ -72,6 +72,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private boolean canWeStart = false;
     private boolean correctPoints = false;
     public String cheatString = "";
+    private CheatingDialog cD;
 
     ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
     LinearLayout testplayedCards;
@@ -83,7 +84,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private long lastUpdate;
     private AlertDialog.Builder myBuilder;
     private AlertDialog myDialog;
-    private boolean isPopUpActive = false;
+    public boolean isPopUpActive = false;
     //For SpeechRecognition and manuel tricks input
     private ProgressBar progressBar;
     private TextView tricksTable, myTricksTable;
@@ -330,9 +331,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         }else{
             server = messageHandler.getServer();
         }
+
+        //For Cheating
         mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         lastUpdate = System.currentTimeMillis();
         myVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        cD = new CheatingDialog(GameActivity.this);
 
 
         startAndSendCards.setOnClickListener(new View.OnClickListener() {
@@ -522,10 +526,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 return;
             }
             lastUpdate = actualTime;
-            if(!JoinGameActivity.owner){
+            /*if(!JoinGameActivity.owner){
             messageHandler.sendEvent(Server.CHEAT,zero,zero,zero);}
-            else{openCheatPopUp(game.getPlayedCards());}
-
+            else{openCheatPopUp(game.getPlayedCards());}*/
+            openCheatPopUp("");
             //enemyCards = testGame.getCardsOfRandomPlayer();
             //String[] splitted = enemyCards.split(";");
             // String[] cardsFromOtherPlayer = {"2_Blue", "7_Green", "8_Yellow"};
@@ -545,54 +549,32 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 e.printStackTrace();
             }*/
 
-/*
-            if(!isPopUpActive) {
-                isPopUpActive = true;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    myVibrator.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else {
-                    //deprecated in API 26
-                    myVibrator.vibrate(5000);
-                }
-                myBuilder = new AlertDialog.Builder(GameActivity.this);
-                myBuilder.setTitle("Cards from: ");
-                myBuilder.setItems(cardsFromOtherPlayer, null);
-                //myBuilder.setMessage(cheatString);
-                myBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                    myVibrator.cancel();
-                    isPopUpActive = false;
-                    }
-                });
-                myBuilder.setIcon(android.R.drawable.ic_dialog_info);
-                myDialog = myBuilder.create();
-                myDialog.show();
-            } */
+
         }
     }
 
     public void openCheatPopUp(String value) {
-        if(!isPopUpActive) {
-            isPopUpActive = true;
+        if(!cD.isActive) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                myVibrator.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
+                myVibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 //deprecated in API 26
-                myVibrator.vibrate(5000);
+                myVibrator.vibrate(500);
             }
-            myBuilder = new AlertDialog.Builder(GameActivity.this);
-            myBuilder.setTitle("Cards from: ");
-            //myBuilder.setItems(cardsFromOtherPlayer, null);
-            myBuilder.setMessage(value);
-            myBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    myVibrator.cancel();
-                    isPopUpActive = false;
-                }
-            });
-            myBuilder.setIcon(android.R.drawable.ic_dialog_info);
-            myDialog = myBuilder.create();
-            myDialog.show();
+            cD.isActive = true;
+            Hand testHand = new Hand();
+            testHand.addCardToHand(new Card(3,3));
+            testHand.addCardToHand(new Card(4,3));
+            testHand.addCardToHand(new Card(5,3));
+            testHand.addCardToHand(new Card(6,3));
+            testHand.addCardToHand(new Card(7,1));
+            testHand.addCardToHand(new Card(8,1));
+            testHand.addCardToHand(new Card(2,2));
+            cD.setHandToShow(testHand);
+
+            cD.show();
+
+
         }
     }
 

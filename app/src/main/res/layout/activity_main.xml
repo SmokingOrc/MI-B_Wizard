@@ -81,7 +81,6 @@
         app:layout_constraintTop_toBottomOf="@id/btnRegeln"
         app:layout_constraintEnd_toEndOf="@id/btnRegeln"
         app:layout_constraintStart_toStartOf="@id/btnRegeln"
-        android:visibility="invisible"
         />
 
 
