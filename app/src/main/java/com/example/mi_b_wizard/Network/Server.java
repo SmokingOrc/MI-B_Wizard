@@ -2,6 +2,7 @@ package com.example.mi_b_wizard.Network;
 
 
 import android.os.Handler;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,17 +13,23 @@ import java.net.Socket;
 public class Server extends Thread{
     private Socket socket;
     private Handler handler;
-    public final static byte MOVE = 1;
-    public final static byte START_GAME = 2;
-    public final static byte GIVE_ME_CARDS = 3;
-    public final static byte CARDS = 4;
-    public final static byte TRICKS = 5;
-    public final static byte ID = 6;
-    public final static byte WINNER = 7;
-    public final static byte YOUR_TURN = 8;
-    public final static byte SEND_POINTS = 9;
-    public final static byte TRUMP = 10;
-    public final static byte CHEAT = 11;
+    private int id = this.hashCode();
+    public final static byte MOVE = 29;
+    public final static byte START_GAME = 22;
+    public final static byte GIVE_ME_CARDS = 33;
+    public final static byte CARDS = 44;
+    public final static byte TRICKS = 55;
+    public final static byte ID = 66;
+    public final static byte WINNER = 121;
+    public final static byte YOUR_TURN = 88;
+    public final static byte SEND_POINTS = 99;
+    public final static byte TRUMP = 100;
+    public final static byte CHEAT = 110;
+    public final static byte NEW_ROUND = 120;
+    public final static byte READ = 114;
+    public final static byte GOT_CARDS = 124;
+    public final static byte NOTIFICATION  = 32;
+
     public final static  byte GIVE_ME_YOUR_CARDS = 12;
 
 
@@ -30,6 +37,10 @@ public class Server extends Thread{
         this.socket = socket;
         this.handler = handler;
 
+    }
+
+    public int getMyId(){
+        return id;
     }
 
     private InputStream inputStream;
@@ -44,7 +55,7 @@ public class Server extends Thread{
             outputStream = socket.getOutputStream();
             byte[] buffer = new byte[1024];
             int bytes;
-            handler.obtainMessage(MessageHandler.HANDLE,1,(int)getId(),this).sendToTarget();
+            handler.obtainMessage(MessageHandler.HANDLE,1,id,this).sendToTarget();
 
             while (true) {
                 try {
@@ -52,68 +63,71 @@ public class Server extends Thread{
                     if (bytes == -1) {
                         break;
                     }
-                    //System.out.println();
                     System.out.println("event id is : "+buffer[0]);
                     switch (buffer[0]){
-                        case MOVE:
-                            handler.obtainMessage(MessageHandler.MOVE, bytes, (int)getId(), buffer).sendToTarget();
-                            System.out.println("move");
+
+                        case READ:
+                            handler.obtainMessage(MessageHandler.READ, bytes, id, buffer).sendToTarget();
                             break;
 
-                        case TRUMP:
-                            handler.obtainMessage(MessageHandler.TRUMP, bytes, (int)getId(), buffer).sendToTarget();
-                            System.out.println("trump");
-                            break;
-
-                        case START_GAME:
-                            handler.obtainMessage(MessageHandler.START_GAME, bytes, (int)getId(), buffer).sendToTarget();
-                            System.out.println("start");
-                            break;
-
-                        case GIVE_ME_CARDS:
-                            handler.obtainMessage(MessageHandler.SEND_CARDS, bytes, (int)getId(), buffer).sendToTarget();
-                            System.out.println("give me cards");
-                            break;
-
-                        case CARDS:
-                            handler.obtainMessage(MessageHandler.CARDS, bytes, (int)getId(), buffer).sendToTarget();
-                            System.out.println("cards");
-                            break;
-
-                        case ID:
-                            handler.obtainMessage(MessageHandler.GET_MY_ID, bytes, (int)getId(), buffer).sendToTarget();
-                            System.out.println("ID");
-                            break;
-
-                        case TRICKS:
-                            handler.obtainMessage(MessageHandler.PREDICTED_TRICKS, bytes, (int)getId(), buffer).sendToTarget();
-                            System.out.println("give me cards");
-                            break;
-
-                        case SEND_POINTS:
-                            handler.obtainMessage(MessageHandler.POINTS, bytes, (int)getId(), buffer).sendToTarget();
-                            System.out.println("points");
+                        case NOTIFICATION:
+                            handler.obtainMessage(MessageHandler.NOTIFICATION, bytes, id, buffer).sendToTarget();
                             break;
 
                         case WINNER:
-                            handler.obtainMessage(MessageHandler.WINNER, bytes, (int)getId(), buffer).sendToTarget();
-                            System.out.println("winner");
+                            handler.obtainMessage(MessageHandler.WINNER, bytes, id, buffer).sendToTarget();
+                            break;
+
+                        case TRUMP:
+                            handler.obtainMessage(MessageHandler.TRUMP, bytes, id, buffer).sendToTarget();
+                            break;
+
+                        case START_GAME:
+                            handler.obtainMessage(MessageHandler.START_GAME, bytes, id, buffer).sendToTarget();
+                            break;
+
+                        case GIVE_ME_CARDS:
+                            handler.obtainMessage(MessageHandler.SEND_CARDS, bytes, id, buffer).sendToTarget();
+                            break;
+
+                        case CARDS:
+                            handler.obtainMessage(MessageHandler.CARDS, bytes, id, buffer).sendToTarget();
+                            break;
+
+                        case ID:
+                            handler.obtainMessage(MessageHandler.GET_MY_ID, bytes, id , buffer).sendToTarget();
+                            break;
+
+                        case TRICKS:
+                            handler.obtainMessage(MessageHandler.PREDICTED_TRICKS, bytes,id, buffer).sendToTarget();
                             break;
 
                         case YOUR_TURN:
-                            handler.obtainMessage(MessageHandler.YOUR_TURN, bytes, (int)getId(), buffer).sendToTarget();
-                            System.out.println("your turn");
+                            handler.obtainMessage(MessageHandler.YOUR_TURN, bytes, id, buffer).sendToTarget();
+                        
+                        case SEND_POINTS:
+                            handler.obtainMessage(MessageHandler.POINTS, bytes, id, buffer).sendToTarget();
+                            System.out.println("points");
+                            break;
+
+                        case NEW_ROUND:
+                            handler.obtainMessage(MessageHandler.ROUND, bytes, id, buffer).sendToTarget();
                             break;
 
                         case CHEAT:
-                            handler.obtainMessage(MessageHandler.GOT_CARDS, bytes, (int)getId(), buffer).sendToTarget();
+                            handler.obtainMessage(MessageHandler.CHEAT, bytes, id, buffer).sendToTarget();
+                            break;
 
+                        case GOT_CARDS:
+                            handler.obtainMessage(MessageHandler.GOT_CARDS, bytes, id, buffer).sendToTarget();
+                            break;
+
+                        case MOVE:
+                            handler.obtainMessage(MessageHandler.MOVE, bytes, id, buffer).sendToTarget();
                             break;
 
                             default:
-
-                                handler.obtainMessage(MessageHandler.READ, bytes, (int)getId(), buffer).sendToTarget();
-                                System.out.println("default");
+                                System.out.println("default : "+buffer[0]);
                                 break;
 
                     }
@@ -133,8 +147,9 @@ public class Server extends Thread{
             }
         }
     }
-    public void write(String msg) {
-        final byte[] buffer = (msg).getBytes();
+    public void write(byte event, String msg) {
+        final byte[] firstbyte = {event};
+        final byte[] buffer  = ArrayUtils.addAll(firstbyte,msg.getBytes());
 
         Thread thread = new Thread() {
             @Override
