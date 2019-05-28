@@ -31,6 +31,7 @@ import android.widget.NumberPicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +74,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public String cheatString = "";
 
     ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
+    LinearLayout testplayedCards;
     Card nextCard;
 
 
@@ -110,7 +112,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
-        LinearLayout trumpPos = findViewById(R.id.trumpPosition);
+        RelativeLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
         ViewCards cardview = new ViewCards(GameActivity.this,this,trump);
         trumpPos.addView(cardview.view);
@@ -119,7 +121,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void showMove(Byte cardPlayed){
         playedcard = cardAdapter.getThisCard(cardPlayed);
         toast("Card : "+ playedcard.getColour()+" "+playedcard.getRank()+" was played ");
+
+        //showPlayedCardsforAll();
+        //showMyPlayedCard();
     }
+
     public void isFirstRound(){
         if(firstRound && JoinGameActivity.owner){
             myTurn = true;
@@ -166,6 +172,42 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+
+    //To show my own played card on screen
+
+    public void showMyPlayedCard(){
+        testplayedCards = findViewById(R.id.myplayedcard);
+
+        ViewCards cardview = new ViewCards(GameActivity.this, this, playedcard);
+        testplayedCards.addView(cardview.view);
+    }
+
+
+    //To show cards from other players on screen
+
+    public void showPlayedCardsforAll() {
+
+        testplayedCards = findViewById(R.id.playedcardsothers);
+
+        ViewCards cardview = new ViewCards(GameActivity.this, this, playedcard);
+        testplayedCards.addView(cardview.view);
+
+    }
+
+    //Clears all Views with played cards, because next round has started
+
+    public void clearView(){
+        testplayedCards= findViewById(R.id.playedcardsothers);
+        testplayedCards.removeAllViews();
+
+        testplayedCards= findViewById(R.id.myplayedcard);
+        testplayedCards.removeAllViews();
+    }
+
+
+
+
+
     //To add images in ScrollView and give them a border, when a card is chosen
 
     private void addImageToScrollView(LinearLayout cardHandView, Card card) {
@@ -195,6 +237,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         cardHandView.addView(cardview.view);
 
     }
+
 
     private void setNextCard(Card card){
         nextCard = card;

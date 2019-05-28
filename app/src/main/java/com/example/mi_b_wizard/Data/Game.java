@@ -113,6 +113,7 @@ public class Game {
         whoWonThisRound();
         waitALittleBit();
         playedCards.clear();
+        //gameActivity.clearView();
         playersPlayedThisRound = 0;
         firstCardThisTurn = 0;
     }
@@ -245,6 +246,7 @@ public class Game {
         }
         winner(id);
         playedCards.clear();
+        //gameActivity.clearView();
     }
 
     private void winner(int id) {
