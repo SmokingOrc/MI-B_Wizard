@@ -32,8 +32,7 @@ public class Notifications {
             PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentIntent(pi);
             mNotificationManager.notify(0, mBuilder.build());
-        }
-    else{
+        } else{
         System.out.println("context null");
     }
 }}
