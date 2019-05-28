@@ -25,22 +25,22 @@ public class MessageHandler implements Handler.Callback {
     private ArrayList<Integer> id = new ArrayList<Integer>();
     private static MessageHandler messageHandler;
     byte  n = 0;
-    public static final int HANDLE = 0x400 + 2;
-    public static final int READ = 0x400 + 1;
-    public static final int MOVE = 0x400 + 3;
-    public static final int START_GAME = 0x400 + 4;
-    public static final int CARDS = 0x400 + 5;
-    public static final int SEND_CARDS = 0x400 + 6;
-    public static final int PREDICTED_TRICKS = 0x400 + 7;
-    public static final int GET_MY_ID = 0x400 + 8;
-    public static final int YOUR_TURN = 0x400 + 9;
-    public static final int WINNER = 0x400 + 10;
-    public static final int POINTS = 0x400 + 11;
-    public static final int CHEAT = 0x400 + 12;
-    public static final int TRUMP = 0x400 + 13;
-    public static final int ROUND = 0x400 + 17;
-    public static final int GOT_CARDS =  0x400 + 14;
-    public static final int NOTIFICATION = 0x400 + 20;
+    public static final byte HANDLE = 2;
+    public static final byte READ = 1;
+    public static final byte MOVE = 3;
+    public static final byte START_GAME =  4;
+    public static final byte CARDS = 5;
+    public static final byte SEND_CARDS =  6;
+    public static final byte PREDICTED_TRICKS = 7;
+    public static final byte GET_MY_ID = 8;
+    public static final byte YOUR_TURN =  9;
+    public static final byte WINNER = 10;
+    public static final byte POINTS =  11;
+    public static final byte CHEAT = 12;
+    public static final byte TRUMP = 13;
+    public static final byte ROUND =  17;
+    public static final byte GOT_CARDS =  14;
+    public static final byte NOTIFICATION = 68;
 
 
 
@@ -145,20 +145,18 @@ public class MessageHandler implements Handler.Callback {
                 break;
 
             case PREDICTED_TRICKS:
-                byte[] tricks = (byte[]) msg.obj;
+                String tricks = new String((byte[])msg.obj,1,msg.arg1);
                 if (JoinGameActivity.owner) {
-                    sendEventToAllExceptTheSender(tricks[0], tricks[1], tricks[2], tricks[3], msg.arg2);
-                    gameActivity.showPredictedTricks(tricks[1],msg.arg2);
-                }else{
-                    gameActivity.showPredictedTricks(tricks[1],msg.arg2);
-                }
+                    writeToAllExceptTheSender(Server.TRICKS,tricks, msg.arg2);}
+                    gameActivity.showPredictedTricks(tricks);
+
                 break;
 
             case NOTIFICATION:
-                String winner = new String((byte[]) msg.obj, 1, msg.arg1);
-                gameActivity.toast(winner);
+                String notification = new String((byte[]) msg.obj, 1, msg.arg1);
+                gameActivity.toast(notification);
                 if (JoinGameActivity.owner) {
-                    writeToAllExceptTheSender(Server.NOTIFICATION,winner, msg.arg2);
+                    writeToAllExceptTheSender(Server.NOTIFICATION,notification, msg.arg2);
                 }
                 break;
 
@@ -193,16 +191,15 @@ public class MessageHandler implements Handler.Callback {
                 break;
 
             case POINTS:
-                byte[] points = (byte[]) msg.obj;
+               // byte[] points = (byte[]) msg.obj;
+                String points = new String((byte[]) msg.obj, 1, msg.arg1);
+                gameActivity.setPointsInDialog(points);
                 if (JoinGameActivity.owner){
                     //gameActivity.showPoints(points);
-                    sendEventToAllExceptTheSender(points[0], points[1], points[2], points[3], msg.arg2);
-                    gameActivity.setPointsInDialog(points[1],msg.arg2);
-                }
-                else {
-                    System.out.println("Points");
-                    //gameActivity.showPoints(points);
-                    gameActivity.setPointsInDialog(points[1],msg.arg2);
+                  //  sendEventToAllExceptTheSender(points[0], points[1], points[2], points[3], msg.arg2);
+                    writeToAllExceptTheSender(Server.SEND_POINTS,points, msg.arg2);
+                   // gameActivity.setPointsInDialog(points[1],msg.arg2);
+
                 }
                 break;
 
@@ -262,6 +259,7 @@ public class MessageHandler implements Handler.Callback {
 
 
     public void sendEvent(byte whatEvent, byte card, byte cardColor, byte player) {
+        System.out.println(whatEvent +" event  "+ card + " card");
         if (Clients.size() >= 1) {
             for (Server Clients : Clients) {
                 Clients.event(whatEvent, card, cardColor, player);
@@ -272,6 +270,7 @@ public class MessageHandler implements Handler.Callback {
     }
 
     public void sendEventToAllExceptTheSender(byte whatEvent, byte card, byte cardColor, byte player, int id) {
+        System.out.println(whatEvent +" event  "+ card + " card");
         if (Clients.size() >= 1) {
             for (Server Clients : Clients) {
                 if (Clients.getMyId() == id) {

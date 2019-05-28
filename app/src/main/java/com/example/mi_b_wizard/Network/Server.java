@@ -14,13 +14,13 @@ public class Server extends Thread{
     private Socket socket;
     private Handler handler;
     private int id = this.hashCode();
-    public final static byte MOVE = 11;
+    public final static byte MOVE = 29;
     public final static byte START_GAME = 22;
     public final static byte GIVE_ME_CARDS = 33;
     public final static byte CARDS = 44;
     public final static byte TRICKS = 55;
     public final static byte ID = 66;
-    public final static byte WINNER = 77;
+    public final static byte WINNER = 121;
     public final static byte YOUR_TURN = 88;
     public final static byte SEND_POINTS = 99;
     public final static byte TRUMP = 100;
@@ -74,10 +74,6 @@ public class Server extends Thread{
                             handler.obtainMessage(MessageHandler.NOTIFICATION, bytes, id, buffer).sendToTarget();
                             break;
 
-                        case MOVE:
-                            handler.obtainMessage(MessageHandler.MOVE, bytes, id, buffer).sendToTarget();
-                            break;
-
                         case WINNER:
                             handler.obtainMessage(MessageHandler.WINNER, bytes, id, buffer).sendToTarget();
                             break;
@@ -124,6 +120,10 @@ public class Server extends Thread{
 
                         case GOT_CARDS:
                             handler.obtainMessage(MessageHandler.GOT_CARDS, bytes, id, buffer).sendToTarget();
+                            break;
+
+                        case MOVE:
+                            handler.obtainMessage(MessageHandler.MOVE, bytes, id, buffer).sendToTarget();
                             break;
 
                             default:

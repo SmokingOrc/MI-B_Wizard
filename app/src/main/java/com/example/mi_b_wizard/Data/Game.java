@@ -81,8 +81,9 @@ public class Game {
     private void whoIsNext() {
         if (turnsCount == ((ids.size() + 1) * round) && round < maxRounds) {
             nextRound();
-            gameActivity.newRound();
             messageHandler.sendEvent(Server.NEW_ROUND, n, n, n);
+            waitALittleBit();
+            gameActivity.newRound();
         } else if (playersPlayedThisRound == ids.size() + 1) {
             nextTurn();
         } else {
@@ -247,6 +248,7 @@ public class Game {
     }
 
     private void winner(int id) {
+        waitALittleBit();
         if (id != 0) {
             messageHandler.sendEventToTheSender(Server.WINNER, n, n, n, id);
             setTurnCounter(id);

@@ -138,11 +138,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void showWhoIsTheWinner(){
         toast("You won!");
-
-        messageHandler.write(Server.NOTIFICATION,me.getPlayerName()+" made a trick");
-
+        messageHandler.write(Server.NOTIFICATION,me.getPlayerName()+" made a trick ");
         myTurn = true;
-        madeTrickUpdate();
+        me.madeATrick();
     }
 
     public void takeCards(byte[] cards){
@@ -220,12 +218,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void sendMyPoints(int points) {
-        if (JoinGameActivity.owner) {
-            messageHandler.sendEvent(Server.SEND_POINTS, (byte) points, zero, zero);
-        } else {
-            messageHandler.sendEvent(Server.SEND_POINTS, (byte) points, zero, zero);
-            toast("My points: " + points);
-        }
+        toast("My points: " + points);
+        // messageHandler.sendEvent(Server.SEND_POINTS, (byte) points, zero, zero);
+        messageHandler.write(Server.SEND_POINTS, me.getPlayerName() + " has " + me.getPoints() + " points");
     }
 
     //Methode to show my points in pointsTable and set my points in TextView of the Dialog (CorrectPoints to start with calculation at the end of the first round)
@@ -233,7 +228,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         if (!correctPoints){
             correctPoints = true;
         }else{
-            me.calculateMyPoints();
+          //  me.calculateMyPoints();
         }
         int p = me.getPoints();
         pointsTable.setText("My actual points: "+ p);
@@ -242,9 +237,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         pointsView.setText("My points: "+ p);
     }
     //Methode to set the points of the other players in the Pointsview to show them in the dialog
-    public void setPointsInDialog(byte points, int id){
-        String messageTricksP = "Points player ID "+id +": "+points;
-        pointsView.append("\n"+messageTricksP);
+    public void setPointsInDialog(String points){
+       // String messageTricksP = "Points player ID "+id +": "+points;
+        pointsView.append("\n"+points);
     }
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
@@ -255,11 +250,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         myTurn = true;
         toast("its your turn");
     }
-    public void showPredictedTricks(byte trick, int id){
-        toast("Player with ID: "+id+ "has predicted "+trick+ "tricks");
+    public void showPredictedTricks(String tricks){
+        toast(tricks);
         //Shows the tricks of the other players
-        String messageTricks = "Tricks Player "+id+": "+trick;
-        tricksTable.append("\n"+messageTricks);
+        tricksTable.append("\n"+tricks);
     }
 
 
@@ -452,7 +446,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         tricks = false;
         predictTricksBtn.setVisibility(View.VISIBLE);
         writeTricksBtn.setVisibility(View.VISIBLE);
-        showMyPoints();
+     //   showMyPoints();
         myTricksTable.setText("Predicted Tricks this round");
         tricksTable.setText("");
     }
@@ -731,13 +725,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     //sends the predicted tricks to the other players
     public void sendPredictedTricks(){
-        if(JoinGameActivity.owner && !tricks){
-            messageHandler.sendEvent(Server.TRICKS,me.getPredictedTrick(),zero,zero);
-            tricks = true;
-            predictTricksBtn.setVisibility(View.INVISIBLE);
-            writeTricksBtn.setVisibility(View.INVISIBLE);
-        }else if(!tricks){
-            messageHandler.sendEvent(Server.TRICKS,me.getPredictedTrick(),zero,zero);
+
+       if(!tricks){
+            messageHandler.write(Server.TRICKS,me.getPlayerName()+" has predicted "+me.getPredictedTrick()+" tricks");
             tricks = true;
             predictTricksBtn.setVisibility(View.INVISIBLE);
             writeTricksBtn.setVisibility(View.INVISIBLE);
