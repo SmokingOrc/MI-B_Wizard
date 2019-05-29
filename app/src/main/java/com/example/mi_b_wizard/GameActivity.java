@@ -61,6 +61,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     ViewGroup layout;
     Server server;
     Card trump;
+    ResultActivity resultActivity;
     byte zero = 0;
     boolean tricks = false;
     Player me = MainActivity.getPlayer();
@@ -109,6 +110,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void newRound(){
         me.calculateMyPoints();
         showMyPoints();
+        resultActivity.addRound();
         haveICheated = false;
     }
     public void setTrump(byte cardT){
@@ -277,6 +279,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         int p = me.getPoints();
         pointsTable.setText("My actual points: "+ p);
         sendMyPoints(p);
+        resultActivity.setPoints(p);
         pointsView = new TextView(GameActivity.this);
         pointsView.setText("My points: "+ p);
     }
@@ -327,6 +330,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             game = new Game();
             game.setMessageHandler(messageHandler);
             game.setIds();
+            resultActivity.setIds();
             startAndSendCards.setText("GIVE OUT CARDS"); // for the first round.
         }else{
             server = messageHandler.getServer();
@@ -431,6 +435,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                                 byte predictedTricks = (byte)numberPicker.getValue();
                                 me.updatePredictedTricks(predictedTricks);
                                 sendPredictedTricks();
+                                resultActivity.setPredictedTricks(predictedTricks);
                                 Log.d(LOG_TAG,predictedTricks+"");
                                 myTricksTable.append("\n"+"My Tricks: "+me.getPredictedTrick());
                                 alertDialog.dismiss();
