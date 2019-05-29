@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.mi_b_wizard.Data.Card;
+import com.example.mi_b_wizard.Data.Hand;
 import com.example.mi_b_wizard.Data.Player;
 
 
@@ -64,6 +66,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent iCheat = new Intent(MainActivity.this, GameActivity.class);
                 startActivity(iCheat);
+                /*Hand testHand = new Hand();
+                testHand.addCardToHand(new Card(3,3));
+                testHand.addCardToHand(new Card(4,3));
+                testHand.addCardToHand(new Card(5,3));
+                testHand.addCardToHand(new Card(6,3));
+                testHand.addCardToHand(new Card(7,1));
+                testHand.addCardToHand(new Card(8,1));
+                testHand.addCardToHand(new Card(2,2));
+
+                CheatingDialog cD = new CheatingDialog(MainActivity.this, testHand);
+                cD.show();*/
             }
 
     });
