@@ -75,6 +75,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public String cheatString = "";
     private CheatingDialog cD;
 
+    //For Cards in Hand, Trump and played cards
     ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
     LinearLayout testplayedCards;
     Card nextCard;
@@ -110,7 +111,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void newRound(){
         me.calculateMyPoints();
         showMyPoints();
-        resultActivity.addRound();
+        //clearView();
+       // resultActivity.addRound();
         haveICheated = false;
     }
     public void setTrump(byte cardT){
@@ -126,7 +128,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         toast("Card : "+ playedcard.getColour()+" "+playedcard.getRank()+" was played ");
 
         //showPlayedCardsforAll();
-        //showMyPlayedCard();
     }
 
     public void isFirstRound(){
@@ -279,7 +280,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         int p = me.getPoints();
         pointsTable.setText("My actual points: "+ p);
         sendMyPoints(p);
-        resultActivity.setPoints(p);
+       // resultActivity.setPoints(p);
         pointsView = new TextView(GameActivity.this);
         pointsView.setText("My points: "+ p);
     }
@@ -330,7 +331,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             game = new Game();
             game.setMessageHandler(messageHandler);
             game.setIds();
-            resultActivity.setIds();
+            //resultActivity.setIds();
             startAndSendCards.setText("GIVE OUT CARDS"); // for the first round.
         }else{
             server = messageHandler.getServer();
@@ -375,11 +376,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     notMyTurnAnymore();
                     game.hostMadeAMove(nextCard.getId());
                     myHand.removeCardFromHand(nextCard);
+                    //showMyPlayedCard();
                     showCardsInHand();
 
                 } else if(myTurn){
                     messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
                     myHand.removeCardFromHand(nextCard);
+                    //showMyPlayedCard();
                     showCardsInHand();
                     notMyTurnAnymore();
                 } else {
@@ -435,7 +438,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                                 byte predictedTricks = (byte)numberPicker.getValue();
                                 me.updatePredictedTricks(predictedTricks);
                                 sendPredictedTricks();
-                                resultActivity.setPredictedTricks(predictedTricks);
+                                //resultActivity.setPredictedTricks(predictedTricks);
                                 Log.d(LOG_TAG,predictedTricks+"");
                                 myTricksTable.append("\n"+"My Tricks: "+me.getPredictedTrick());
                                 alertDialog.dismiss();
