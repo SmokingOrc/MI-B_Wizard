@@ -1,26 +1,22 @@
 package com.example.mi_b_wizard;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.mi_b_wizard.Data.Card;
-import com.example.mi_b_wizard.Data.Hand;
 import com.example.mi_b_wizard.Data.Player;
 
 
 public class MainActivity extends AppCompatActivity {
-    private static Player player;
-    Button ButtonJoin = null;
-    Button ButtonRegeln;
+    private static Player player = null;
+    Button buttonJoin = null;
+    Button buttonRegeln;
     private Button btnCheat = null; //only for testing shaking
-    Button ButtonSpeech;
-    Button ShowCardsOnHand;
-    EditText Userid;
+    EditText userID;
     String user;
 
 
@@ -28,20 +24,26 @@ public class MainActivity extends AppCompatActivity {
         return player;
     }
 
+    public static void setPlayer(String newPlayer) {
+        if (player == null) {
+            player = new Player(newPlayer);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Userid = findViewById(R.id.Userid);
-        user = Userid.getText().toString();
-        ButtonJoin = findViewById(R.id.btnJoin); //Wechsel zu Join Game
-        ButtonJoin.setOnClickListener(new View.OnClickListener() {
+        userID = findViewById(R.id.Userid);
+        user = userID.getText().toString();
+        buttonJoin = findViewById(R.id.btnJoin); //Wechsel zu Join Game
+        buttonJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(user.isEmpty()){
-                user = Userid.getText().toString();}
+                user = userID.getText().toString();}
                 if(!user.isEmpty()) {
-                    player = new Player(user);
+                    setPlayer(user);
                     Intent i = new Intent(MainActivity.this, JoinGameActivity.class);
                     startActivity(i);
                 }else {
@@ -50,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ButtonRegeln = findViewById(R.id.btnRegeln);//Wechsel zu Regeln
-        ButtonRegeln.setOnClickListener(new View.OnClickListener() {
+        buttonRegeln = findViewById(R.id.btnRegeln);//Wechsel zu Regeln
+        buttonRegeln.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     Intent i2 = new Intent(MainActivity.this, RulesActivity.class);
