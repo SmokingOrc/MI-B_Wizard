@@ -88,7 +88,6 @@ public class MessageHandler implements Handler.Callback {
     @Override
     public boolean handleMessage(Message msg) {
         setActivities();
-
         switch (msg.what) {
             case READ:
                 String s = new String((byte[]) msg.obj, 1, msg.arg1);

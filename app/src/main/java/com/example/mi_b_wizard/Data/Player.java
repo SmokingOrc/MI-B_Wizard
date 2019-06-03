@@ -90,9 +90,6 @@ public class Player{
 
    // <------------------------------------------->
 
-    public void showHand(){
-        hand.showHand();
-    }
     public void showActualPoints(){
         System.out.println("Your actual points are: "+points);
     }
