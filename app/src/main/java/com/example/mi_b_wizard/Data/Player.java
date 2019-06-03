@@ -22,8 +22,6 @@ public class Player{
 
     public Player(String playerName){
         setPlayerName(playerName);
-
-
         hand = new Hand();
         game = new Game();
 
@@ -92,9 +90,6 @@ public class Player{
 
    // <------------------------------------------->
 
-    public void showHand(){
-        hand.showHand();
-    }
     public void showActualPoints(){
         System.out.println("Your actual points are: "+points);
     }
@@ -228,12 +223,12 @@ public class Player{
     }
 
     //Only for testing Game Class!!!!
-    public Card playCardForTesting() {
-        Random r = new Random();
+  /* public Card playCardForTesting() {
+        Random r = new Random(); // bug - reuse random
         int index = r.nextInt(hand.getHandSize());
         Card item = (Card)hand.getHand().get(index);
         //Log.d("Info", "Player: " + this.playerName + " plays: " + item.getId());
         System.out.println("Player: " + this.playerName + " plays: " + item.getId());
         return item;
-    }
+    } */
 }

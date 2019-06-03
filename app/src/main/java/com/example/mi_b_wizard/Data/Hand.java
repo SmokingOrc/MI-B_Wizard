@@ -1,60 +1,50 @@
 package com.example.mi_b_wizard.Data;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Hand{
-    public int count=0;
+    //public int count=0;
+    private String tag = "Hand";
 
-    public List<Card> hand;
+    public List<Card> handCards;
 
     public Hand() {
-        hand = new ArrayList<Card>();
+        handCards = new ArrayList<>();
     }
-
-
 
     //adds a card to the hand
     public void addCardToHand(Card card){
-        System.out.println("card "+card.getRank()+" in "+card.getColour()+" added to your hand");
-        hand.add(card);
+        Log.i(tag,"card "+card.getRank()+" in "+card.getColour()+" added to your hand");
+        handCards.add(card);
     }
 
     //show all cards in the hand
-    public void showHand(){
-        /*Set keys = hand.keySet();
-        for(Object key: keys){
-            System.out.println(key +": "+ hand.get(key));
-        }
-        //Methode only print the keys
-        /*System.out.println("Keys: "+keys);*/
-    }
 
     public void removeFirstCard(){
-        hand.remove(0);
+        handCards.remove(0);
     }
 
     public void clearHand(){
-        hand.clear();
+        handCards.clear();
     }
     public int getHandSize(){
-        return hand.size();
+        return handCards.size();
     }
     public void removeCardFromHand(Card playedcard){
-        hand.remove(playedcard);
+        handCards.remove(playedcard);
     }
     public void setHand(List<Card> hand) {
-        this.hand = hand;
+        this.handCards = hand;
     }
     public List<Card> getHand(){
-        return hand;
+        return handCards;
     }
 
     public byte getCardInHand(int i){
-        return hand.get(i).getId();
+        return handCards.get(i).getId();
     }
 }

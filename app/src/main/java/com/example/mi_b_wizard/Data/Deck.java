@@ -32,9 +32,6 @@ public class Deck {
             }
     }
 
-    public void createDeck(){
-
-    }
 
     public Byte getTrump(){
         Object[] rand = card.keySet().toArray();
@@ -59,8 +56,7 @@ public class Deck {
      */
 
     public List<Card> getCards(int currentRound) {
-        List<Card> handCards = new ArrayList<Card>();
-
+        List<Card> handCards = new ArrayList<>();
 
         int i = 0;
 
@@ -77,15 +73,15 @@ public class Deck {
     }
 
     public String getMyCardsToString(byte[] myByteCards){
-            String myCards = "";
+        StringBuilder bld = new StringBuilder();
             for (int i = 1; i <myByteCards.length; i++) {
                 if (myByteCards[i] == 0) {
                     break;
                 } else {
-                    myCards +=  card.get(myByteCards[i]).getColour()+" "+card.get(myByteCards[i]).getRank()+", ";
+                    bld.append(card.get(myByteCards[i]).getColour()+" "+card.get(myByteCards[i]).getRank()+", ");
                 }
             }
-            return myCards;
+            return bld.toString();
         }
 
     public String getMyCardToString(byte myByteCards){
