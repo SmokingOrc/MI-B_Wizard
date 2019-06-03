@@ -1,5 +1,7 @@
 package com.example.mi_b_wizard.Data;
 
+import android.util.Log;
+
 import com.example.mi_b_wizard.GameActivity;
 import com.example.mi_b_wizard.Network.MessageHandler;
 import com.example.mi_b_wizard.Network.Server;
@@ -7,21 +9,21 @@ import com.example.mi_b_wizard.Network.Server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Game {
     private int turnsCount = 0;
+    private String tag = "game";
     private byte[] magicians = {30, 45, 60, 75};
     private int playersPlayedThisRound = 0;
     private MessageHandler messageHandler;
     private CardAdapter cardAdapter = new CardAdapter();
-    private Deck deck = new Deck();
     private GameActivity gameActivity = GameActivity.getGameActivity();
-    private ArrayList<Integer> ids = new ArrayList<Integer>();
+    private List<Integer> ids = new ArrayList<>();
     private byte firstCardThisTurn = 0;
     private byte trumpThisRound;
     private int round = 1;
-    private int turnsToGo = ids.size() + 1;
     private int playedRounds = 0;
     private int maxRounds;
     private int turns = 0;
@@ -32,8 +34,7 @@ public class Game {
     private boolean rightNumberOfPlayers = false;
     private Map<Byte, Integer> playedCards = new HashMap<>();
 
-    // Setters&Getters for tests
-    public void setIdsTest(ArrayList<Integer> id) {
+    public void setIdsTest(List<Integer> id) {
         ids = id;
     }
 
@@ -104,7 +105,7 @@ public class Game {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(tag,"sleep exception");
             Thread.currentThread().interrupt();
         }
     }
@@ -120,7 +121,6 @@ public class Game {
     private void findNext() {
         if (turns < ids.size()) {
             messageHandler.sendEventToTheSender(Server.YOUR_TURN, n, n, n, ids.get(turns));
-            System.out.println("other players turn");
             turns++;
         } else {
             gameActivity.MyTurn();
@@ -143,15 +143,14 @@ public class Game {
                 byte[] cardsToSend;
                 cardsToSend = cardAdapter.getByteCards(round);
                 messageHandler.sendCardsToPlayer(cardsToSend, playerId);
-                System.out.println("cards sent to players from game class");
+                Log.i(tag,"cards sent to players from game class");
             }
             gameActivity.takeCards(cardAdapter.getByteCards(round));
 
         } else if (round != 1) {
-            turnsToGo = (ids.size() + 1) * round;
             sendCards();
         } else {
-            System.out.println("Wrong number of players");
+            Log.i(tag,"Wrong number of players");
             throw new IllegalStateException();
         }
     }
@@ -169,7 +168,6 @@ public class Game {
     }
 
     public void moveMade(byte cardPlayed, int playerID) {
-        System.out.println("card " + cardPlayed + " played from player with id : " + playerID);
         playedCards.put(cardPlayed, playerID);
         setFirstCard(cardPlayed);
         findNextPlayer();
@@ -179,13 +177,12 @@ public class Game {
         if (playersPlayedThisRound == 0) {
             if (cardPlayed != (byte) 31 || cardPlayed != (byte) 46 || cardPlayed != (byte) 61 || cardPlayed != (byte) 16) {
                 firstCardThisTurn = cardPlayed;
-                System.out.println("new first/high card");
+                Log.i(tag,"new first/high card");
             }
         }
     }
 
     public void hostMadeAMove(byte cardPlayed) {
-        System.out.println("I played a card : " + cardPlayed);
         playedCards.put(cardPlayed, host);
         setFirstCard(cardPlayed);
         findNextPlayer();
@@ -220,45 +217,37 @@ public class Game {
                     id = playedCards.get(magicians[i]);
                     System.out.println(id);
                     winner = true;
-                    System.out.println("magician");
                 }
             }
             if (!winner) {
-                if (nextCard.getKey() > ((color + 1) * 15 + 2) && nextCard.getKey() < (((color + 1) * 15 + 1) + 15)) {
-                    if (highTrump < nextCard.getKey()) {
+                if (nextCard.getKey() > ((color + 1) * 15 + 2) && nextCard.getKey() < ((color + 1) * 15 + 1) + 15 && highTrump < nextCard.getKey()) {
                         highTrump = nextCard.getKey();
                         id = nextCard.getValue();
                         playedTrump = true;
-                        System.out.println("trump");
-                    }
-                } else if (nextCard.getKey() > ((otherCardColor + 1) * 15 + 2) && nextCard.getKey() < ((((otherCardColor + 1) * 15 + 1) + 15)) && !playedTrump) {
-                    if (highCard < nextCard.getKey()) {
+                        Log.i(tag,"trump");
+                } else if (nextCard.getKey() > ((otherCardColor + 1) * 15 + 2) && nextCard.getKey() < ((((otherCardColor + 1) * 15 + 1) + 15)) && !playedTrump && highCard < nextCard.getKey()) {
                         highCard = nextCard.getKey();
                         id = nextCard.getValue();
-                        System.out.println("high");
+                        Log.i(tag,"high card");
                         highCardPlayed = true;
-                    }
                 }
             }
         }
         if (!playedTrump && !highCardPlayed && !winner) {
             id = playedFirstCard;
-            System.out.println("jester");
+            Log.i(tag,"jester");
         }
         winner(id);
         playedCards.clear();
     }
 
     private void winner(int id) {
-        waitALittleBit();
         if (id != 0) {
             messageHandler.sendEventToTheSender(Server.WINNER, n, n, n, id);
             setTurnCounter(id);
-            System.out.println("win player");
         } else {
             gameActivity.showWhoIsTheWinner();
             turns = 0;
-            System.out.println("win host");
         }
     }
 
