@@ -18,14 +18,19 @@ public class ViewCards {
     public ViewCards(Context context, AppCompatActivity screen, Card card) {
         this.card = card;
         this.view = new ImageView(context);
-        this.view.setTag(this);
         this.updatePictureOfCard();
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(180,300);
-        layoutParams.setMargins(10,10,10,10);
-        view.setLayoutParams(layoutParams);
 
+        //Calculates ImageView size from px to dp
+        // ->needed for cards, to display them in same size on every screen (Smartphone, Tablet,...)
+        final float scale = view.getResources().getDisplayMetrics().density;
+        int dpWidthInPx  = (int) (65 * scale);
+        int dpHeightInPx = (int) (90 * scale);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpWidthInPx,dpHeightInPx);
+        view.setLayoutParams(layoutParams);
     }
+
 
 
     /**
