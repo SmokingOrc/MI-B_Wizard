@@ -7,8 +7,8 @@ import java.util.List;
 
 public class CardAdapter {
     Deck deck = new Deck();
-    List<Card> handCards = new ArrayList<Card>();
-    List<String> playercards = new ArrayList<String>();
+    List<Card> handCards = new ArrayList<>();
+    List<String> playercards = new ArrayList<>();
 
     public String getPlayerCards(){
         return playercards.toString();
