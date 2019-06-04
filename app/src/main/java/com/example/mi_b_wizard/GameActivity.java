@@ -528,10 +528,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 return;
             }
             lastUpdate = actualTime;
-            /*if(!JoinGameActivity.owner){
-            messageHandler.sendEvent(Server.CHEAT,zero,zero,zero);}
-            else{openCheatPopUp(game.getPlayedCards());}*/
-            openCheatPopUp("");
+            if(!JoinGameActivity.owner){
+                messageHandler.sendEvent(Server.CHEAT,zero,zero,zero);
+            } else {
+                openCheatPopUp(game.getPlayedCards());
+            }
+            //openCheatPopUp("");
             //enemyCards = testGame.getCardsOfRandomPlayer();
             //String[] splitted = enemyCards.split(";");
             // String[] cardsFromOtherPlayer = {"2_Blue", "7_Green", "8_Yellow"};
@@ -556,7 +558,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void openCheatPopUp(String value) {
-        if(!cD.isActive) {
+        Log.d("In cheatpopup: ", value);
+        /*if(!cD.isActive) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 myVibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
@@ -573,11 +576,28 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             testHand.addCardToHand(new Card(8,1));
             testHand.addCardToHand(new Card(2,2));
             cD.setHandToShow(testHand);
+            cD.setTitle(value);
+            //cD.show();
 
-            cD.show();
 
-
+        }*/
+        if(!isPopUpActive) {
+            AlertDialog.Builder myBuilder = new AlertDialog.Builder(GameActivity.this);
+            myBuilder.setTitle("Cards handed out: ");
+            //List<String> list;
+            myBuilder.setMessage(value);
+            //myBuilder.setMessage(cheatString);
+            myBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    //myVibrator.cancel();
+                    isPopUpActive = false;
+                }
+            });
+            myBuilder.setIcon(android.R.drawable.ic_dialog_info);
+            AlertDialog myDialog = myBuilder.create();
+            myDialog.show();
         }
+
     }
 
 
