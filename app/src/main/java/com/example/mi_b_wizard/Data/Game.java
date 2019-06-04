@@ -134,6 +134,7 @@ public class Game {
             playedRounds++;
             findAndSendTrump();
 
+
             waitALittleBit();
 
             int playerId;
@@ -204,6 +205,7 @@ public class Game {
         boolean highCardPlayed = false;
         int playedFirstCard = 0;
 
+
         Iterator it = playedCards.entrySet().iterator();
 
         while (it.hasNext()) {
@@ -237,6 +239,7 @@ public class Game {
         }
         winner(id);
         playedCards.clear();
+        gameActivity.clearView();
     }
 
     private void winner(int id) {
