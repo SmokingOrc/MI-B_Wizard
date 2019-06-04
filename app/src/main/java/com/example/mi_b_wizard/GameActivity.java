@@ -399,6 +399,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         numberPicker.setMinValue(0);
         numberPicker.setMaxValue(20);
 
+        //Alert Dialog to predict the tricks without speech recognition
         writeTricksBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -419,7 +420,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                                 sendPredictedTricks();
                                 //resultActivity.setPredictedTricks(predictedTricks);
                                 Log.d(LOG_TAG,predictedTricks+"");
-                                myTricksTable.append("\n"+"My Tricks: "+me.getPredictedTrick());
+                                myTricksTable.append("\n"+"Player "+me.getPlayerName()+": "+me.getPredictedTrick());
                                 alertDialog.dismiss();
 
                             }
@@ -716,7 +717,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         Byte confirmedPredictedTricks = me.getCheckedPredictedTricks();
         me.updatePredictedTricks(confirmedPredictedTricks);
         Log.d(LOG_TAG,"positive click: " + confirmedPredictedTricks);
-        myTricksTable.setText("Predicted Tricks this round"+"\n"+"My Tricks: "+me.getPredictedTrick());
+        myTricksTable.setText("Predicted Tricks this round"+"\n"+"Player "+me.getPlayerName()+": "+me.getPredictedTrick());
         sendPredictedTricks();
     }
     @Override
