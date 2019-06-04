@@ -121,4 +121,11 @@ public class DeckTest {
 
 
     }
+
+    @Test
+    public void getMyCardToStringByte(){
+        byte bytecard = 32;
+        assertEquals("GREEN ONE, ", deck.getMyCardToString(bytecard));
+    }
+
 }

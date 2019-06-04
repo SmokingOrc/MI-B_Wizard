@@ -65,10 +65,6 @@ public class Player{
         this.predictedTrick = predictedTrick;
     }
 
-    public Hand getHand() {
-        return hand;
-    }
-
     public int getPoints() {
         return points;
     }
@@ -90,10 +86,6 @@ public class Player{
 
    // <------------------------------------------->
 
-    public void showActualPoints(){
-        System.out.println("Your actual points are: "+points);
-    }
-
     //Methode to reset for new round
     public void resetForNewRound(){
         hand.clearHand();
@@ -105,13 +97,6 @@ public class Player{
 
     //<------------Interaction with Game-------------->
 
-
-    //updates the points from a player
- /*   public void updatePoints(int predictedTrick, int madeTrick){
-      points = points + game.calculatePointsForOnePlayer(predictedTrick, madeTrick);
-
-    } */
-
     public void calculateMyPoints(){
 
         if(predictedTrick == madeTrick){
@@ -122,7 +107,7 @@ public class Player{
         resetForNewRound();
     }
 
-    public Hand getMyCards(){
+   /* public Hand getMyCards(){
         return hand;
     }
 
@@ -130,13 +115,6 @@ public class Player{
     public void giveCards(List<Card> playReadyCardsFromGame){
         resetForNewRound();
         hand.setHand(playReadyCardsFromGame);
-    }
-/*
-    //Updates made Tricks per round
-    public void updateMadeTricks(){
-        if(game.calculateWhoWonTheRound().equals(playerName)){
-            madeTrick++;
-        }
     }*/
 
     //<---------------Action Player-------------------->
@@ -144,10 +122,7 @@ public class Player{
     //Method to play Card
     public void playCard(Card card){
         hand.removeCardFromHand(card);
-       // game.addCardToCardsPlayed(this.playerName,card); -->needs to be updated
         actualPlayedCard = card;
-        //server.write(bytes)
-
     }
 
     //update Predicted Tricks
@@ -160,10 +135,10 @@ public class Player{
         if (predictedTrickS.contains("0") || predictedTrickS.equals("null")) {
             checkedPredictedTricks = 0;
         }
-        if (predictedTrickS.contains("1") || predictedTrickS.equals("eins")) {
+        if (predictedTrickS.contains("1") || predictedTrickS.equals("eins")|| predictedTrickS.equals("ans")) {
             checkedPredictedTricks = 1;
         }
-        if (predictedTrickS.contains("2") || predictedTrickS.equals("zwei")) {
+        if (predictedTrickS.contains("2") || predictedTrickS.equals("zwei")|| predictedTrickS.equals("zwa")) {
             checkedPredictedTricks = 2;
         }
         if (predictedTrickS.contains("3") || predictedTrickS.equals("drei")) {
