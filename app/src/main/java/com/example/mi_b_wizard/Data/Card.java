@@ -76,6 +76,7 @@ public class Card {
     //This method returns e.g. "TWO in BLUE"
     @Override
     public String toString(){
-        return String.format("%s in %s", getRank(),getColour());
+        //return String.format("%s in %s", getRank(),getColour());
+        return getColour() + "_" + getRank();
     }
 }
