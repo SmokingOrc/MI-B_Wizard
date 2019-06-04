@@ -78,8 +78,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private CheatingDialog cD;
 
     //For Cards in Hand, Trump and played cards
-    ArrayList<ViewCards> handCards = new ArrayList<>();
-    LinearLayout testplayedCards;
+    ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
+    LinearLayout playedCardsOthers, myPlayedCards;
     Card nextCard;
 
     private SensorManager mySensorManager;
@@ -111,22 +111,27 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         showMove(cardPlayed);
         messageHandler.sendEventToAllExceptTheSender(Server.MOVE,cardPlayed,zero,zero,playerID);
     }
+
     public void newRound(){
         me.calculateMyPoints();
         showMyPoints();
         haveICheated = false;
     }
+
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
         RelativeLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
         ViewCards cardview = new ViewCards(GameActivity.this,this,trump);
         trumpPos.addView(cardview.view);
+
+        clearView();
     }
 
     public void showMove(Byte cardPlayed){
         playedcard = cardAdapter.getThisCard(cardPlayed);
         toast("Card : "+ playedcard.getColour()+" "+playedcard.getRank()+" was played ");
+        showPlayedCardsforAll();
     }
 
     public void isFirstRound(){
@@ -154,8 +159,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void takeCards(byte[] cards){
         setMyHand(cards);
         showCardsInHand();
-    }
 
+        clearView();
+    }
 
     //To show cards/images in Hand
 
@@ -178,35 +184,41 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     //To show my own played card on screen
 
     public void showMyPlayedCard(){
-        testplayedCards = findViewById(R.id.myplayedcard);
+        myPlayedCards = findViewById(R.id.myplayedcard);
+        myPlayedCards.removeAllViews();
 
-        ViewCards cardview = new ViewCards(GameActivity.this, this, playedcard);
-        testplayedCards.addView(cardview.view);
+        ViewCards cardview = new ViewCards(GameActivity.this, this, nextCard);
+        myPlayedCards.addView(cardview.view);
     }
 
 
     //To show cards from other players on screen
 
     public void showPlayedCardsforAll() {
-
-        testplayedCards = findViewById(R.id.playedcardsothers);
+        playedCardsOthers = findViewById(R.id.playedcardsothers);
 
         ViewCards cardview = new ViewCards(GameActivity.this, this, playedcard);
-        testplayedCards.addView(cardview.view);
+        playedCardsOthers.addView(cardview.view);
 
     }
 
     //Clears all Views with played cards, because next round has started
 
     public void clearView(){
-        testplayedCards= findViewById(R.id.playedcardsothers);
-        testplayedCards.removeAllViews();
-
-        testplayedCards= findViewById(R.id.myplayedcard);
-        testplayedCards.removeAllViews();
+        clearPlayedCardsOthers();
+        clearMyPlayedCards();
     }
 
 
+    public void clearPlayedCardsOthers(){
+        myPlayedCards = findViewById(R.id.playedcardsothers);
+        myPlayedCards.removeAllViews();
+    }
+
+    public void clearMyPlayedCards(){
+        playedCardsOthers = findViewById(R.id.myplayedcard);
+        playedCardsOthers.removeAllViews();
+    }
 
 
 
@@ -220,7 +232,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 ViewCards cardview = GameActivity.this.handCards.get(index);
-                if(!tricks){
+                if(!tricks) {
                     toast("Please predict tricks first");
                 }else if(!cardview.isActive){
                     cardview.view.setBackgroundColor(Color.WHITE);
@@ -348,6 +360,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         });
 
 
+        //For updating Cards in Hand when Card is played
+
         playACard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -357,10 +371,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     notMyTurnAnymore();
                     game.hostMadeAMove(nextCard.getId());
                     myHand.removeCardFromHand(nextCard);
+                    showMyPlayedCard();
                     showCardsInHand();
                 }else if(myTurn){
                     messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
                     myHand.removeCardFromHand(nextCard);
+                    showMyPlayedCard();
                     showCardsInHand();
                     notMyTurnAnymore();
                 } else {
