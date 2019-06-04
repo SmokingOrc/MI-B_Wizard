@@ -69,13 +69,10 @@ public class Card {
         return this;
     }
 
-    public void showCard(){
-        //needs to be implemented
-        System.out.println(toString()+", ");
-    }
     //This method returns e.g. "TWO in BLUE"
     @Override
     public String toString(){
-        return String.format("%s in %s", getRank(),getColour());
+        //return String.format("%s in %s", getRank(),getColour());
+        return getColour() + "_" + getRank();
     }
 }

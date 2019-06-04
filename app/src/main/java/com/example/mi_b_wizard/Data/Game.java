@@ -239,7 +239,6 @@ public class Game {
         }
         winner(id);
         playedCards.clear();
-        gameActivity.clearView();
     }
 
     private void winner(int id) {
