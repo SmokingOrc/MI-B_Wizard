@@ -112,7 +112,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         messageHandler.sendEventToAllExceptTheSender(Server.MOVE,cardPlayed,zero,zero,playerID);
     }
 
-
     public void newRound(){
         me.calculateMyPoints();
         showMyPoints();
@@ -125,11 +124,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         trumpPos.removeAllViews();
         ViewCards cardview = new ViewCards(GameActivity.this,this,trump);
         trumpPos.addView(cardview.view);
+
+        clearView();
     }
 
     public void showMove(Byte cardPlayed){
         playedcard = cardAdapter.getThisCard(cardPlayed);
         toast("Card : "+ playedcard.getColour()+" "+playedcard.getRank()+" was played ");
+        showPlayedCardsforAll();
     }
 
     public void isFirstRound(){
@@ -157,8 +159,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void takeCards(byte[] cards){
         setMyHand(cards);
         showCardsInHand();
-    }
 
+        clearView();
+    }
 
     //To show cards/images in Hand
 
@@ -216,8 +219,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         playedCardsOthers = findViewById(R.id.myplayedcard);
         playedCardsOthers.removeAllViews();
     }
-
-
 
 
 
@@ -359,6 +360,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         });
 
 
+        //For updating Cards in Hand when Card is played
+
         playACard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -368,10 +371,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     notMyTurnAnymore();
                     game.hostMadeAMove(nextCard.getId());
                     myHand.removeCardFromHand(nextCard);
+                    showMyPlayedCard();
                     showCardsInHand();
                 }else if(myTurn){
                     messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
                     myHand.removeCardFromHand(nextCard);
+                    showMyPlayedCard();
                     showCardsInHand();
                     notMyTurnAnymore();
                 } else {
