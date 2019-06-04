@@ -104,12 +104,31 @@ public class DeckTest {
 
     }
 
+    //To test the if statement in getMyHand Method
+
+    @Test
+    public void getMyHandTest(){
+        byte[] ba = {0,0};
+        Hand hand = deck.getMyHand(ba);
+        assertEquals(hand.getHand().toString(),hand.getHand().toString());
+    }
+
     @Test
     public void getByteCardToStringTest(){
         byte[] ba = {0,50};
         String cardString = deck.getMyCardsToString(ba);
         assertEquals("YELLOW FOUR, ", cardString );
 
+
+    }
+
+    //To test the if statement in getMyCardsToString Method
+
+    @Test
+    public void getByteCardsToStringTest(){
+        byte[] ba = {0,0};
+        String cardString = deck.getMyCardsToString(ba);
+        assertEquals("", cardString );
 
     }
 
