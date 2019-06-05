@@ -15,7 +15,7 @@ public class ViewCards {
     public boolean isActive = false;
 
 
-    public ViewCards(Context context, AppCompatActivity screen, Card card) {
+    public ViewCards(Context context, Card card) {
         this.card = card;
         this.view = new ImageView(context);
         this.updatePictureOfCard();

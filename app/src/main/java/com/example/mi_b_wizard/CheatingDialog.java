@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 
 import com.example.mi_b_wizard.Data.Card;
 import com.example.mi_b_wizard.Data.Hand;
-import com.example.mi_b_wizard.Data.ViewCardForCheating;
 import com.example.mi_b_wizard.Data.ViewCards;
 
 import java.util.List;
@@ -44,14 +43,14 @@ public class CheatingDialog extends Dialog implements android.view.View.OnClickL
 
     public void addCardsToView() {
         if(handToShow != null) {
-            ViewCardForCheating cardview;
+            ViewCards cardview;
             List<Card> cards = handToShow.getHand();
             Card oneCard;
             linearLayoutCardView.removeAllViews();
 
             for (int i = 0; i<handToShow.getHandSize(); i++){
                 oneCard = cards.get(i);
-                cardview = new ViewCardForCheating(c, oneCard);
+                cardview = new ViewCards(c, oneCard);
                 linearLayoutCardView.addView(cardview.view);
             }
         }
