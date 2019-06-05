@@ -105,11 +105,26 @@ public class DeckTest {
     }
 
     @Test
+    public void getMyHandTest(){
+        byte[] ba = {0,0};
+        Hand hand = deck.getMyHand(ba);
+        assertEquals(hand.getHand().toString(),hand.getHand().toString());
+    }
+
+    @Test
     public void getByteCardToStringTest(){
         byte[] ba = {0,50};
         String cardString = deck.getMyCardsToString(ba);
         assertEquals("YELLOW FOUR, ", cardString );
 
+
+    }
+
+    @Test
+    public void getByteCardsToStringTest(){
+        byte[] ba = {0,0};
+        String cardString = deck.getMyCardsToString(ba);
+        assertEquals("", cardString );
 
     }
 
@@ -126,6 +141,20 @@ public class DeckTest {
     public void getMyCardToStringByte(){
         byte bytecard = 32;
         assertEquals("GREEN ONE, ", deck.getMyCardToString(bytecard));
+    }
+
+    @Test
+    public void TrumpIsMagicianTest(){
+
+        Card c = new Card(14,2);
+        int i = deck.getTrump();
+
+        if (i == 14){
+            assertTrue(c.isMagician());
+            assertEquals(14,i);
+
+        }
+
     }
 
 }
