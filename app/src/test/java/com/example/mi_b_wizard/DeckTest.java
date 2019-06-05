@@ -104,8 +104,6 @@ public class DeckTest {
 
     }
 
-    //To test the if statement in getMyHand Method
-
     @Test
     public void getMyHandTest(){
         byte[] ba = {0,0};
@@ -121,8 +119,6 @@ public class DeckTest {
 
 
     }
-
-    //To test the if statement in getMyCardsToString Method
 
     @Test
     public void getByteCardsToStringTest(){
@@ -145,6 +141,20 @@ public class DeckTest {
     public void getMyCardToStringByte(){
         byte bytecard = 32;
         assertEquals("GREEN ONE, ", deck.getMyCardToString(bytecard));
+    }
+
+    @Test
+    public void TrumpIsMagicianTest(){
+
+        Card c = new Card(14,2);
+        int i = deck.getTrump();
+
+        if (i == 14){
+            assertTrue(c.isMagician());
+            assertEquals(14,i);
+
+        }
+
     }
 
 }
