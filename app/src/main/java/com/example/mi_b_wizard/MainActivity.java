@@ -8,7 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.mi_b_wizard.Data.Game;
 import com.example.mi_b_wizard.Data.Player;
+import com.example.mi_b_wizard.Data.PlayerList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public static void setPlayer(String newPlayer) {
         if (player == null) {
             player = new Player(newPlayer);
+            PlayerList.addPlayer(player); // add Player to Playerlist
         }
     }
 

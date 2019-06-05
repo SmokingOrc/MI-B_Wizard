@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ResultActivity">
 
+    <Button
+        android:id="@+id/backToMainMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:text="Back to Menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <TableLayout
         android:id="@+id/result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#9fadb6"
-        android:stretchColumns="1,2,3,4,5,6"></TableLayout>
+        android:stretchColumns="1,2,3,4,5,6"
+        tools:layout_editor_absoluteX="55dp"
+        tools:layout_editor_absoluteY="0dp"></TableLayout>
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#f1f1f1"
-                android:gravity="center_horizontal"/>
+                android:gravity="center_horizontal" />
+
         </LinearLayout>
     </TableRow>
 </android.support.constraint.ConstraintLayout>

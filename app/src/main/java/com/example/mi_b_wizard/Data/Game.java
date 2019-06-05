@@ -33,6 +33,17 @@ public class Game {
     private int maxPlayers = 6;
     private boolean rightNumberOfPlayers = false;
     private Map<Byte, Integer> playedCards = new HashMap<>();
+    //PlayerListe in Game einfügen
+    private List<Player> playerList = new ArrayList<>();
+
+
+    public List<Player> getPlayerList() {
+        return playerList;
+    }
+
+    public void addPlayerList(Player player) {
+        this.playerList.add(player);
+    }
 
     public void setIdsTest(List<Integer> id) {
         ids = id;
@@ -93,6 +104,7 @@ public class Game {
     }
 
     private void nextRound() {
+
         turnsCount = 0;
         round++;
         playersPlayedThisRound = 0;
