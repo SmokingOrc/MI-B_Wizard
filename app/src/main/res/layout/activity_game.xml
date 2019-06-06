@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#928E8E"
+    android:background="@drawable/gamebackground"
     tools:context=".GameActivity">
 
     <Button
@@ -15,101 +15,45 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:soundEffectsEnabled="true"
         android:text="Wait"
-        app:layout_constraintBottom_toTopOf="@+id/myTricksTable"
+        app:layout_constraintBottom_toTopOf="@+id/playedCardsThisRoundView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myplayedcard" />
-
-    <Button
-        android:id="@+id/playacard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Play a card"
-        app:layout_constraintBottom_toTopOf="@+id/playerHand1"
-        app:layout_constraintEnd_toStartOf="@+id/tricksTable"
-        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintHorizontal_bias="0.423"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.978"
-        tools:visibility="invisible" />
-
-    <Button
-        android:id="@+id/predictTricksbtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Say Tricks"
-        app:layout_constraintBottom_toBottomOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playedCardOtherPlayers"
         app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/writeTricksbtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginBottom="8dp"
-        android:text="Enter tricks"
-        app:layout_constraintBottom_toTopOf="@+id/playerHand1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/pointsButton"
-        android:layout_width="130dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Show Points"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.671"
-        app:layout_constraintStart_toEndOf="@+id/pointstable"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tricksTable"
-        android:layout_width="183dp"
-        android:layout_height="58dp"
+        android:layout_width="140dp"
+        android:layout_height="35dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/playerHand1"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/playerHand1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.727"
-        app:layout_constraintStart_toEndOf="@+id/writeTricksbtn" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/myTricksTable"
-        android:layout_width="201dp"
-        android:layout_height="49dp"
+        android:layout_width="120dp"
+        android:layout_height="29dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:text="Predicted Tricks"
         android:textColor="#3F51B5"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/tricksTable"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/predictTricksbtn"
-        app:layout_constraintTop_toBottomOf="@+id/myplayedcard"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.465" />
 
     <TextView
         android:id="@+id/pointstable"
@@ -119,7 +63,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="My actual Points"
+        android:textColor="#FDFDFB"
         android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/myPredictTricksView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.027"
         app:layout_constraintStart_toStartOf="parent"
@@ -133,12 +80,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/playerHand1"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/playacard"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.178"
+        app:layout_constraintHorizontal_bias="0.386"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playedCardOtherPlayers"
+        app:layout_constraintTop_toBottomOf="@+id/myplayedcard"
         app:layout_constraintVertical_bias="1.0" />
 
 
@@ -166,35 +113,38 @@
     </HorizontalScrollView>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/trumpPosition"
         android:layout_width="70dp"
         android:layout_height="102dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="104dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="16dp"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.135"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintBottom_toTopOf="@+id/playedCardsThisRoundView"
+        app:layout_constraintEnd_toStartOf="@+id/myplayedcard"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/trump"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="22dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Trump:"
+        android:layout_marginBottom="8dp"
+        android:text="Trump"
+        android:textColor="#FDFDFB"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/trumpPosition"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.16"
+        app:layout_constraintHorizontal_bias="0.093"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pointstable"
-        app:layout_constraintVertical_bias="0.864" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 
     <LinearLayout
@@ -202,13 +152,16 @@
         android:layout_width="70dp"
         android:layout_height="102dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="17dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/playedCardsThisRoundView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.359"
-        app:layout_constraintStart_toEndOf="@+id/trumpPosition"
-        app:layout_constraintTop_toBottomOf="@+id/pointsButton">
+        app:layout_constraintHorizontal_bias="0.403"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
     </LinearLayout>
 
@@ -220,14 +173,14 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="88dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/myTricksTable"
+        app:layout_constraintBottom_toTopOf="@+id/playerHand1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.042"
+        app:layout_constraintHorizontal_bias="0.443"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trumpPosition"
-        app:layout_constraintVertical_bias="0.554">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
             android:id="@+id/playedcardsothers"
@@ -247,12 +200,14 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="My last played Card"
+        android:textColor="#FDFDFB"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/myplayedcard"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.366"
-        app:layout_constraintStart_toEndOf="@+id/trump"
-        app:layout_constraintTop_toBottomOf="@+id/pointsButton"
-        app:layout_constraintVertical_bias="0.952" />
+        app:layout_constraintHorizontal_bias="0.372"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/playedCardsThisRoundView"
@@ -262,13 +217,123 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Played cards this round:"
+        android:text="Played cards this round"
+        android:textColor="#FDFDFB"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/playedCardOtherPlayers"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.148"
+        app:layout_constraintHorizontal_bias="0.415"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trumpPosition"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/myPredictTricksView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="My predicted tricks"
+        android:textColor="#FDFDFB"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/StartWithCards"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.006" />
+
+    <ImageView
+        android:id="@+id/writeTricksbtn"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="52dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/playerHand1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playedCardOtherPlayers"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/entertricks_orange" />
+
+    <ImageView
+        android:id="@+id/sayTricksBtn"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/playerHand1"
+        app:layout_constraintEnd_toStartOf="@+id/writeTricksbtn"
+        app:layout_constraintHorizontal_bias="0.66"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playedCardOtherPlayers"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/saytricks_red" />
+
+    <ImageView
+        android:id="@+id/playacard"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/playerHand1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playedCardOtherPlayers"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/playacard_red" />
+
+    <ImageView
+        android:id="@+id/showPointsBtn"
+        android:layout_width="127dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/showpoints_red" />
+
+    <ImageView
+        android:id="@+id/showTricksBtn"
+        android:layout_width="127dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/myTricksTable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showPointsBtn"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/showtricks_red" />
+
+    <ImageView
+        android:id="@+id/detectedCheatingBtn"
+        android:layout_width="127dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/myTricksTable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showTricksBtn"
+        app:layout_constraintVertical_bias="0.006"
+        app:srcCompat="@drawable/detectcheating_red" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -7,7 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 public class PredictedTricksDialogFragment extends DialogFragment  {
-    private String predictedTricks;
+
     /* To receive event callbacks this interface must be implemented
     of the activity, which creates an instance of the dialogFragment.
     If the host needs to query the DialogFragment, these two methodes passes the DialogFragment to the host. */
@@ -35,7 +35,7 @@ public class PredictedTricksDialogFragment extends DialogFragment  {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
+        String predictedTricks;
         Bundle args = getArguments();
         predictedTricks = args.getString("PREDICTEDTRICKS");
         // Use the Builder class for convenient dialog construction
