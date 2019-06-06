@@ -144,7 +144,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         trump = cardAdapter.getThisCard(cardT);
         RelativeLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
-        ViewCards cardview = new ViewCards(GameActivity.this,this,trump);
+        ViewCards cardview = new ViewCards(GameActivity.this,trump);
         trumpPos.addView(cardview.view);
 
         clearView();
@@ -211,7 +211,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         myPlayedCards = findViewById(R.id.myplayedcard);
         myPlayedCards.removeAllViews();
 
-        ViewCards cardview = new ViewCards(GameActivity.this, this, nextCard);
+        ViewCards cardview = new ViewCards(GameActivity.this, nextCard);
         myPlayedCards.addView(cardview.view);
     }
 
@@ -221,7 +221,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void showPlayedCardsforAll() {
         playedCardsOthers = findViewById(R.id.playedcardsothers);
 
-        ViewCards cardview = new ViewCards(GameActivity.this, this, playedcard);
+        ViewCards cardview = new ViewCards(GameActivity.this, playedcard);
         playedCardsOthers.addView(cardview.view);
 
     }
@@ -249,7 +249,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     //To add images in ScrollView and give them a border, when a card is chosen
 
     private void addImageToScrollView(LinearLayout cardHandView, Card card) {
-        ViewCards cardview = new ViewCards(GameActivity.this,this,card);
+        ViewCards cardview = new ViewCards(GameActivity.this, card);
         handCards.add(cardview);
         final int index = handCards.indexOf(cardview);
         cardview.view.setOnClickListener(new View.OnClickListener() {
