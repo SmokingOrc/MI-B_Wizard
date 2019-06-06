@@ -52,6 +52,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private CardAdapter cardAdapter = new CardAdapter() ;
     Player me = MainActivity.getPlayer();
     private String tag = "gameActivity";
+    private int round = 0;
+    private int maxRounds = 20;
     Button startAndSendCards;
     Button playACard;
     Button predictTricksBtn;
@@ -78,7 +80,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private boolean correctPoints = false;
     public String cheatString = "";
     private CheatingDialog cD;
-
+    List<String> finalSt = new ArrayList<>();
     //For Cards in Hand, Trump and played cards
     ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
     LinearLayout playedCardsOthers, myPlayedCards;
@@ -108,16 +110,34 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         return gameActivity;
     }
 
+    public void setMaxRounds(int maxRounds) {
+      this.maxRounds = maxRounds;
+    }
+
     public void playerMadeAMove(Byte cardPlayed, int playerID){
         game.moveMade(cardPlayed,playerID);
         showMove(cardPlayed);
-        messageHandler.sendEventToAllExceptTheSender(Server.MOVE,cardPlayed,zero,zero,playerID);
+        messageHandler.sendEventToAllExceptTheSender(Server.MOVE,cardPlayed,playerID);
     }
 
     public void newRound(){
+        if(round < maxRounds){
+        round++;
         me.calculateMyPoints();
         showMyPoints();
         haveICheated = false;
+    }else if(JoinGameActivity.owner) {
+            Intent i = new Intent(GameActivity.this, ResultActivity.class);
+            startActivity(i);
+            messageHandler.sendEvent(Server.END,zero);
+            System.out.println(" game "+finalSt.toString());
+        }
+    }
+
+    public void endGame(){
+        Intent i = new Intent(GameActivity.this, ResultActivity.class);
+        startActivity(i);
+        System.out.println(" game "+finalSt.toString());
     }
 
     public void setTrump(byte cardT){
@@ -136,6 +156,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         showPlayedCardsforAll();
     }
 
+    public List<String> getFinalSt(){
+        return finalSt;
+    }
     public void isFirstRound(){
         if(firstRound && JoinGameActivity.owner){
             myTurn = true;
@@ -161,7 +184,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void takeCards(byte[] cards){
         setMyHand(cards);
         showCardsInHand();
-
         clearView();
     }
 
@@ -271,7 +293,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void sendMyPoints(int points) {
         toast("My points: " + points);
-        messageHandler.write(Server.SEND_POINTS, "Player "+ me.getPlayerName() + ": " + me.getPoints()+" points");
+        messageHandler.write(Server.SEND_POINTS, "Player "+ me.getPlayerName() + ": " + me.getPoints()+" points ");
     }
 
     //Methode to show my points in pointsTable and set my points in TextView of the Dialog (CorrectPoints to start with calculation at the end of the first round)
@@ -284,14 +306,18 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         sendMyPoints(p);
         pointsView = new TextView(GameActivity.this);
         pointsView.setText("Player "+me.getPlayerName()+": "+ p);
+        finalSt.add("\n Round "+round +" player "+ me.getPlayerName()+": "+p+" points");
+
     }
     //Methode to set the points of the other players in the Pointsview to show them in the dialog
     public void setPointsInDialog(String points){
         pointsView.append("\n"+points);
+        finalSt.add("\n Round "+round+" "+points);
     }
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
     }
+
 
     public void MyTurn(){
         myTurn = true;
@@ -352,7 +378,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) {
                 if (JoinGameActivity.owner && messageHandler != null) {
                     PlayersStart();
-                    messageHandler.sendEvent(Server.START_GAME,zero,zero,zero);
+                    messageHandler.sendEvent(Server.START_GAME,zero);
                     try{
                     game.sendCards();}
                     catch (IllegalStateException e){
@@ -362,7 +388,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     isFirstRound();
                 }else if(messageHandler == null){
                     PlayersStart();
-                    messageHandler.sendEvent(Server.START_GAME, zero, zero, zero);
+                    messageHandler.sendEvent(Server.START_GAME, zero);
                 }
                 else {
                     toast("You have to wait for host to give out the cards..");
@@ -378,14 +404,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) {
                 if(nextCard != null){
                     if (myTurn && JoinGameActivity.owner) {
-                    messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
+                    messageHandler.sendEvent(Server.MOVE,nextCard.getId());
                     notMyTurnAnymore();
                     game.hostMadeAMove(nextCard.getId());
                     myHand.removeCardFromHand(nextCard);
                     showMyPlayedCard();
                     showCardsInHand();
                 }else if(myTurn){
-                    messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
+                    messageHandler.sendEvent(Server.MOVE,nextCard.getId());
                     myHand.removeCardFromHand(nextCard);
                     showMyPlayedCard();
                     showCardsInHand();
@@ -529,7 +555,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             }
             lastUpdate = actualTime;
             if(!JoinGameActivity.owner){
-                messageHandler.sendEvent(Server.CHEAT,zero,zero,zero);
+                messageHandler.sendEvent(Server.CHEAT,zero);
             } else {
                 openCheatPopUp(game.getPlayedCards());
             }

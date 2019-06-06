@@ -29,8 +29,7 @@ public class Server extends Thread{
     public final static byte READ = 114;
     public final static byte GOT_CARDS = 124;
     public final static byte NOTIFICATION  = 32;
-
-    public final static  byte GIVE_ME_YOUR_CARDS = 12;
+    public final static byte END  = 42;
 
 
     public Server(Socket socket, Handler handler) {
@@ -67,11 +66,11 @@ public class Server extends Thread{
                     switch (buffer[0]){
 
                         case READ:
-                            handler.obtainMessage(MessageHandler.READ, bytes, id, buffer).sendToTarget();
+                            handler.obtainMessage(MessageHandler.READ, bytes-1, id, buffer).sendToTarget();
                             break;
 
                         case NOTIFICATION:
-                            handler.obtainMessage(MessageHandler.NOTIFICATION, bytes, id, buffer).sendToTarget();
+                            handler.obtainMessage(MessageHandler.NOTIFICATION, bytes-1, id, buffer).sendToTarget();
                             break;
 
                         case WINNER:
@@ -99,15 +98,14 @@ public class Server extends Thread{
                             break;
 
                         case TRICKS:
-                            handler.obtainMessage(MessageHandler.PREDICTED_TRICKS, bytes,id, buffer).sendToTarget();
+                            handler.obtainMessage(MessageHandler.PREDICTED_TRICKS, bytes-1,id, buffer).sendToTarget();
                             break;
 
                         case YOUR_TURN:
                             handler.obtainMessage(MessageHandler.YOUR_TURN, bytes, id, buffer).sendToTarget();
                         
                         case SEND_POINTS:
-                            handler.obtainMessage(MessageHandler.POINTS, bytes, id, buffer).sendToTarget();
-                            System.out.println("points");
+                            handler.obtainMessage(MessageHandler.POINTS, bytes-1, id, buffer).sendToTarget();
                             break;
 
                         case NEW_ROUND:
@@ -119,7 +117,11 @@ public class Server extends Thread{
                             break;
 
                         case GOT_CARDS:
-                            handler.obtainMessage(MessageHandler.GOT_CARDS, bytes, id, buffer).sendToTarget();
+                            handler.obtainMessage(MessageHandler.GOT_CARDS, bytes-1, id, buffer).sendToTarget();
+                            break;
+
+                        case END:
+                            handler.obtainMessage(MessageHandler.END, bytes, id, buffer).sendToTarget();
                             break;
 
                         case MOVE:
@@ -150,14 +152,14 @@ public class Server extends Thread{
     public void write(byte event, String msg) {
         final byte[] firstbyte = {event};
         final byte[] buffer  = ArrayUtils.addAll(firstbyte,msg.getBytes());
-
+        String st = new String(buffer,1,buffer.length-1);
+        System.out.println("MESSAGE "+st);
         Thread thread = new Thread() {
             @Override
             public void run() {
                 super.run();
                 try {
                     outputStream.write(buffer);
-                    System.out.println("writing-Server ");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -166,8 +168,8 @@ public class Server extends Thread{
         thread.run();
     }
 
-    public void event (byte whatEvent, byte card, byte cardColor, byte player){
-        final byte[] buffer = {whatEvent,card,cardColor,player};
+    public void event (byte whatEvent, byte card){
+        final byte[] buffer = {whatEvent,card};
 
        Thread thread = new Thread() {
             @Override
@@ -175,7 +177,6 @@ public class Server extends Thread{
                 super.run();
                 try {
                     outputStream.write(buffer);
-                    System.out.println("New event");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -192,7 +193,6 @@ public class Server extends Thread{
                 super.run();
                 try {
                     outputStream.write(myCards);
-                    System.out.println("cards sent");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
