@@ -37,16 +37,14 @@ public class ResultActivity extends AppCompatActivity {
 
     TableLayout resultLayout;
     MessageHandler messageHandler;
-    GameActivity gameActivity;
+    GameActivity gameActivity = GameActivity.getGameActivity();
     Server server;
     ArrayList<Integer> ids = new ArrayList<Integer>();
     int predictedTricks;
     int points;
     int round=1,maxRounds;
     int playerCount;
-
-
-
+    List<String> end = new ArrayList<>();
 
     public void addRound(){
         this.round++;
@@ -71,7 +69,7 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
         mapOfIds = new HashMap<>();
         resultLayout = findViewById(R.id.result);
-
+        end = gameActivity.getFinalSt(); // end results..
 
         /*
         ids.add(123);
