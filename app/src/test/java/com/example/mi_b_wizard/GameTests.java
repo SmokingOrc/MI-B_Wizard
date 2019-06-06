@@ -74,9 +74,9 @@ public class GameTests {
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
         doNothing().when(gameActivity).setTrump(any(byte.class));
-        doNothing().when(messageHandler).sendEvent(any(byte.class),any(byte.class),any(byte.class),any(byte.class));
+        doNothing().when(messageHandler).sendEvent(any(byte.class),any(byte.class));
         game.sendCards();
-        verify(messageHandler, times(1)).sendEvent(eq(Server.TRUMP),any(byte.class),any(byte.class),any(byte.class));
+        verify(messageHandler, times(1)).sendEvent(eq(Server.TRUMP),any(byte.class));
         verify(messageHandler, times(2)).sendCardsToPlayer(any(byte[].class),any(Integer.class));
         verify(gameActivity,times(1)).takeCards(any(byte[].class));
     }
@@ -88,9 +88,9 @@ public class GameTests {
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
         doNothing().when(gameActivity).setTrump(any(byte.class));
-        doNothing().when(messageHandler).sendEvent(any(byte.class),any(byte.class),any(byte.class),any(byte.class));
+        doNothing().when(messageHandler).sendEvent(any(byte.class),any(byte.class));
         game.sendCards();
-        verify(messageHandler, times(1)).sendEvent(eq(Server.TRUMP),any(byte.class),any(byte.class),any(byte.class));
+        verify(messageHandler, times(1)).sendEvent(eq(Server.TRUMP),any(byte.class));
         verify(messageHandler, times(3)).sendCardsToPlayer(any(byte[].class),any(Integer.class));
         verify(gameActivity,times(1)).takeCards(any(byte[].class));
     }
@@ -102,9 +102,9 @@ public class GameTests {
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
         doNothing().when(gameActivity).setTrump(any(byte.class));
-        doNothing().when(messageHandler).sendEvent(any(byte.class),any(byte.class),any(byte.class),any(byte.class));
+        doNothing().when(messageHandler).sendEvent(any(byte.class),any(byte.class));
         game.sendCards();
-        verify(messageHandler, times(1)).sendEvent(eq(Server.TRUMP),any(byte.class),any(byte.class),any(byte.class));
+        verify(messageHandler, times(1)).sendEvent(eq(Server.TRUMP),any(byte.class));
         verify(messageHandler, times(4)).sendCardsToPlayer(any(byte[].class),any(Integer.class));
         verify(gameActivity,times(1)).takeCards(any(byte[].class));
     }
@@ -116,9 +116,9 @@ public class GameTests {
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
         doNothing().when(gameActivity).setTrump(any(byte.class));
-        doNothing().when(messageHandler).sendEvent(eq(Server.TRUMP),any(byte.class),any(byte.class),any(byte.class));
+        doNothing().when(messageHandler).sendEvent(eq(Server.TRUMP),any(byte.class));
         game.sendCards();
-        verify(messageHandler, times(1)).sendEvent(eq(Server.TRUMP),any(byte.class),any(byte.class),any(byte.class));
+        verify(messageHandler, times(1)).sendEvent(eq(Server.TRUMP),any(byte.class));
         verify(messageHandler, times(5)).sendCardsToPlayer(any(byte[].class),any(Integer.class));
         verify(gameActivity,times(1)).takeCards(any(byte[].class));
     }
@@ -130,9 +130,9 @@ public class GameTests {
         game.setIdsTest(ids);
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
-        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
         game.hostMadeAMove((byte)0);
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
     }
 
     @Test
@@ -141,9 +141,9 @@ public class GameTests {
         game.setIdsTest(ids);
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
-        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
         game.moveMade((byte)0,1);
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
     }
 
     @Test
@@ -152,13 +152,13 @@ public class GameTests {
         game.setIdsTest(ids);
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
-        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
-        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.WINNER),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
+        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.WINNER),eq((byte)0),eq(1));
         game.hostMadeAMove((byte)14);
         game.moveMade((byte)30,1);
         game.moveMade((byte)20,2);
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.WINNER),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.WINNER),eq((byte)0),eq(1));
     }
 
 
@@ -168,12 +168,12 @@ public class GameTests {
         game.setIdsTest(ids);
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
-        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
         game.hostMadeAMove((byte)30);
         game.moveMade((byte)45,1);
         game.moveMade((byte)60,2);
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(2));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(2));
         verify(gameActivity, atLeastOnce()).showWhoIsTheWinner();
     }
 
@@ -184,14 +184,14 @@ public class GameTests {
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
         game.setTrumpThisRound((byte)50);
-        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
         doReturn(1).when(gameActivity).getColor(eq((byte)50));
         doReturn(1).when(gameActivity).getColor(eq((byte)31));
         game.hostMadeAMove((byte)31);
         game.moveMade((byte)46,1);
         game.moveMade((byte)61,2);
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(2));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(2));
         verify(gameActivity, atLeastOnce()).showWhoIsTheWinner();
     }
     @Test
@@ -201,15 +201,15 @@ public class GameTests {
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
         game.setTrumpThisRound((byte)50);
-        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
         doReturn(1).when(gameActivity).getColor(eq((byte)50));
         doReturn(0).when(gameActivity).getColor(eq((byte)20));
         game.hostMadeAMove((byte)20);
         game.moveMade((byte)25,1);
         game.moveMade((byte)26,2);
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(2));
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.WINNER),eq((byte)0),eq((byte)0),eq((byte)0),eq(2));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(2));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.WINNER),eq((byte)0),eq(2));
     }
 
     @Test
@@ -219,15 +219,15 @@ public class GameTests {
         game.setMessageHandler(messageHandler);
         game.setGameActivity(gameActivity);
         game.sendCards();
-        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        doNothing().when(messageHandler).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
         game.hostMadeAMove((byte)44);
         game.moveMade((byte)47,1);
         game.moveMade((byte)68,2);
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(2));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(2));
         verify(gameActivity, atLeastOnce()).showWhoIsTheWinner();
         game.hostMadeAMove((byte)40);
-        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq((byte)0),eq((byte)0),eq(1));
+        verify(messageHandler, atLeastOnce()).sendEventToTheSender(eq(Server.YOUR_TURN),eq((byte)0),eq(1));
 
     }
 

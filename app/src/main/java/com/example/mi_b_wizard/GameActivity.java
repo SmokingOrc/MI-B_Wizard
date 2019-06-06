@@ -51,6 +51,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private CardAdapter cardAdapter = new CardAdapter() ;
     Player me = MainActivity.getPlayer();
     private String tag = "gameActivity";
+    private int round = 0;
+    private int maxRounds = 20;
     Button startAndSendCards;
     ImageView playACard;
     ImageView predictTricksBtn;
@@ -77,7 +79,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private boolean haveICheated = false;
     public String cheatString = "";
     private CheatingDialog cD;
-
+    List<String> finalSt = new ArrayList<>();
     //For Cards in Hand, Trump and played cards
     ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
     LinearLayout playedCardsOthers, myPlayedCards;
@@ -110,23 +112,41 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         return gameActivity;
     }
 
+    public void setMaxRounds(int maxRounds) {
+      this.maxRounds = maxRounds;
+    }
+
     public void playerMadeAMove(Byte cardPlayed, int playerID){
         game.moveMade(cardPlayed,playerID);
         showMove(cardPlayed);
-        messageHandler.sendEventToAllExceptTheSender(Server.MOVE,cardPlayed,zero,zero,playerID);
+        messageHandler.sendEventToAllExceptTheSender(Server.MOVE,cardPlayed,playerID);
     }
 
     public void newRound(){
+        if(round < maxRounds){
+        round++;
         me.calculateMyPoints();
         showMyPoints();
         haveICheated = false;
+    }else if(JoinGameActivity.owner) {
+            Intent i = new Intent(GameActivity.this, ResultActivity.class);
+            startActivity(i);
+            messageHandler.sendEvent(Server.END,zero);
+            System.out.println(" game "+finalSt.toString());
+        }
+    }
+
+    public void endGame(){
+        Intent i = new Intent(GameActivity.this, ResultActivity.class);
+        startActivity(i);
+        System.out.println(" game "+finalSt.toString());
     }
 
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
         LinearLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
-        ViewCards cardview = new ViewCards(GameActivity.this,this,trump);
+        ViewCards cardview = new ViewCards(GameActivity.this,trump);
         trumpPos.addView(cardview.view);
 
         clearView();
@@ -137,6 +157,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         showPlayedCardsforAll();
     }
 
+    public List<String> getFinalSt(){
+        return finalSt;
+    }
     public void isFirstRound(){
         if(firstRound && JoinGameActivity.owner){
             myTurn = true;
@@ -162,7 +185,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void takeCards(byte[] cards){
         setMyHand(cards);
         showCardsInHand();
-
         clearView();
     }
 
@@ -190,7 +212,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         myPlayedCards = findViewById(R.id.myplayedcard);
         myPlayedCards.removeAllViews();
 
-        ViewCards cardview = new ViewCards(GameActivity.this, this, nextCard);
+        ViewCards cardview = new ViewCards(GameActivity.this, nextCard);
         myPlayedCards.addView(cardview.view);
     }
 
@@ -200,7 +222,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void showPlayedCardsforAll() {
         playedCardsOthers = findViewById(R.id.playedcardsothers);
 
-        ViewCards cardview = new ViewCards(GameActivity.this, this, playedcard);
+        ViewCards cardview = new ViewCards(GameActivity.this, playedcard);
         playedCardsOthers.addView(cardview.view);
 
     }
@@ -228,7 +250,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     //To add images in ScrollView and give them a border, when a card is chosen
 
     private void addImageToScrollView(LinearLayout cardHandView, Card card) {
-        ViewCards cardview = new ViewCards(GameActivity.this,this,card);
+        ViewCards cardview = new ViewCards(GameActivity.this, card);
         handCards.add(cardview);
         final int index = handCards.indexOf(cardview);
         cardview.view.setOnClickListener(new View.OnClickListener() {
@@ -281,15 +303,18 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         sendMyPoints(p);
         pointsView = new TextView(GameActivity.this);
         pointsView.setText(me.getPlayerName()+": "+ p+" points");
+        finalSt.add("\n Round "+round +" player "+ me.getPlayerName()+": "+p+" points");
+
     }
     //Methode to set the points of the other players in the Pointsview to show them in the dialog
     public void setPointsInDialog(String points){
         pointsView.append("\n"+points+" ");
+        finalSt.add("\n Round "+round+" "+points);
     }
-
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
     }
+
 
     public void MyTurn(){
         myTurn = true;
@@ -352,7 +377,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) {
                 if (JoinGameActivity.owner && messageHandler != null) {
                     PlayersStart();
-                    messageHandler.sendEvent(Server.START_GAME,zero,zero,zero);
+                    messageHandler.sendEvent(Server.START_GAME,zero);
                     try{
                     game.sendCards();}
                     catch (IllegalStateException e){
@@ -362,7 +387,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     isFirstRound();
                 }else if(messageHandler == null){
                     PlayersStart();
-                    messageHandler.sendEvent(Server.START_GAME, zero, zero, zero);
+                    messageHandler.sendEvent(Server.START_GAME, zero);
                 }
                 else {
                     toast("You have to wait for host to give out the cards..");
@@ -378,14 +403,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) {
                 if(nextCard != null){
                     if (myTurn && JoinGameActivity.owner) {
-                    messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
+                    messageHandler.sendEvent(Server.MOVE,nextCard.getId());
                     notMyTurnAnymore();
                     game.hostMadeAMove(nextCard.getId());
                     myHand.removeCardFromHand(nextCard);
                     showMyPlayedCard();
                     showCardsInHand();
                 }else if(myTurn){
-                    messageHandler.sendEvent(Server.MOVE,nextCard.getId(),zero,zero);
+                    messageHandler.sendEvent(Server.MOVE,nextCard.getId());
                     myHand.removeCardFromHand(nextCard);
                     showMyPlayedCard();
                     showCardsInHand();
@@ -552,7 +577,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             }
             lastUpdate = actualTime;
             if(!JoinGameActivity.owner){
-                messageHandler.sendEvent(Server.CHEAT,zero,zero,zero);
+                messageHandler.sendEvent(Server.CHEAT,zero);
             } else {
                 openCheatPopUp(game.getPlayedCards());
             }

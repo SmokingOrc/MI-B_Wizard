@@ -30,8 +30,11 @@ public class CardAdapter {
     }
 
     public byte getTrump(){
-         playercards.clear();
         return deck.getTrump();
+    }
+
+    public void clearCardsTosend(){
+        playercards.clear();
     }
 
 
