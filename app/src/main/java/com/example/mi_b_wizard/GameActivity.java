@@ -13,7 +13,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -26,10 +25,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,11 +52,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     Player me = MainActivity.getPlayer();
     private String tag = "gameActivity";
     Button startAndSendCards;
-    Button playACard;
-    Button predictTricksBtn;
-    Button writeTricksBtn;
-    Button pointsBtn;
-    Button showTricksBtn;
+    ImageView playACard;
+    ImageView predictTricksBtn;
+    ImageView writeTricksBtn;
+    ImageView pointsBtn;
+    ImageView showTricksBtn;
     TextView trumpView;
     TextView pointsTable;
     TextView lastPlayedCardView;
@@ -76,7 +75,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private boolean firstRound = true;
     private boolean myTurn = false;
     private boolean haveICheated = false;
-    private boolean correctPoints = false;
     public String cheatString = "";
     private CheatingDialog cD;
 
@@ -91,6 +89,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
    // private AlertDialog.Builder myBuilder;
    // private AlertDialog myDialog;
     public boolean isPopUpActive = false;
+
     //For SpeechRecognition and manuel tricks input
     private ProgressBar progressBar;
     private TextView tricksTable;
@@ -125,7 +124,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void setTrump(byte cardT){
         trump = cardAdapter.getThisCard(cardT);
-        RelativeLayout trumpPos = findViewById(R.id.trumpPosition);
+        LinearLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
         ViewCards cardview = new ViewCards(GameActivity.this,this,trump);
         trumpPos.addView(cardview.view);
@@ -275,11 +274,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         messageHandler.write(Server.SEND_POINTS, me.getPlayerName() + ": " + (byte)points+" points  ");
     }
 
-    //Methode to show my points in pointsTable (left top) and set my points in TextView of the Dialog (CorrectPoints to start with calculation at the end of the first round)
+    //Methode to show my points in pointsTable (left top) and set my points in TextView of the Dialog
     public void showMyPoints(){
-        if (!correctPoints){
-            correctPoints = true;
-        }
         int p = me.getPoints();
         pointsTable.setText("My actual points: "+ p);
         sendMyPoints(p);
@@ -315,11 +311,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         trumpView.setVisibility(View.INVISIBLE);
         lastPlayedCardView =findViewById(R.id.lastPlayedCardTextView);
         lastPlayedCardView.setVisibility(View.INVISIBLE);
-        playedCardsThisRoundView = findViewById(R.id.lastPlayedCardTextView);
+        playedCardsThisRoundView = findViewById(R.id.playedCardsThisRoundView);
         playedCardsThisRoundView.setVisibility(View.INVISIBLE);
         playACard = findViewById(R.id.playacard);
         playACard.setVisibility(View.INVISIBLE);
-        predictTricksBtn = findViewById(R.id.predictTricksbtn);
+        predictTricksBtn = findViewById(R.id.sayTricksBtn);
         predictTricksBtn.setVisibility(View.INVISIBLE);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
@@ -329,7 +325,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         writeTricksBtn = findViewById(R.id.writeTricksbtn);
         writeTricksBtn.setVisibility(View.INVISIBLE);
         pointsTable = findViewById(R.id.pointstable);
-        pointsBtn = findViewById(R.id.pointsButton);
+        pointsBtn = findViewById(R.id.showPointsBtn);
         showTricksBtn = findViewById(R.id.showTricksBtn);
         myTrickView = findViewById(R.id.myPredictTricksView);
 
@@ -403,9 +399,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         });
 
         //Checks the permission for SpeechRecognition- User has to accept the permission by the first use
-        String[] PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
-        if(!checkForPermission(GameActivity.this, PERMISSIONS)) {
-            ActivityCompat.requestPermissions(GameActivity.this, PERMISSIONS, REQUEST_PERMISSION_KEY);
+        String[] permission = {Manifest.permission.RECORD_AUDIO};
+        if(!checkForPermission(GameActivity.this, permission)) {
+            ActivityCompat.requestPermissions(GameActivity.this, permission, REQUEST_PERMISSION_KEY);
         }
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
