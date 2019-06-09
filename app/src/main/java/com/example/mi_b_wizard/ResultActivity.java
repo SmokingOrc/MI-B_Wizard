@@ -2,6 +2,8 @@ package com.example.mi_b_wizard;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Pair;
@@ -13,10 +15,13 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.mi_b_wizard.Data.Game;
 import com.example.mi_b_wizard.Data.Player;
 import com.example.mi_b_wizard.Data.PlayerList;
 import com.example.mi_b_wizard.Network.MessageHandler;
 import com.example.mi_b_wizard.Network.Server;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,15 +33,17 @@ import java.util.Random;
 public class ResultActivity extends AppCompatActivity {
 
     Map<Pair<Integer, String>, String> resultMap = new HashMap<>();
+    public static ResultActivity resultActivity;
     TableLayout resultLayout;
     MessageHandler messageHandler;
-    GameActivity gameActivity;
+    GameActivity gameActivity = GameActivity.getGameActivity();
     Server server;
     ArrayList<Integer> ids = new ArrayList<Integer>();
     int predictedTricks;
     int points;
     int round=1,maxRounds;
     int playerCount;
+    List<String> end = new ArrayList<>();
     Button btmm;
 
 
@@ -48,29 +55,15 @@ public class ResultActivity extends AppCompatActivity {
         return ids;
     }
 
-    public void setMessageHandler(MessageHandler messageHandler) {
-        this.messageHandler = messageHandler;
+    public void setMaxRounds(int maxRounds) {
+        this.maxRounds = maxRounds;
     }
 
-    public void setGameActivity() {
-        this.gameActivity = GameActivity.getGameActivity();
+    public static ResultActivity getResultActivity() {
+        return resultActivity;
     }
 
-    public void setServer() {
-        this.server = messageHandler.getServer();
-    }
 
-    public void addRound(){
-        this.round++;
-    }
-    public void setIds(){
-        this.ids=messageHandler.getId();
-        this.playerCount=ids.size();
-    }
-
-    public int getPredictedTricks() {
-        return predictedTricks;
-    }
 
     public void setPredictedTricks(int predictedTricks){
         this.predictedTricks=predictedTricks;
@@ -86,6 +79,7 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
         resultLayout = findViewById(R.id.result);
+        end = gameActivity.getFinalSt(); // end results..
         btmm = findViewById(R.id.backToMainMenu);
 
 
@@ -100,12 +94,13 @@ public class ResultActivity extends AppCompatActivity {
         */
 
 
-        setGameActivity();
+        String sEnd = end.get(1);
+        TextView test = findViewById(R.id.test);
+        test.setText(end.toString());
 
-        setResultMap(gameActivity.resultMap);
         //randomdata2();
 
-        generateNewResultList(PlayerList.getPlayers().size());
+      //  generateNewResultList(PlayerList.getPlayers().size());
 
         btmm.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -119,20 +114,15 @@ public class ResultActivity extends AppCompatActivity {
 
     }
 
-
-    private void generateNewResultList(int playercount){
-        if (playercount < 3){
-            playercount = 3;
-        }else  if(playercount > 6){
-            playercount = 6;
+    private void generateNewResultList(int maxRounds){
+        if (maxRounds > 0 ) {
+            playerCount = 60 / maxRounds;
         }
-        maxRounds= 60 / playercount;
-
 
         //Creating HeadRow
         TableRow headRow = new TableRow(ResultActivity.this);
 
-            for(int i = 0; i < playercount + 1 ; i++){
+            for(int i = 0; i < playerCount + 1 ; i++){
                 TextView cell = new TextView(ResultActivity.this);
 
                 headRow.addView(cell);
@@ -142,7 +132,7 @@ public class ResultActivity extends AppCompatActivity {
                     cell.setTypeface(null, Typeface.BOLD);
                     cell.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
                 }else if (i > 0){
-                    cell.setText(PlayerList.getPlayerNameById(i-1));
+                    cell.setText("Player "+ i);
                     cell.setTypeface(null, Typeface.BOLD);
                     cell.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
                 }
@@ -159,7 +149,7 @@ public class ResultActivity extends AppCompatActivity {
             TableRow row = new TableRow(ResultActivity.this);
             resultLayout.addView(row);
 
-            for (int j = 0; j < playercount + 1; j++){
+            for (int j = 0; j < playerCount + 1; j++){
                 LinearLayout cell = new LinearLayout(ResultActivity.this);
                 cell.setGravity(Gravity.CENTER_VERTICAL);
                 //cell.setOrientation(LinearLayout.HORIZONTAL);
@@ -168,7 +158,7 @@ public class ResultActivity extends AppCompatActivity {
 
                 TextView tv1 = new TextView(ResultActivity.this); //actual score
 
-                switch(playercount) {
+                switch(playerCount) {
                     case 3:
                         tv1.setPadding(50, 0, 0, 0);
                         break;
@@ -193,6 +183,7 @@ public class ResultActivity extends AppCompatActivity {
 
                 }else{
                     String s="";
+                    /*
                     List<Player> playerList = PlayerList.getPlayers();
 
                     for (Player player:playerList) {
@@ -200,7 +191,7 @@ public class ResultActivity extends AppCompatActivity {
                         s = resultMap.get(pair);
 
                     }
-
+                    */
                     TextView textViewValues = new TextView(ResultActivity.this);
                     textViewValues.setText(s);
                     //textViewPoints.setText("" + points);
@@ -265,7 +256,6 @@ public class ResultActivity extends AppCompatActivity {
         }
 
     }
-
 
 
 }

@@ -44,8 +44,7 @@ public class Deck {
             c = card.get(key);
             if (!c.isMagician()) {
                 break;
-            }
-        }
+            } }
         }
         return  c.getId();
     }

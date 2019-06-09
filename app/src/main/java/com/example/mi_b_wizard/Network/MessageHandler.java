@@ -24,7 +24,7 @@ public class MessageHandler implements Handler.Callback {
     Notifications notifications;
     private WaitingLobby waitingLobby = WaitingLobby.getWaitingLobby();
     private GameActivity gameActivity  = GameActivity.getGameActivity();
-
+    boolean set = false;
     private ArrayList<Server> Clients = new ArrayList<Server>();
     private ArrayList<Integer> id = new ArrayList<Integer>();
     @SuppressLint("StaticFieldLeak")
@@ -46,6 +46,7 @@ public class MessageHandler implements Handler.Callback {
     public static final byte ROUND =  17;
     public static final byte GOT_CARDS =  14;
     public static final byte NOTIFICATION = 68;
+    public static final byte END = 49;
 
 
 
@@ -87,7 +88,8 @@ public class MessageHandler implements Handler.Callback {
 
     @Override
     public boolean handleMessage(Message msg) {
-        setActivities();
+        if(!set){
+        setActivities();}
         switch (msg.what) {
             case READ:
                 String s = new String((byte[]) msg.obj, 1, msg.arg1);
@@ -101,10 +103,8 @@ public class MessageHandler implements Handler.Callback {
             case HANDLE:
                 Object obj = msg.obj;
                 setServer((Server) obj);
-                if (JoinGameActivity.owner) {
                     Clients.add((Server) obj);
                     id.add(msg.arg2);
-                }
                 break;
 
             case START_GAME:
@@ -127,7 +127,7 @@ public class MessageHandler implements Handler.Callback {
                 if(gameActivity != null && move[1] > 16 && move[1]< 76){
                 if (JoinGameActivity.owner) {
                   gameActivity.playerMadeAMove(move[1], msg.arg2);
-                  sendEventToAllExceptTheSender(Server.MOVE,move[1],n,n,msg.arg2);
+                  sendEventToAllExceptTheSender(Server.MOVE,move[1],msg.arg2);
                 }else{
                     gameActivity.showMove(move[1]);
                 }}
@@ -137,7 +137,7 @@ public class MessageHandler implements Handler.Callback {
                 byte[] trump = (byte[]) msg.obj;
                 if(gameActivity != null){
                 if (JoinGameActivity.owner) {
-                    sendEvent(Server.TRUMP,trump[1],n,n);
+                    sendEvent(Server.TRUMP,trump[1]);
                 }else {
                     gameActivity.setTrump(trump[1]);
                 }}
@@ -183,6 +183,7 @@ public class MessageHandler implements Handler.Callback {
             case GOT_CARDS:
                 if (gameActivity != null) {
                     String cardsfromplayer = new String((byte[]) msg.obj, 1, msg.arg1);
+                    gameActivity.openCheatPopUp(cardsfromplayer);
                 }else{
                     Log.i(tag,gameNaN);
                 }
@@ -205,6 +206,14 @@ public class MessageHandler implements Handler.Callback {
                 }}
                 break;
 
+
+            case END:
+                if (gameActivity != null){
+                    gameActivity.endGame();}
+                else {
+                    Log.i(tag,gameNaN);
+                }
+                break;
             case ROUND:
                 if (gameActivity != null){
                     gameActivity.newRound(); }
@@ -232,6 +241,9 @@ public class MessageHandler implements Handler.Callback {
         }
         if(waitingLobby == null){
             waitingLobby = WaitingLobby.getWaitingLobby();
+        }
+        if( gameActivity != null && waitingLobby !=null){
+            set = true;
         }
     }
 
@@ -266,26 +278,18 @@ public class MessageHandler implements Handler.Callback {
         }
     }
 
-    public void sendEvent(byte whatEvent, byte card, byte cardColor, byte player) {
-        if (Clients.size() >= 1) {
-            for (Server Clients : Clients) {
-                Clients.event(whatEvent, card, cardColor, player);
-            }
-        } else {
-            server.event(whatEvent, card, cardColor, player);
+    public void sendEvent(byte whatEvent, byte card) {
+        for (Server Clients : Clients) {
+            Clients.event(whatEvent, card);
         }
     }
 
-    public void sendEventToAllExceptTheSender(byte whatEvent, byte card, byte cardColor, byte player, int id) {
-        if (Clients.size() >= 1) {
+    public void sendEventToAllExceptTheSender(byte whatEvent, byte card, int id) {
             for (Server Clients : Clients) {
                 if (Clients.getMyId() != id) {
-                    Clients.event(whatEvent, card, cardColor, player);
+                    Clients.event(whatEvent, card);
                 }
             }
-        } else {
-            server.event(whatEvent, card, cardColor, player);
-        }
     }
 
     public void sendCardsToPlayer(byte[] cards, int id) {
@@ -296,10 +300,10 @@ public class MessageHandler implements Handler.Callback {
         }
     }
 
-    public void sendEventToTheSender(byte whatEvent, byte card, byte cardColor, byte player, int id) {
+    public void sendEventToTheSender(byte whatEvent, byte card, int id) {
         for (Server Clients : Clients) {
             if (Clients.getMyId() == id) {
-                Clients.event(whatEvent, card, cardColor, player);
+                Clients.event(whatEvent, card);
             }
         }
     }

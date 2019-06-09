@@ -1,12 +1,7 @@
 package com.example.mi_b_wizard.Data;
 
-import android.os.Debug;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 public class Player{
 
@@ -15,7 +10,6 @@ public class Player{
     private int madeTrick = 0; // tricks, which were made (gemachte Stiche)
     private byte predictedTrick; //tricks, which were predicted (angesagte Stiche)
     private Hand hand; //actual Hand of the player
-    private Game game;
     private Card actualPlayedCard;
     private int playerId;
     private byte checkedPredictedTricks;
@@ -23,8 +17,6 @@ public class Player{
     public Player(String playerName){
         setPlayerName(playerName);
         hand = new Hand();
-        game = new Game();
-
     }
 
     //Getter-Setter
@@ -55,7 +47,7 @@ public class Player{
     }
 
     public void madeATrick(){ madeTrick ++;
-        System.out.println("You made a trick");
+        Log.d("Tag","You made a trick");
     }
     public byte getPredictedTrick() {
         return predictedTrick;
@@ -107,16 +99,6 @@ public class Player{
         resetForNewRound();
     }
 
-   /* public Hand getMyCards(){
-        return hand;
-    }
-
-    //Reset for new Round + Get the actual cards from Game and add it to the hand of the player
-    public void giveCards(List<Card> playReadyCardsFromGame){
-        resetForNewRound();
-        hand.setHand(playReadyCardsFromGame);
-    }*/
-
     //<---------------Action Player-------------------->
 
     //Method to play Card
@@ -135,10 +117,10 @@ public class Player{
         if (predictedTrickS.contains("0") || predictedTrickS.equals("null")) {
             checkedPredictedTricks = 0;
         }
-        if (predictedTrickS.contains("1") || predictedTrickS.equals("eins")|| predictedTrickS.equals("ans")) {
+        if (predictedTrickS.contains("1") || predictedTrickS.equals("eins")) {
             checkedPredictedTricks = 1;
         }
-        if (predictedTrickS.contains("2") || predictedTrickS.equals("zwei")|| predictedTrickS.equals("zwa")) {
+        if (predictedTrickS.contains("2") || predictedTrickS.equals("zwei")) {
             checkedPredictedTricks = 2;
         }
         if (predictedTrickS.contains("3") || predictedTrickS.equals("drei")) {
@@ -196,14 +178,4 @@ public class Player{
             checkedPredictedTricks = 20;
         }
     }
-
-    //Only for testing Game Class!!!!
-  /* public Card playCardForTesting() {
-        Random r = new Random(); // bug - reuse random
-        int index = r.nextInt(hand.getHandSize());
-        Card item = (Card)hand.getHand().get(index);
-        //Log.d("Info", "Player: " + this.playerName + " plays: " + item.getId());
-        System.out.println("Player: " + this.playerName + " plays: " + item.getId());
-        return item;
-    } */
 }
