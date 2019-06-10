@@ -126,7 +126,7 @@ public class CardTest {
     }
     @Test
     public void testToString(){
-        assertEquals("GREEN_JESTER",card.toString());
+        assertEquals("GREEN_0",card.toString());
     }
 }
 

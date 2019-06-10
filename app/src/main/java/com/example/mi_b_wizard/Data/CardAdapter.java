@@ -8,10 +8,16 @@ import java.util.List;
 public class CardAdapter {
     Deck deck = new Deck();
     List<Card> handCards = new ArrayList<>();
-    List<String> playercards = new ArrayList<>();
+    List<Card> playercards = new ArrayList<>();
+    public String returnValue = "";
 
     public String getPlayerCards(){
-        return playercards.toString();
+        /*returnValue = "";
+        for(Card c : playercards) {
+            returnValue += c.toString() + ";";
+            //playercards.add(c);
+        }*/
+        return returnValue;
     }
 
     public void resetDeck(){
@@ -21,7 +27,11 @@ public class CardAdapter {
     public byte[] getByteCards(int round){
         byte[] cards = new byte[round+2];
         handCards = deck.getCards(round);
-        playercards.add(handCards.toString());
+        for(Card c : handCards) {
+            playercards.add(c);
+            returnValue += c.toString() + ";";
+        }
+        //playercards.add(handCards.toString());
         cards[0] = Server.CARDS;
         for (int i = 1; i <handCards.size()+1 ; i++) {
             cards[i] = handCards.get(i-1).getId();

@@ -132,7 +132,7 @@ public class DeckTest {
     public void getByteCardTest(){
         byte card = 50;
         Card c = deck.getThisCard(card);
-       assertEquals("YELLOW_FOUR",c.toString());
+       assertEquals("YELLOW_4",c.toString());
 
 
     }

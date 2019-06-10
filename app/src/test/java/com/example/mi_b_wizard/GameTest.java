@@ -1,22 +1,63 @@
 package com.example.mi_b_wizard;
 
-import android.content.SyncStatusObserver;
-
+import com.example.mi_b_wizard.Data.Card;
+import com.example.mi_b_wizard.Data.CardAdapter;
 import com.example.mi_b_wizard.Data.Game;
-import com.example.mi_b_wizard.Data.Player;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public class GameTest {
     private Game testGame;
 
+    private CardAdapter testAdapter;
+
     @Before
     public void init() {
         testGame = new Game();
+        testAdapter = new CardAdapter();
+    }
+
+    @Test
+    public void testGetPlayerCards() {
+        testAdapter.getByteCards(4);
+        System.out.println(testAdapter.getPlayerCards());
+        System.out.println(generateCardsForCheating(testAdapter.getPlayerCards()).toString());
+
+    }
+
+    public List<Card> generateCardsForCheating (String csvString) {
+        List<Card> returnList = new ArrayList<Card>();
+        String[] csvSplitted = csvString.split(";");
+        System.out.println("Splitted: " + csvSplitted[0]);
+        String[] cardSplitted;
+        int i = 0;
+        while(i < csvSplitted.length) {
+            cardSplitted = csvSplitted[i].split("_");
+            System.out.println(cardSplitted[0]);
+            if(cardSplitted[0].equals("BLUE")) {
+                System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 0));
+            } else if (cardSplitted[0].equals("GREEN")) {
+                System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 1));
+            } else if (cardSplitted[0].equals("YELLOW")) {
+                System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 2));
+            } else if (cardSplitted[0].equals("RED")) {
+                System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 3));
+            }
+            i++;
+        }
+
+        return returnList;
     }
 
 /*

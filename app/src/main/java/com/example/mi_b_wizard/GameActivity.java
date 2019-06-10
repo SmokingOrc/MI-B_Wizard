@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -125,6 +126,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void newRound(){
         if(round < maxRounds){
         round++;
+        cardAdapter.returnValue = "";
         me.calculateMyPoints();
         showMyPoints();
         haveICheated = false;
@@ -369,7 +371,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         lastUpdate = System.currentTimeMillis();
         myVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        cD = new CheatingDialog(GameActivity.this);
+
 
 
         startAndSendCards.setOnClickListener(new View.OnClickListener() {
@@ -551,6 +553,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
+
+    //Cheating Section
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -606,30 +610,31 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void openCheatPopUp(String value) {
+        List<Card> cheatingCards = generateCardsForCheating(value);
+
         Log.d("In cheatpopup: ", value);
-        /*if(!cD.isActive) {
+        if(!isPopUpActive) {
+            CheatingDialog cD = new CheatingDialog(GameActivity.this);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 myVibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 //deprecated in API 26
                 myVibrator.vibrate(500);
             }
+            //isPopUpActive = true;
             cD.isActive = true;
+            cD.handToShow = null;
             Hand testHand = new Hand();
-            testHand.addCardToHand(new Card(3,3));
-            testHand.addCardToHand(new Card(4,3));
-            testHand.addCardToHand(new Card(5,3));
-            testHand.addCardToHand(new Card(6,3));
-            testHand.addCardToHand(new Card(7,1));
-            testHand.addCardToHand(new Card(8,1));
-            testHand.addCardToHand(new Card(2,2));
+            for (Card c : cheatingCards) {
+                testHand.addCardToHand(c);
+            }
             cD.setHandToShow(testHand);
-            cD.setTitle(value);
-            //cD.show();
+            cD.setTitle("Cheating");
+            cD.show();
 
 
-        }*/
-        if(!isPopUpActive) {
+        }
+        /*if(!isPopUpActive) {
             AlertDialog.Builder myBuilder = new AlertDialog.Builder(GameActivity.this);
             myBuilder.setTitle("Cards handed out: ");
             //List<String> list;
@@ -644,7 +649,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             myBuilder.setIcon(android.R.drawable.ic_dialog_info);
             AlertDialog myDialog = myBuilder.create();
             myDialog.show();
-        }
+        }*/
 
     }
 
@@ -670,6 +675,36 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         super.onPause();
         mySensorManager.unregisterListener(this);
     }
+
+    private List<Card> generateCardsForCheating (String csvString) {
+        List<Card> returnList = new ArrayList<Card>();
+        String[] csvSplitted = csvString.split(";");
+        System.out.println("Splitted: " + csvSplitted[0]);
+        String[] cardSplitted;
+        int i = 0;
+        while(i < csvSplitted.length) {
+            cardSplitted = csvSplitted[i].split("_");
+            System.out.println(cardSplitted[0]);
+            if(cardSplitted[0].equals("BLUE")) {
+                System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 0));
+            } else if (cardSplitted[0].equals("GREEN")) {
+                System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 1));
+            } else if (cardSplitted[0].equals("YELLOW")) {
+                System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 2));
+            } else if (cardSplitted[0].equals("RED")) {
+                System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 3));
+            }
+            i++;
+        }
+
+        return returnList;
+    }
+    //End Cheating Section
+
     //----SpeechRecognition----
     //Methods need to be override, because of the implementation of RecognitionListener(Abstract)
 
