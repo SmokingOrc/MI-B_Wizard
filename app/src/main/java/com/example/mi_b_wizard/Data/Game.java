@@ -34,6 +34,9 @@ public class Game {
     private boolean rightNumberOfPlayers = false;
     private Map<Byte, Integer> playedCards = new HashMap<>();
 
+
+
+
     public void setIdsTest(List<Integer> id) {
         ids = id;
     }
@@ -77,6 +80,7 @@ public class Game {
                 maxRounds = 10;
             }
             gameActivity.setMaxRounds(maxRounds);
+
         }
     }
 
@@ -94,6 +98,7 @@ public class Game {
     }
 
     private void nextRound() {
+
         turnsCount = 0;
         round++;
         playersPlayedThisRound = 0;

@@ -1,65 +1,43 @@
 package com.example.mi_b_wizard;
 
-import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Menu;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import com.example.mi_b_wizard.Data.Game;
-import com.example.mi_b_wizard.Data.Player;
-import com.example.mi_b_wizard.Network.MessageHandler;
-import com.example.mi_b_wizard.Network.Server;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+
+import static android.graphics.Color.parseColor;
 
 
 public class ResultActivity extends AppCompatActivity {
-
-    private String idsPoints;
-    private String idsPredictedTricks;
-
-    private HashMap<String, Integer> mapOfIds;
-
     TableLayout resultLayout;
-    MessageHandler messageHandler;
     GameActivity gameActivity = GameActivity.getGameActivity();
-    Server server;
-    ArrayList<Integer> ids = new ArrayList<Integer>();
-    int predictedTricks;
-    int points;
-    int round=1,maxRounds;
+    int rowcounter = 1;
+    int maxRounds = 21;
     int playerCount;
     List<String> end = new ArrayList<>();
+    Button btmm;
 
-    public void addRound(){
-        this.round++;
-    }
-    public void setIds(){
-        this.ids=messageHandler.getId();
-        this.playerCount=ids.size();
-    }
 
-    public void setPredictedTricks(int predictedTricks){
-        this.predictedTricks=predictedTricks;
+    public String getPlayernameFromList(int position){
+        String name  = end.get(position);
+        String[] row = name.split(" ");
+        return row[1];
     }
 
-    public void setPoints(int points){
-        this.points=points;
+    public String getPointsFromList(int position){
+        String points = end.get(position);
+        String[] row = points.split(" ");
+        return row[2];
+
     }
 
 
@@ -67,99 +45,104 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-        mapOfIds = new HashMap<>();
         resultLayout = findViewById(R.id.result);
         end = gameActivity.getFinalSt(); // end results..
+        btmm = findViewById(R.id.backToMainMenu);
 
-        /*
-        ids.add(123);
-        ids.add(124);
-        ids.add(125);
-        ids.add(126);
-        playerCount=ids.size();
-       */
-        randomdata();
-        generateNewResultList(playerCount);
+        //Getting maxRounds from Game_activity
+        Intent mIntent = getIntent();
+        maxRounds = mIntent.getIntExtra("maxRounds", 0);
+
+  //      randomdata2();
+        System.out.println("Game: " + end.size());
+        System.out.println("maxRounds: " + maxRounds);
+        for (String s: end){
+            System.out.println(s);
+        }
+
+        generateNewResultList(maxRounds);
+
+        btmm.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ResultActivity.this, MainActivity.class);
+                startActivity(i);
+            }
+        });
+
 
     }
 
-    private void generateNewResultList(int playercount){
-        if (playercount < 3){
-            playercount = 3;
-        }else if(playercount > 6){
-            playercount = 6;
+    private void generateNewResultList(int maxRounds){
+        if (maxRounds > 0 ) {
+            playerCount = 60 / maxRounds;
         }
-        maxRounds= 60 / playercount;
-
 
         //Creating HeadRow
         TableRow headRow = new TableRow(ResultActivity.this);
 
-            for(int i = 0; i < playercount + 1 ; i++){
+            for(int i = 0; i < playerCount + 1 ; i++){
                 TextView cell = new TextView(ResultActivity.this);
 
                 headRow.addView(cell);
 
-                if (i > 0){
-                    int id =ids.get(i-1);
-                    cell.setText("" + id);
-                    cell.setTypeface(null, Typeface.BOLD);
+                if(i==0){
+                    cell.setText(" ");
+                }else if (i > 0){   //setting Playernames
+                    String playername = getPlayernameFromList(i-1);
+                    cell.setText(playername+" ");
+                    cell.setTextColor(parseColor("#FFFFFFFF"));
                     cell.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
                 }
             }
-
-        headRow.setBackgroundColor(13);
-
         resultLayout.addView(headRow);
 
-
         // add cells to Row
-        for (int i = 1; i <= maxRounds; i++){
+        for (int i = 0; i < maxRounds  ; i++){
 
             TableRow row = new TableRow(ResultActivity.this);
             resultLayout.addView(row);
-
-            for (int j = 0; j < playercount + 1; j++){
+            for (int j = 0; j < playerCount + 1; j++){
                 LinearLayout cell = new LinearLayout(ResultActivity.this);
-                //cell.setGravity(Gravity.CENTER_VERTICAL);
-                //cell.setOrientation(LinearLayout.HORIZONTAL);
+                cell.setGravity(Gravity.CENTER_VERTICAL);
                 row.addView(cell);
 
-
                 TextView tv1 = new TextView(ResultActivity.this); //actual score
-                tv1.setPadding(10, 0, 0, 0);
-                cell.addView(tv1);
 
+                switch(playerCount) {
+                    case 3:
+                        tv1.setPadding(50, 0, 0, 0);
+                        break;
+                    case 4:
+                        tv1.setPadding(30, 0, 0, 0);
+                        break;
+                    default:
+                        tv1.setPadding(20, 0, 0, 0);
+
+                }
+                cell.addView(tv1);
 
                 //first cell that shows the number of the round
                 if(j == 0) {
-                    tv1.setText("" + i);
+                    int c = i+1;
+                    tv1.setText("" + c);
                     tv1.setTypeface(null, Typeface.BOLD);
+                    tv1.setTextColor(parseColor("#FFFFFFFF"));
                     tv1.setGravity(Gravity.CENTER_HORIZONTAL);
 
-                }else{
-                    TextView textViewPredictedTricks = new TextView(ResultActivity.this);
-                    TextView textViewPoints = new TextView(ResultActivity.this);
-                    TextView placeHolder = new TextView(ResultActivity.this);
-                    textViewPredictedTricks.setText("" + predictedTricks);
-                    textViewPoints.setText("" + points);
-                    placeHolder.setText("|");
- //                   textViewPoints.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-   //                 textViewPredictedTricks.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+                }else {
 
+                    String s;
+                    s = getPointsFromList(rowcounter-1);
 
-                    LinearLayout resultContainer = new LinearLayout(ResultActivity.this);
-                    resultContainer.setOrientation(LinearLayout.HORIZONTAL);
-                    cell.addView(resultContainer);
-                  //  resultContainer.setGravity(Gravity.RIGHT);
+                    TextView textViewValues = new TextView(ResultActivity.this);
+                    textViewValues.setText(s);
+                    textViewValues.setTypeface(null, Typeface.BOLD);
+                    textViewValues.setTextColor(parseColor("#FFFFFFFF"));
+                    cell.addView(textViewValues);
+                    textViewValues.setPadding(10, 0, 0, 0);
 
-
-
-                    resultContainer.addView(textViewPredictedTricks);
-                    resultContainer.addView(placeHolder);
-                    resultContainer.addView(textViewPoints);
-
-
+                    rowcounter++;
                 }
 
 
@@ -171,27 +154,5 @@ public class ResultActivity extends AppCompatActivity {
 
 
     }
-
-    public void randomdata(){
-        Random rand=new Random();
-
-        playerCount=3;
-
-        for (int r=0;r < round;r++) {
-
-
-            for (int p = 0; p <= playerCount; p++) {
-                ids.add(123 + p);
-                predictedTricks = rand.nextInt(7);
-                points = rand.nextInt(6)*10;
-
-
-            }
-
-
-        }
-
-    }
-
 
 }
