@@ -128,9 +128,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         me.calculateMyPoints();
         showMyPoints();
         haveICheated = false;
-        System.out.println(" game "+finalSt.toString());
     }else if(JoinGameActivity.owner) {
             Intent i = new Intent(GameActivity.this, ResultActivity.class);
+            i.putExtra("maxRounds", maxRounds);
             startActivity(i);
             messageHandler.sendEvent(Server.END,zero);
             System.out.println(" game "+finalSt.toString());
@@ -139,6 +139,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void endGame(){
         Intent i = new Intent(GameActivity.this, ResultActivity.class);
+        i.putExtra("maxRounds", maxRounds);
         startActivity(i);
         System.out.println(" game "+finalSt.toString());
     }
@@ -294,7 +295,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     //send points to the others
     public void sendMyPoints(int points) {
-        messageHandler.write(Server.SEND_POINTS, me.getPlayerName() + ": " + (byte)points+" points  ");
+        messageHandler.write(Server.SEND_POINTS, me.getPlayerName() + ": " + (byte)points+" points");
     }
 
     //Methode to show my points in pointsTable (left top) and set my points in TextView of the Dialog
@@ -304,13 +305,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         sendMyPoints(p);
         pointsView = new TextView(GameActivity.this);
         pointsView.setText(me.getPlayerName()+": "+ p+" points");
-        finalSt.add("\n Round "+round +" player "+ me.getPlayerName()+": "+p+" points");
+        finalSt.add("\n Round"+round +" "+ me.getPlayerName()+": "+p+" points");
 
     }
     //Methode to set the points of the other players in the Pointsview to show them in the dialog
     public void setPointsInDialog(String points){
         pointsView.append("\n"+points+" ");
-        finalSt.add("\n Round "+round+" "+points);
+        finalSt.add("\n Round"+round+" "+points);
     }
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
@@ -355,14 +356,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         showTricksBtn = findViewById(R.id.showTricksBtn);
         myTrickView = findViewById(R.id.myPredictTricksView);
 
-        Button res  = findViewById(R.id.res);
-        res.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(GameActivity.this, ResultActivity.class);
-                startActivity(i);
-            }
-        });
 
         layout = (ViewGroup) startAndSendCards.getParent();
         if (JoinGameActivity.owner) {

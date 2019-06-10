@@ -5,7 +5,6 @@ import android.util.Log;
 import com.example.mi_b_wizard.GameActivity;
 import com.example.mi_b_wizard.Network.MessageHandler;
 import com.example.mi_b_wizard.Network.Server;
-import com.example.mi_b_wizard.ResultActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,18 +33,9 @@ public class Game {
     private int maxPlayers = 6;
     private boolean rightNumberOfPlayers = false;
     private Map<Byte, Integer> playedCards = new HashMap<>();
-    private ResultActivity resultActivity = ResultActivity.getResultActivity();
-    //PlayerListe in Game einfügen
-    private List<Player> playerList = new ArrayList<>();
 
 
-    public List<Player> getPlayerList() {
-        return playerList;
-    }
 
-    public void addPlayerList(Player player) {
-        this.playerList.add(player);
-    }
 
     public void setIdsTest(List<Integer> id) {
         ids = id;
