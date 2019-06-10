@@ -97,7 +97,7 @@ public class Game {
         turnsCount = 0;
         round++;
         playersPlayedThisRound = 0;
-        cardAdapter.returnValue = "";
+        cardAdapter.setReturnValue("");
         whoWonThisRound();
         waitALittleBit();
         sendCards();

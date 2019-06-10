@@ -9,7 +9,7 @@ public class CardAdapter {
     Deck deck = new Deck();
     List<Card> handCards = new ArrayList<>();
     List<Card> playercards = new ArrayList<>();
-    public String returnValue = "";
+    private String returnValue = "";
 
     public String getPlayerCards(){
         /*returnValue = "";
@@ -22,6 +22,14 @@ public class CardAdapter {
 
     public void resetDeck(){
         deck.resetDeck();
+    }
+
+    public String getReturnValue() {
+        return returnValue;
+    }
+
+    public void setReturnValue(String returnValue) {
+        this.returnValue = returnValue;
     }
 
     public byte[] getByteCards(int round){

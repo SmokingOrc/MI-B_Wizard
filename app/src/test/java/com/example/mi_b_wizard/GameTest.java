@@ -35,23 +35,23 @@ public class GameTest {
     public List<Card> generateCardsForCheating (String csvString) {
         List<Card> returnList = new ArrayList<Card>();
         String[] csvSplitted = csvString.split(";");
-        System.out.println("Splitted: " + csvSplitted[0]);
+        //System.out.println("Splitted: " + csvSplitted[0]);
         String[] cardSplitted;
         int i = 0;
         while(i < csvSplitted.length) {
             cardSplitted = csvSplitted[i].split("_");
             System.out.println(cardSplitted[0]);
             if(cardSplitted[0].equals("BLUE")) {
-                System.out.println("hello");
+                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 0));
             } else if (cardSplitted[0].equals("GREEN")) {
-                System.out.println("hello");
+                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 1));
             } else if (cardSplitted[0].equals("YELLOW")) {
-                System.out.println("hello");
+                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 2));
             } else if (cardSplitted[0].equals("RED")) {
-                System.out.println("hello");
+                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 3));
             }
             i++;

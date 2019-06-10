@@ -22,7 +22,7 @@ public class CheatingDialog extends Dialog implements android.view.View.OnClickL
     private Dialog d;
     private Button btnOk;
     private LinearLayout linearLayoutCardView;
-    public Hand handToShow = null;
+    private Hand handToShow = null;
     public boolean isActive;
 
     public CheatingDialog(Activity a) {
@@ -81,6 +81,7 @@ public class CheatingDialog extends Dialog implements android.view.View.OnClickL
             case R.id.btn_ok:
                 //c.finish();
                 isActive = false;
+
                 dismiss();
                 break;
             default:

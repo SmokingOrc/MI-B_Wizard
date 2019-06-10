@@ -126,7 +126,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void newRound(){
         if(round < maxRounds){
         round++;
-        cardAdapter.returnValue = "";
+        cardAdapter.setReturnValue("");
         me.calculateMyPoints();
         showMyPoints();
         haveICheated = false;
@@ -609,6 +609,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+
     public void openCheatPopUp(String value) {
         List<Card> cheatingCards = generateCardsForCheating(value);
 
@@ -623,7 +624,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             }
             //isPopUpActive = true;
             cD.isActive = true;
-            cD.handToShow = null;
             Hand testHand = new Hand();
             for (Card c : cheatingCards) {
                 testHand.addCardToHand(c);
@@ -634,22 +634,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
 
         }
-        /*if(!isPopUpActive) {
-            AlertDialog.Builder myBuilder = new AlertDialog.Builder(GameActivity.this);
-            myBuilder.setTitle("Cards handed out: ");
-            //List<String> list;
-            myBuilder.setMessage(value);
-            //myBuilder.setMessage(cheatString);
-            myBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    //myVibrator.cancel();
-                    isPopUpActive = false;
-                }
-            });
-            myBuilder.setIcon(android.R.drawable.ic_dialog_info);
-            AlertDialog myDialog = myBuilder.create();
-            myDialog.show();
-        }*/
+
 
     }
 
@@ -679,23 +664,23 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private List<Card> generateCardsForCheating (String csvString) {
         List<Card> returnList = new ArrayList<Card>();
         String[] csvSplitted = csvString.split(";");
-        System.out.println("Splitted: " + csvSplitted[0]);
+        //System.out.println("Splitted: " + csvSplitted[0]);
         String[] cardSplitted;
         int i = 0;
         while(i < csvSplitted.length) {
             cardSplitted = csvSplitted[i].split("_");
-            System.out.println(cardSplitted[0]);
+            //System.out.println(cardSplitted[0]);
             if(cardSplitted[0].equals("BLUE")) {
-                System.out.println("hello");
+                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 0));
             } else if (cardSplitted[0].equals("GREEN")) {
-                System.out.println("hello");
+                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 1));
             } else if (cardSplitted[0].equals("YELLOW")) {
-                System.out.println("hello");
+                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 2));
             } else if (cardSplitted[0].equals("RED")) {
-                System.out.println("hello");
+                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 3));
             }
             i++;
