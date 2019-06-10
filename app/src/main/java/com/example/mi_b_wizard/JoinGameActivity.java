@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
     Notifications notifications = new Notifications(this);
     MessageHandler messageHandler;
     ListView lvAvailableGames;
-    Button btnDiscover, btnSend;
+    ImageView btnDiscover;
     public TextView wifi;
     EditText message;
     public WifiP2pManager mManager;
@@ -107,8 +108,7 @@ public class JoinGameActivity extends AppCompatActivity implements ChannelListen
         mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
         wifi = findViewById(R.id.wifi);
         lvAvailableGames = (ListView) findViewById(R.id.lvAvailableGames);
-        btnDiscover = findViewById(R.id.btnDiscover);
-        btnSend = findViewById(R.id.send);
+        btnDiscover = findViewById(R.id.discover);
         message = findViewById(R.id.message);
         messageHandler = new MessageHandler();
         messageHandler.setJoingameContext(this);
