@@ -11,19 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import com.example.mi_b_wizard.Network.MessageHandler;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static android.graphics.Color.parseColor;
 
 
 public class ResultActivity extends AppCompatActivity {
     TableLayout resultLayout;
-    MessageHandler messageHandler;
     GameActivity gameActivity = GameActivity.getGameActivity();
     int rowcounter = 1;
     int maxRounds = 21;
@@ -93,9 +88,7 @@ public class ResultActivity extends AppCompatActivity {
 
                 if(i==0){
                     cell.setText(" ");
-                    cell.setTextColor(parseColor("#FFFFFFFF"));
-                    cell.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-                }else if (i > 0){
+                }else if (i > 0){   //setting Playernames
                     String playername = getPlayernameFromList(i-1);
                     cell.setText(playername+" ");
                     cell.setTextColor(parseColor("#FFFFFFFF"));
@@ -146,7 +139,6 @@ public class ResultActivity extends AppCompatActivity {
                     textViewValues.setText(s);
                     textViewValues.setTypeface(null, Typeface.BOLD);
                     textViewValues.setTextColor(parseColor("#FFFFFFFF"));
-
                     cell.addView(textViewValues);
                     textViewValues.setPadding(10, 0, 0, 0);
 
@@ -162,27 +154,5 @@ public class ResultActivity extends AppCompatActivity {
 
 
     }
-
-    //Random Data zum testen der Auflösung
-
-
-    public void randomdata2(){
-        Random rand=new Random();
-
-        playerCount = 6;
-        maxRounds= 60 / playerCount;
-        for (int i = 1; i < maxRounds + 1; i++) {
-
-            for (int j = 0; j <playerCount; j++) {
-                end.add("Round" + i + " groups" + j + ": " + i * rand.nextInt(10) + " points");
-
-
-            }
-
-
-        }
-
-    }
-
 
 }
