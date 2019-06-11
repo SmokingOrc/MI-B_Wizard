@@ -70,6 +70,6 @@ public class Card {
     //This method returns e.g. "TWO in BLUE"
     @Override
     public String toString(){
-        return getColour() + "_" + getRank();
+        return getColour() + "_" + getRank().ordinal();
     }
 }

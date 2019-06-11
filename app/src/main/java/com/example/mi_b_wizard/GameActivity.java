@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -126,11 +127,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void newRound(){
         if(round < maxRounds){
         round++;
+        cardAdapter.setReturnValue("");
         me.calculateMyPoints();
         showMyPoints();
         haveICheated = false;
     }else if(JoinGameActivity.owner) {
             Intent i = new Intent(GameActivity.this, ResultActivity.class);
+            i.putExtra("maxRounds", maxRounds);
             startActivity(i);
             messageHandler.sendEvent(Server.END,zero);
             System.out.println(" game "+finalSt.toString());
@@ -139,6 +142,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void endGame(){
         Intent i = new Intent(GameActivity.this, ResultActivity.class);
+        i.putExtra("maxRounds", maxRounds);
         startActivity(i);
         System.out.println(" game "+finalSt.toString());
     }
@@ -294,7 +298,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     //send points to the others
     public void sendMyPoints(int points) {
-        messageHandler.write(Server.SEND_POINTS, me.getPlayerName() + ": " + (byte)points+" points  ");
+        messageHandler.write(Server.SEND_POINTS, me.getPlayerName() + ": " + (byte)points+" points");
     }
 
     //Methode to show my points in pointsTable (left top) and set my points in TextView of the Dialog
@@ -304,13 +308,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         sendMyPoints(p);
         pointsView = new TextView(GameActivity.this);
         pointsView.setText(me.getPlayerName()+": "+ p+" points");
-        finalSt.add("\n Round "+round +" player "+ me.getPlayerName()+": "+p+" points");
+        finalSt.add("\n Round"+round +" "+ me.getPlayerName()+": "+p+" points");
 
     }
     //Methode to set the points of the other players in the Pointsview to show them in the dialog
     public void setPointsInDialog(String points){
         pointsView.append("\n"+points+" ");
-        finalSt.add("\n Round "+round+" "+points);
+        finalSt.add("\n Round"+round+" "+points);
     }
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
@@ -370,7 +374,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         lastUpdate = System.currentTimeMillis();
         myVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        cD = new CheatingDialog(GameActivity.this);
+
 
 
         startAndSendCards.setOnClickListener(new View.OnClickListener() {
@@ -552,6 +556,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
+
+    //Cheating Section
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -606,46 +612,32 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+
     public void openCheatPopUp(String value) {
+        List<Card> cheatingCards = generateCardsForCheating(value);
+
         Log.d("In cheatpopup: ", value);
-        /*if(!cD.isActive) {
+        if(!isPopUpActive) {
+            CheatingDialog cD = new CheatingDialog(GameActivity.this);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 myVibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 //deprecated in API 26
                 myVibrator.vibrate(500);
             }
+            //isPopUpActive = true;
             cD.isActive = true;
             Hand testHand = new Hand();
-            testHand.addCardToHand(new Card(3,3));
-            testHand.addCardToHand(new Card(4,3));
-            testHand.addCardToHand(new Card(5,3));
-            testHand.addCardToHand(new Card(6,3));
-            testHand.addCardToHand(new Card(7,1));
-            testHand.addCardToHand(new Card(8,1));
-            testHand.addCardToHand(new Card(2,2));
+            for (Card c : cheatingCards) {
+                testHand.addCardToHand(c);
+            }
             cD.setHandToShow(testHand);
-            cD.setTitle(value);
-            //cD.show();
+            cD.setTitle("Cheating");
+            cD.show();
 
 
-        }*/
-        if(!isPopUpActive) {
-            AlertDialog.Builder myBuilder = new AlertDialog.Builder(GameActivity.this);
-            myBuilder.setTitle("Cards handed out: ");
-            //List<String> list;
-            myBuilder.setMessage(value);
-            //myBuilder.setMessage(cheatString);
-            myBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    //myVibrator.cancel();
-                    isPopUpActive = false;
-                }
-            });
-            myBuilder.setIcon(android.R.drawable.ic_dialog_info);
-            AlertDialog myDialog = myBuilder.create();
-            myDialog.show();
         }
+
 
     }
 
@@ -671,6 +663,36 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         super.onPause();
         mySensorManager.unregisterListener(this);
     }
+
+    private List<Card> generateCardsForCheating (String csvString) {
+        List<Card> returnList = new ArrayList<Card>();
+        String[] csvSplitted = csvString.split(";");
+        //System.out.println("Splitted: " + csvSplitted[0]);
+        String[] cardSplitted;
+        int i = 0;
+        while(i < csvSplitted.length) {
+            cardSplitted = csvSplitted[i].split("_");
+            //System.out.println(cardSplitted[0]);
+            if(cardSplitted[0].equals("BLUE")) {
+                //System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 0));
+            } else if (cardSplitted[0].equals("GREEN")) {
+                //System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 1));
+            } else if (cardSplitted[0].equals("YELLOW")) {
+                //System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 2));
+            } else if (cardSplitted[0].equals("RED")) {
+                //System.out.println("hello");
+                returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 3));
+            }
+            i++;
+        }
+
+        return returnList;
+    }
+    //End Cheating Section
+
     //----SpeechRecognition----
     //Methods need to be override, because of the implementation of RecognitionListener(Abstract)
 

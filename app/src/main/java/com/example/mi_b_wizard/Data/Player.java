@@ -1,6 +1,5 @@
 package com.example.mi_b_wizard.Data;
 
-
 import android.util.Log;
 
 
