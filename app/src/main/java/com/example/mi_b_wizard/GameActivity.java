@@ -83,7 +83,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     List<String> finalSt = new ArrayList<>();
     //For Cards in Hand, Trump and played cards
     ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
-    LinearLayout playedCardsOthers, myPlayedCards;
+    LinearLayout playedCardsOthers;
+    LinearLayout myPlayedCards;
     Card nextCard;
 
     private SensorManager mySensorManager;
@@ -97,7 +98,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private ProgressBar progressBar;
     private TextView tricksTable;
     private TextView myTricksTable;
-    public SpeechRecognizer speechRecognizer = null;
+    public static SpeechRecognizer speechRecognizer = null;
     private Intent speechRecognizerIntent;
     static final int REQUEST_PERMISSION_KEY = 1;
     private static final String LOG_TAG = "SpeechActivity";
