@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RulesActivity"
-    android:background="#9fadb6">
+    android:background="#595A5C">
 
-    <Button
-        android:id="@+id/btn_join"
+    <TextView
+        android:id="@+id/space"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Join Game"
+        android:text=""
         android:textColor="@color/colorAccent"
-        android:textSize="18sp"
+        android:textSize="10sp"
         android:layout_alignParentRight="true"
 
         />
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         tools:layout_editor_absoluteX="0dp"
-        android:layout_below="@+id/btn_join"
+        android:layout_below="@+id/space"
         />
 
 

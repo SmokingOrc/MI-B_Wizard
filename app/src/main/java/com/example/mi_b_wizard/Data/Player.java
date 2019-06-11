@@ -54,10 +54,6 @@ public class Player{
         return predictedTrick;
     }
 
-    public void setPredictedTrick(byte predictedTrick) {
-        this.predictedTrick = predictedTrick;
-    }
-
     public int getPoints() {
         return points;
     }

@@ -19,7 +19,7 @@ public class Card {
 
     public void setRank(int rank){
         if(rank <0|| rank >14){
-            throw new RuntimeException("Rank must be between 0 and 14");
+            throw new IllegalArgumentException("Rank must be between 0 and 14");
         }else {
             this.rank = Rank.values()[rank];
         }
@@ -31,7 +31,7 @@ public class Card {
 
     public void setColour(int colour){
         if(colour <0|| colour >3){
-            throw new RuntimeException("Colour must be between 0 and 3");
+            throw new IllegalArgumentException("Colour must be between 0 and 3");
         }else {
             this.colour = Colour.values()[colour];
         }
@@ -47,7 +47,6 @@ public class Card {
     //Sets the ID of the cards in Byte to send the cards clients <->host
     //ID Example rank 0, colour 1 --> 1 ; rank 1, colour 0 -->10
     public void setId(int rank, int colour){
-        String idString = Integer.toString(rank)+(colour);
         int intID = (rank+1)+((colour+1)*15);
         byte bID = (byte)intID;
         this.id = bID;
@@ -59,11 +58,9 @@ public class Card {
         return id;
     }
 
+   //Returns true if the two cards are equale
     public boolean equalToOtherCard(Card otherCard){
-        if (this.getColour() == otherCard.getColour() && this.getRank() == otherCard.getRank()){
-            return true;
-        }else
-            return false;
+        return this.getColour()==otherCard.getColour() && this.getRank() ==otherCard.getRank();
     }
 
     public Card returnThisCard(){
