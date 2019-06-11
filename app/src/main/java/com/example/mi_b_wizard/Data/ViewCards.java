@@ -2,7 +2,6 @@ package com.example.mi_b_wizard.Data;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
