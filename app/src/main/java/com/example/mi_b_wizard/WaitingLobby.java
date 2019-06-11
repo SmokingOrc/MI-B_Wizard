@@ -1,13 +1,12 @@
 package com.example.mi_b_wizard;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +16,7 @@ import com.example.mi_b_wizard.Network.Server;
 
 public class WaitingLobby extends AppCompatActivity {
     boolean owner = JoinGameActivity.owner;
-    Button send, start;
+    ImageView send, start;
     Player player = MainActivity.getPlayer();
     TextView clientOrOwner, messages;
     EditText message;
@@ -59,8 +58,8 @@ public class WaitingLobby extends AppCompatActivity {
         user = player.getPlayerName();
         clientOrOwner =  findViewById(R.id.owner);
         messages = findViewById(R.id.messages);
-        send = findViewById(R.id.send);
-        start = findViewById(R.id.start);
+        send = findViewById(R.id.send_orange);
+        start = findViewById(R.id.start_red);
         message = findViewById(R.id.message);
         messages.setMovementMethod(new ScrollingMovementMethod());
 

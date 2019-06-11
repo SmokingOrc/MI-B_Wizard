@@ -15,8 +15,8 @@ import com.example.mi_b_wizard.Data.Player;
 
 public class MainActivity extends AppCompatActivity {
     private static Player player = null;
-    Button buttonJoin = null;
-    Button buttonRegeln;
+    ImageView buttonJoin = null;
+    ImageView buttonRegeln;
     private Button btnCheat = null; //only for testing shaking
     EditText userID;
     String user;
@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         userID = findViewById(R.id.Userid);
         user = userID.getText().toString();
-        buttonJoin = findViewById(R.id.btnJoin); //Wechsel zu Join Game
+        buttonJoin = findViewById(R.id.startgame); //Wechsel zu Join Game
+        buttonRegeln = findViewById(R.id.rules);//Wechsel zu Regeln
         buttonJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        buttonRegeln = findViewById(R.id.btnRegeln);//Wechsel zu Regeln
         buttonRegeln.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
