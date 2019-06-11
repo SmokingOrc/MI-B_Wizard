@@ -67,6 +67,8 @@ public class GameTests {
     }
 
 
+
+
     @Test
     public void testIfPlayerGetTheirCards3(){
         generatePlayers(3);
@@ -80,6 +82,8 @@ public class GameTests {
         verify(messageHandler, times(2)).sendCardsToPlayer(any(byte[].class),any(Integer.class));
         verify(gameActivity,times(1)).takeCards(any(byte[].class));
     }
+
+
 
     @Test
     public void testIfPlayerGetTheirCards4(){

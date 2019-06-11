@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.mi_b_wizard.Data.Game;
 import com.example.mi_b_wizard.Data.Player;
 
 

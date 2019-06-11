@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -39,6 +40,7 @@ public class CheatingDialog extends Dialog implements android.view.View.OnClickL
 
     public void setHandToShow(Hand handToShow) {
         this.handToShow = handToShow;
+        //addCardsToView();
     }
 
     public void addCardsToView() {
@@ -69,6 +71,7 @@ public class CheatingDialog extends Dialog implements android.view.View.OnClickL
         btnOk = findViewById(R.id.btn_ok);
         linearLayoutCardView = findViewById(R.id.layoutEnemyCards);
         btnOk.setOnClickListener(this);
+        Log.d("DEBUG", "in on create mf");
         addCardsToView();
     }
 
@@ -78,6 +81,7 @@ public class CheatingDialog extends Dialog implements android.view.View.OnClickL
             case R.id.btn_ok:
                 //c.finish();
                 isActive = false;
+
                 dismiss();
                 break;
             default:

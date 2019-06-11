@@ -1,6 +1,5 @@
 package com.example.mi_b_wizard.Data;
 
-
 import android.util.Log;
 
 
@@ -52,10 +51,6 @@ public class Player{
     }
     public byte getPredictedTrick() {
         return predictedTrick;
-    }
-
-    public void setPredictedTrick(byte predictedTrick) {
-        this.predictedTrick = predictedTrick;
     }
 
     public int getPoints() {

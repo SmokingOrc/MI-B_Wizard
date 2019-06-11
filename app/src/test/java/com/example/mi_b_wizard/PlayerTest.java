@@ -10,8 +10,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class PlayerTest {
-    Player player;
-    Player player2;
+    private Player player;
+    private Player player2;
     @Before
     public void before(){
         player =  new Player("Tom");
@@ -59,7 +59,7 @@ public class PlayerTest {
     @Test
     public void testResetForNewRound(){
         player.setActualPlayedCard(new Card(1,2));
-        player.setPredictedTrick((byte)5);
+        player.updatePredictedTricks((byte)5);
         player.setMadeTrick(2);
         player.resetForNewRound();
 
@@ -259,7 +259,7 @@ public class PlayerTest {
     }
     @Test
     public void CalculatePointsTest(){
-        player.setPredictedTrick((byte)1);
+        player.updatePredictedTricks((byte)1);
         player.madeATrick();
         player.calculateMyPoints();
         assertEquals(30,player.getPoints());

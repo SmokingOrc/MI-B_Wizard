@@ -20,6 +20,8 @@
         android:id="@+id/Userid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="483dp"
+        android:maxLength="7"
         android:layout_marginTop="32dp"
         android:ems="10"
         android:inputType="textPersonName"
