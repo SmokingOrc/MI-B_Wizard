@@ -120,41 +120,37 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void playerMadeAMove(Byte cardPlayed, int playerID){
         game.moveMade(cardPlayed,playerID);
-        showMove(cardPlayed);
-        messageHandler.sendEventToAllExceptTheSender(Server.MOVE,cardPlayed,playerID);
     }
 
     public void newRound(){
-        if(round < maxRounds){
-        round++;
         cardAdapter.setReturnValue("");
         me.calculateMyPoints();
         showMyPoints();
         haveICheated = false;
-    }else if(JoinGameActivity.owner) {
-            Intent i = new Intent(GameActivity.this, ResultActivity.class);
-            i.putExtra("maxRounds", maxRounds);
-            startActivity(i);
-            messageHandler.sendEvent(Server.END,zero);
-            System.out.println(" game "+finalSt.toString());
-        }
+    }
+
+    public void sendEnd(){
+        Intent i = new Intent(GameActivity.this, ResultActivity.class);
+        i.putExtra("maxRounds", maxRounds);
+        startActivity(i);
+        messageHandler.sendEvent(Server.END,zero);
+        Log.i(tag,finalSt.toString());
     }
 
     public void endGame(){
         Intent i = new Intent(GameActivity.this, ResultActivity.class);
         i.putExtra("maxRounds", maxRounds);
         startActivity(i);
-        System.out.println(" game "+finalSt.toString());
+        Log.i(tag,finalSt.toString());
     }
 
     public void setTrump(byte cardT){
+        round++;
         trump = cardAdapter.getThisCard(cardT);
         LinearLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
         ViewCards cardview = new ViewCards(GameActivity.this,trump);
         trumpPos.addView(cardview.view);
-
-        clearView();
     }
 
     public void showMove(Byte cardPlayed){
@@ -188,6 +184,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void takeCards(byte[] cards){
+        waitALittleBit();
         setMyHand(cards);
         showCardsInHand();
         clearView();
@@ -219,6 +216,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
         ViewCards cardview = new ViewCards(GameActivity.this, nextCard);
         myPlayedCards.addView(cardview.view);
+        nextCard = null;
     }
 
 
@@ -238,7 +236,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         clearPlayedCardsOthers();
         clearMyPlayedCards();
     }
-
+    private void waitALittleBit() {
+        try {
+            Thread.sleep(800);
+        } catch (InterruptedException e) {
+            Log.e(tag,"sleep exception");
+            Thread.currentThread().interrupt();
+        }
+    }
 
     public void clearPlayedCardsOthers(){
         myPlayedCards = findViewById(R.id.playedcardsothers);
@@ -407,14 +412,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 if(nextCard != null){
-                    if (myTurn && JoinGameActivity.owner) {
+                    if (myTurn && JoinGameActivity.owner ) {
                     messageHandler.sendEvent(Server.MOVE,nextCard.getId());
                     notMyTurnAnymore();
                     game.hostMadeAMove(nextCard.getId());
                     myHand.removeCardFromHand(nextCard);
                     showMyPlayedCard();
                     showCardsInHand();
-                }else if(myTurn){
+                }else if(myTurn ){
                     messageHandler.sendEvent(Server.MOVE,nextCard.getId());
                     myHand.removeCardFromHand(nextCard);
                     showMyPlayedCard();

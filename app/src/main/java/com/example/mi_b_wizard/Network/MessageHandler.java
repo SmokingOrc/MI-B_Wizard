@@ -124,13 +124,13 @@ public class MessageHandler implements Handler.Callback {
 
             case MOVE:
                 byte[] move = (byte[]) msg.obj;
-                if(gameActivity != null && move[1] > 16 && move[1]< 76){
+                if(gameActivity != null && move[1] >= 16 && move[1]< 76){
+                    gameActivity.showMove(move[1]);
                 if (JoinGameActivity.owner) {
                   gameActivity.playerMadeAMove(move[1], msg.arg2);
                   sendEventToAllExceptTheSender(Server.MOVE,move[1],msg.arg2);
-                }else{
-                    gameActivity.showMove(move[1]);
                 }}
+
                 break;
 
             case TRUMP:
@@ -191,7 +191,7 @@ public class MessageHandler implements Handler.Callback {
 
             case YOUR_TURN:
                 if (gameActivity != null){
-                   gameActivity.MyTurn();}
+                   gameActivity.MyTurn(); }
                 else {
                     Log.i(tag,gameNaN);
                 }
