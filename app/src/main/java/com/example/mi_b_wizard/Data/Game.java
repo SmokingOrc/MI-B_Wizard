@@ -24,6 +24,7 @@ public class Game {
     private byte firstCardThisTurn = 0;
     private byte trumpThisRound;
     private int round = 1;
+    private boolean lastRound = false;
     private int playedRounds = 0;
     private int maxRounds;
     private int turns = 0;
@@ -85,32 +86,35 @@ public class Game {
     }
 
     private void whoIsNext() {
-        if (turnsCount == ((ids.size() + 1) * round) && round < maxRounds) {
+        System.out.println("max "+maxRounds+" round "+round);
+        if (turnsCount == ((ids.size() + 1) * round) && round <= maxRounds) {
+            if(round == maxRounds){
+                gameActivity.sendEnd();
+            }else {
+            whoWonThisRound();
+            waitALittleBit();
             nextRound();
             messageHandler.sendEvent(Server.NEW_ROUND, n);
-            waitALittleBit();
-            gameActivity.newRound();
-        } else if (playersPlayedThisRound == ids.size() + 1) {
+            gameActivity.newRound();}
+        }else if (playersPlayedThisRound == ids.size() + 1) {
             nextTurn();
-        } else {
+        }else {
             findNext();
         }
     }
 
     private void nextRound() {
-
         turnsCount = 0;
         round++;
         playersPlayedThisRound = 0;
         cardAdapter.setReturnValue("");
-        whoWonThisRound();
         waitALittleBit();
-        sendCards();
-    }
+        sendCards(); }
+
 
     private void waitALittleBit() {
         try {
-            Thread.sleep(500);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             Log.e(tag,"sleep exception");
             Thread.currentThread().interrupt();
@@ -141,6 +145,8 @@ public class Game {
             playedRounds++;
             cardAdapter.clearCardsTosend();
             int playerId;
+            findAndSendTrump();
+            waitALittleBit();
             for (int i = 0; i < ids.size(); i++) {
                 playerId = ids.get(i);
                 byte[] cardsToSend;
@@ -149,8 +155,8 @@ public class Game {
                 Log.i(tag,"cards sent to players from game class");
             }
             gameActivity.takeCards(cardAdapter.getByteCards(round));
-            waitALittleBit();
-            findAndSendTrump();
+
+         //   findAndSendTrump();
         } else if (round != 1) {
             sendCards();
         } else {

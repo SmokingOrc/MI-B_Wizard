@@ -34,6 +34,7 @@ public class Deck {
 
 
     public Byte getTrump(){
+        resetDeck();
         Object[] rand = card.keySet().toArray();
         Object key = rand[new Random().nextInt(rand.length)];
         Card c = card.get(key);
@@ -46,7 +47,8 @@ public class Deck {
                 break;
             } }
         }
-        return  c.getId();
+        card.remove(c);
+        return c.getId();
     }
     /**
      * getCards method takes the input currentRound

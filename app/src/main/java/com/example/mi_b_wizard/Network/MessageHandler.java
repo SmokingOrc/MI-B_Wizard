@@ -25,8 +25,10 @@ public class MessageHandler implements Handler.Callback {
     private WaitingLobby waitingLobby = WaitingLobby.getWaitingLobby();
     private GameActivity gameActivity  = GameActivity.getGameActivity();
     boolean set = false;
+    boolean hostCheated = false;
     private ArrayList<Server> Clients = new ArrayList<Server>();
     private ArrayList<Integer> id = new ArrayList<Integer>();
+    public ArrayList<Integer> cheaters = new ArrayList<Integer>();
     @SuppressLint("StaticFieldLeak")
     private static MessageHandler messageHandler;
     private byte  n = 0;
@@ -47,6 +49,9 @@ public class MessageHandler implements Handler.Callback {
     public static final byte GOT_CARDS =  14;
     public static final byte NOTIFICATION = 68;
     public static final byte END = 49;
+    public static final byte DETECT = 77;
+    public static final byte CHEATER_FOUND = 94;
+
 
 
 
@@ -62,6 +67,10 @@ public class MessageHandler implements Handler.Callback {
         return server;
     }
 
+    public boolean didSomebodyCheated(){
+        return (hostCheated || !cheaters.isEmpty());
+    }
+
     public static MessageHandler messageHandler(){
         return messageHandler;
     }
@@ -73,6 +82,7 @@ public class MessageHandler implements Handler.Callback {
         this.notifications = notifications;
     }
 
+
     public void setJoingameContext(Context joingameContext) {
         this.joingameContext = joingameContext;
         setNotifications(new Notifications(joingameContext));
@@ -82,6 +92,13 @@ public class MessageHandler implements Handler.Callback {
         return handler;
     }
 
+    public void resetCheaters(){
+        cheaters.clear();
+        hostCheated = false;
+    }
+    public void setHostCheated(boolean b){
+        hostCheated = b;
+    }
     public void setHandler(Handler handler) {
         this.handler = handler;
     }
@@ -124,13 +141,13 @@ public class MessageHandler implements Handler.Callback {
 
             case MOVE:
                 byte[] move = (byte[]) msg.obj;
-                if(gameActivity != null && move[1] > 16 && move[1]< 76){
+                if(gameActivity != null && move[1] >= 16 && move[1]< 76){
+                    gameActivity.showMove(move[1]);
                 if (JoinGameActivity.owner) {
                   gameActivity.playerMadeAMove(move[1], msg.arg2);
                   sendEventToAllExceptTheSender(Server.MOVE,move[1],msg.arg2);
-                }else{
-                    gameActivity.showMove(move[1]);
                 }}
+
                 break;
 
             case TRUMP:
@@ -175,6 +192,7 @@ public class MessageHandler implements Handler.Callback {
                 if (gameActivity != null){
                 if(JoinGameActivity.owner) {
                   writeToTheSender(Server.GOT_CARDS,gameActivity.getPlayerHand(),msg.arg2);
+                  cheaters.add(msg.arg2);
                 }}else {
                     Log.i(tag,gameNaN);
                 }
@@ -191,7 +209,7 @@ public class MessageHandler implements Handler.Callback {
 
             case YOUR_TURN:
                 if (gameActivity != null){
-                   gameActivity.MyTurn();}
+                   gameActivity.MyTurn(); }
                 else {
                     Log.i(tag,gameNaN);
                 }
@@ -206,7 +224,6 @@ public class MessageHandler implements Handler.Callback {
                 }}
                 break;
 
-
             case END:
                 if (gameActivity != null){
                     gameActivity.endGame();}
@@ -214,9 +231,32 @@ public class MessageHandler implements Handler.Callback {
                     Log.i(tag,gameNaN);
                 }
                 break;
+
+            case DETECT:
+                if (gameActivity != null && JoinGameActivity.owner){
+                    if(didSomebodyCheated()){
+                        writeToTheSender(Server.CHEATER_FOUND,"1",msg.arg2);
+                        findCheaters();
+                        resetCheaters();
+                    }else{
+                        writeToTheSender(Server.CHEATER_FOUND,"3",msg.arg2);
+                    }
+                } else {
+                    Log.i(tag,gameNaN);
+                }
+                break;
+
             case ROUND:
                 if (gameActivity != null){
                     gameActivity.newRound(); }
+                else { Log.i(gameNaN,tag); }
+                break;
+
+            case CHEATER_FOUND:
+                String s1 = new String((byte[]) msg.obj, 1, msg.arg1);
+                if (gameActivity != null){
+                    gameActivity.showCheater(s1);
+                    }
                 else { Log.i(gameNaN,tag); }
                 break;
 
@@ -229,10 +269,22 @@ public class MessageHandler implements Handler.Callback {
                     Log.i(gameNaN,tag); }
                 break;
 
+
+
                 default:
                     Log.i("unknown event",tag);
         }
         return true;
+    }
+
+    public void findCheaters() {
+        if(hostCheated){
+            gameActivity.showCheater("2");
+        }
+
+        for (int i = 0; i <cheaters.size(); i++) {
+            writeToTheSender(Server.CHEATER_FOUND,"2",cheaters.get(i));
+        }
     }
 
     private void setActivities() {
