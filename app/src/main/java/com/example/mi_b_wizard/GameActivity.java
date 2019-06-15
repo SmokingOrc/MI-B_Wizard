@@ -55,6 +55,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private int round = 0;
     private int maxRounds = 20;
     Button startAndSendCards;
+    ImageView detectBtn;
     ImageView playACard;
     ImageView predictTricksBtn;
     ImageView writeTricksBtn;
@@ -144,8 +145,21 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         Log.i(tag,finalSt.toString());
     }
 
+    public void showCheater(String c){
+        if(c.startsWith("1")){
+            me.foundACheater();
+            toast("Somebody cheated this round... +50 points for you :)");
+        }else if (c.startsWith("2")){
+            me.cheated();
+            toast("Somebody detected your cheating... -50 points for you");
+        }else if(c.startsWith("3")){
+            me.cheated();
+            toast("nobody cheated.. -50 points for you :(");
+        }
+    }
     public void setTrump(byte cardT){
         round++;
+        messageHandler.resetCheaters();
         trump = cardAdapter.getThisCard(cardT);
         LinearLayout trumpPos = findViewById(R.id.trumpPosition);
         trumpPos.removeAllViews();
@@ -363,7 +377,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         pointsBtn = findViewById(R.id.showPointsBtn);
         showTricksBtn = findViewById(R.id.showTricksBtn);
         myTrickView = findViewById(R.id.myPredictTricksView);
-
+        detectBtn = findViewById(R.id.detectedCheatingBtn);
 
         layout = (ViewGroup) startAndSendCards.getParent();
         if (JoinGameActivity.owner) {
@@ -454,6 +468,24 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 progressBar.setVisibility(View.INVISIBLE);
                 predictTricksBtn.setVisibility(View.VISIBLE);
                 speechRecognizer.stopListening();
+            }
+        });
+
+        detectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(JoinGameActivity.owner){
+                    if(messageHandler.didSomebodyCheated()){
+                    messageHandler.findCheaters();
+                    toast("somebody cheated this round.. + 50 points :)");
+                    messageHandler.resetCheaters();
+                    me.foundACheater();
+                }else{
+                        toast("nobody cheated this round.. - 50 points :(");
+                        me.cheated();
+                }}else{
+                    messageHandler.sendEvent(Server.DETECT,zero);
+                }
             }
         });
 
@@ -592,6 +624,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 messageHandler.sendEvent(Server.CHEAT,zero);
             } else {
                 openCheatPopUp(game.getPlayedCards());
+                messageHandler.setHostCheated(true);
             }
             //openCheatPopUp("");
             //enemyCards = testGame.getCardsOfRandomPlayer();

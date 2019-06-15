@@ -30,7 +30,8 @@ public class Server extends Thread{
     public final static byte GOT_CARDS = 124;
     public final static byte NOTIFICATION  = 32;
     public final static byte END  = 42;
-
+    public final static byte DETECT  = 64;
+    public final static byte CHEATER_FOUND  = 25;
 
     public Server(Socket socket, Handler handler) {
         this.socket = socket;
@@ -124,11 +125,19 @@ public class Server extends Thread{
                             handler.obtainMessage(MessageHandler.END, bytes, id, buffer).sendToTarget();
                             break;
 
+                        case DETECT:
+                            handler.obtainMessage(MessageHandler.DETECT, bytes, id, buffer).sendToTarget();
+                            break;
+
                         case MOVE:
                             handler.obtainMessage(MessageHandler.MOVE, bytes, id, buffer).sendToTarget();
                             break;
 
-                            default:
+                        case CHEATER_FOUND:
+                            handler.obtainMessage(MessageHandler.CHEATER_FOUND, bytes, id, buffer).sendToTarget();
+                            break;
+
+                        default:
                                 System.out.println("default : "+buffer[0]);
                                 break;
 

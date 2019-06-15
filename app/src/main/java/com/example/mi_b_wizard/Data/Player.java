@@ -49,6 +49,13 @@ public class Player{
     public void madeATrick(){ madeTrick ++;
         Log.d("Tag","You made a trick");
     }
+    public void cheated(){
+        points -= 50;
+    }
+
+    public void foundACheater(){
+        points += 50;
+    }
     public byte getPredictedTrick() {
         return predictedTrick;
     }
