@@ -74,9 +74,18 @@ public class CardTest {
         assertEquals(Colour.YELLOW, card.getColour());
     }
     @Test
-    public void testSetClourFailed(){
+    public void testSetColourFailedToHigh(){
         try{
             card.setColour(5);
+            fail();
+        }catch(RuntimeException e){
+            assertEquals(e.getMessage(), "Colour must be between 0 and 3");
+        }
+    }
+    @Test
+    public void testSetColourFailedToLow(){
+        try{
+            card.setColour(-1);
             fail();
         }catch(RuntimeException e){
             assertEquals(e.getMessage(), "Colour must be between 0 and 3");
@@ -121,8 +130,18 @@ public class CardTest {
         assertTrue(card.equalToOtherCard(card2));
     }
     @Test
-    public void testEqualToOtherCardFalse(){
+    public void testEqualToOtherCardBothFalse(){
         assertFalse(card.equalToOtherCard(card1));
+    }
+    @Test
+    public void testEqualToOtherCardRankDifferent(){
+        Card cardRank = new Card(1,1);
+        assertFalse(card.equalToOtherCard(cardRank));
+    }
+    @Test
+    public void testEqualToOtherCardColourDifferent(){
+        Card cardColour = new Card(0,2);
+        assertFalse(card.equalToOtherCard(cardColour));
     }
     @Test
     public void testToString(){
