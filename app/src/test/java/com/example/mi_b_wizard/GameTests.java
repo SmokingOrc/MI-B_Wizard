@@ -52,7 +52,7 @@ public class GameTests {
 
     @Test(expected = IllegalStateException.class)
     public void testStartGameFalseNotEnoughPlayers() {
-        generatePlayers(2);
+        generatePlayers(1);
         game.setIdsTest(ids);
         game.setMessageHandler(messageHandler);
         game.sendCards();
