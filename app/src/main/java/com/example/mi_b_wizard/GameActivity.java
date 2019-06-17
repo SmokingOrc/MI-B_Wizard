@@ -142,12 +142,17 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         Log.i(tag,finalSt.toString());
     }
 
+    public void sendLastPoints(int p){
+        messageHandler.write(Server.ROUNDEND, me.getPlayerName() + ": " + (byte)p+" points");
+    }
+
+
     public void addEndListEntry(){
         round++;
         me.calculateMyPoints();
         int p = me.getPoints();
        // sendMyPoints(p);
-        messageHandler.write(Server.ROUNDEND, me.getPlayerName() + ": " + (byte)p+" points");
+        sendLastPoints(p);
         finalSt.add("\n Round"+round +" "+ me.getPlayerName()+": "+p+" points");
     }
 

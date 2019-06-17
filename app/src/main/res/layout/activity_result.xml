@@ -6,6 +6,14 @@
     android:layout_height="fill_parent"
     tools:context=".ResultActivity">
 
+
+    <TableLayout
+        android:id="@+id/result"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/resultbackground"
+        android:stretchColumns="1,2,3"></TableLayout>
+
     <Button
         android:id="@+id/backToMainMenu"
         android:layout_width="wrap_content"
@@ -14,24 +22,6 @@
         android:text="Back to Menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <ListView
-        android:id="@+id/resultList"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/resultbackground"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <TableLayout
-        android:id="@+id/result"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/resultbackground"
-        android:stretchColumns="1,2,3,4,5,6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></TableLayout>
 
 
 </android.support.constraint.ConstraintLayout>

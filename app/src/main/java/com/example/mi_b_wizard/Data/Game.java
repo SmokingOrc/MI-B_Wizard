@@ -81,7 +81,7 @@ public class Game {
                 maxRounds = 10;
             }
             //set maxRound to 3 for Demoversion
-            maxRounds = 2;
+            maxRounds = 3;
             gameActivity.setMaxRounds(maxRounds);
 
         }
@@ -92,6 +92,8 @@ public class Game {
         if (turnsCount == ((ids.size() + 1) * round) && round <= maxRounds) {
             if(round == maxRounds){
                 gameActivity.addEndListEntry();
+                gameActivity.newRound();
+                waitALittleBit();
                 gameActivity.sendEnd();
             }else {
             whoWonThisRound();

@@ -24,7 +24,7 @@ public class ResultActivity extends AppCompatActivity {
     ListView resultView;
     GameActivity gameActivity = GameActivity.getGameActivity();
     int rowcounter = 1;
-    int maxRounds = 2;
+    int maxRounds = 3;
     int playerCount = 2;
     List<String> end = new ArrayList<>();
     Button btmm;
@@ -33,13 +33,13 @@ public class ResultActivity extends AppCompatActivity {
     public String getPlayernameFromList(int position){
         String name  = end.get(position);
         String[] row = name.split(" ");
-        return row[1];
+        return row[2];
     }
 
     public String getPointsFromList(int position){
         String points = end.get(position);
         String[] row = points.split(" ");
-        return row[2];
+        return row[3];
 
     }
 
@@ -51,6 +51,7 @@ public class ResultActivity extends AppCompatActivity {
            System.out.println("rowlänge: " + row.length);
            if (row.length <= 3){
                end.remove(i);
+               i--;
            }
         }
 
@@ -62,7 +63,6 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
         resultLayout = findViewById(R.id.result);
-        resultView = findViewById(R.id.resultList);
         end = gameActivity.getFinalSt(); // end results..
         btmm = findViewById(R.id.backToMainMenu);
 
@@ -80,14 +80,17 @@ public class ResultActivity extends AppCompatActivity {
 
         cleanMyList(end);
 
-        if (maxRounds * playerCount == end.size()){
-            resultView.setVisibility(View.GONE);
-            generateNewResultList(maxRounds);
+        System.out.println("Game: " + end.size());
+
+        for (String s: end){
+            System.out.println(s);
         }
-        resultLayout.setVisibility(View.GONE);
+        generateNewResultList(maxRounds);
+
+      /*  resultLayout.setVisibility(View.GONE);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, end);
         resultView.setAdapter(adapter);
-
+        */
 
 
 
@@ -119,9 +122,10 @@ public class ResultActivity extends AppCompatActivity {
                     cell.setText(" ");
                 }else if (i > 0){   //setting Playernames
                     String playername = getPlayernameFromList(i-1);
+                    System.out.println("playername " + playername);
                     cell.setText(playername+" ");
                     cell.setTextColor(parseColor("#FFFFFFFF"));
-                    cell.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+ //                   cell.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
                 }
             }
         resultLayout.addView(headRow);
@@ -133,10 +137,12 @@ public class ResultActivity extends AppCompatActivity {
             resultLayout.addView(row);
             for (int j = 0; j < playerCount + 1; j++){
                 LinearLayout cell = new LinearLayout(ResultActivity.this);
-                cell.setGravity(Gravity.CENTER_VERTICAL);
+//                cell.setGravity(Gravity.CENTER_VERTICAL);
                 row.addView(cell);
 
                 TextView tv1 = new TextView(ResultActivity.this); //actual score
+
+                /*
 
                 switch(playerCount) {
                     case 3:
@@ -149,6 +155,7 @@ public class ResultActivity extends AppCompatActivity {
                         tv1.setPadding(20, 0, 0, 0);
 
                 }
+                */
                 cell.addView(tv1);
 
                 //first cell that shows the number of the round
@@ -161,11 +168,11 @@ public class ResultActivity extends AppCompatActivity {
 
                 }else {
 
-                    String s;
-                    s = getPointsFromList(rowcounter-1);
-
+                    String res;
+                    res = getPointsFromList(rowcounter-1);
+                    System.out.println("points " + res);
                     TextView textViewValues = new TextView(ResultActivity.this);
-                    textViewValues.setText(s);
+                    textViewValues.setText(res);
                     textViewValues.setTypeface(null, Typeface.BOLD);
                     textViewValues.setTextColor(parseColor("#FFFFFFFF"));
                     cell.addView(textViewValues);
