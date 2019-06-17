@@ -30,7 +30,7 @@ public class Game {
     private int turns = 0;
     private byte n = 0;
     private int host = 0;
-    private int minPlayers = 3;  // when testing with 2 devices change the value of minPlayers.
+    private int minPlayers = 2;  // when testing with 2 devices change the value of minPlayers.
     private int maxPlayers = 6;
     private boolean rightNumberOfPlayers = false;
     private Map<Byte, Integer> playedCards = new HashMap<>();
@@ -80,6 +80,8 @@ public class Game {
             } else {
                 maxRounds = 10;
             }
+            //set maxRound to 3 for Demoversion
+            maxRounds = 2;
             gameActivity.setMaxRounds(maxRounds);
 
         }
@@ -89,6 +91,7 @@ public class Game {
         System.out.println("max "+maxRounds+" round "+round);
         if (turnsCount == ((ids.size() + 1) * round) && round <= maxRounds) {
             if(round == maxRounds){
+                gameActivity.addEndListEntry();
                 gameActivity.sendEnd();
             }else {
             whoWonThisRound();

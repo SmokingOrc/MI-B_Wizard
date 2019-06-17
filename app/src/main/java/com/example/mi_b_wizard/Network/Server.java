@@ -32,6 +32,7 @@ public class Server extends Thread{
     public final static byte END  = 42;
     public final static byte DETECT  = 64;
     public final static byte CHEATER_FOUND  = 25;
+    public static final byte ROUNDEND =  48;
 
     public Server(Socket socket, Handler handler) {
         this.socket = socket;
@@ -136,6 +137,11 @@ public class Server extends Thread{
                         case CHEATER_FOUND:
                             handler.obtainMessage(MessageHandler.CHEATER_FOUND, bytes, id, buffer).sendToTarget();
                             break;
+
+                        case ROUNDEND:
+                            handler.obtainMessage(MessageHandler.ROUNDEND, bytes-1, id, buffer).sendToTarget();
+                            break;
+
 
                         default:
                                 System.out.println("default : "+buffer[0]);

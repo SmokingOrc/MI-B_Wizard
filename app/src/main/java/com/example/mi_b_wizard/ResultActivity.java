@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -19,10 +21,11 @@ import static android.graphics.Color.parseColor;
 
 public class ResultActivity extends AppCompatActivity {
     TableLayout resultLayout;
+    ListView resultView;
     GameActivity gameActivity = GameActivity.getGameActivity();
     int rowcounter = 1;
-    int maxRounds = 21;
-    int playerCount;
+    int maxRounds = 2;
+    int playerCount = 2;
     List<String> end = new ArrayList<>();
     Button btmm;
 
@@ -40,27 +43,53 @@ public class ResultActivity extends AppCompatActivity {
 
     }
 
+    public void cleanMyList(List<String> end){
+        for (int i=0; i < end.size();i++ ){
+           String s  = end.get(i);
+           System.out.println("datensatz: " + s);
+           String[] row = s.split(" ");
+           System.out.println("rowlänge: " + row.length);
+           if (row.length <= 3){
+               end.remove(i);
+           }
+        }
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
         resultLayout = findViewById(R.id.result);
+        resultView = findViewById(R.id.resultList);
         end = gameActivity.getFinalSt(); // end results..
         btmm = findViewById(R.id.backToMainMenu);
 
         //Getting maxRounds from Game_activity
-        Intent mIntent = getIntent();
-        maxRounds = mIntent.getIntExtra("maxRounds", 0);
-
-  //      randomdata2();
+        //Intent mIntent = getIntent();
+//        maxRounds = mIntent.getIntExtra("maxRounds", 0);
+   //     maxRounds= gameActivity.getMaxRounds();
         System.out.println("Game: " + end.size());
         System.out.println("maxRounds: " + maxRounds);
+        System.out.println("Playercount: " + playerCount);
+
         for (String s: end){
             System.out.println(s);
         }
 
-        generateNewResultList(maxRounds);
+        cleanMyList(end);
+
+        if (maxRounds * playerCount == end.size()){
+            resultView.setVisibility(View.GONE);
+            generateNewResultList(maxRounds);
+        }
+        resultLayout.setVisibility(View.GONE);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, end);
+        resultView.setAdapter(adapter);
+
+
+
 
         btmm.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -74,7 +103,7 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private void generateNewResultList(int maxRounds){
-        if (maxRounds > 0 ) {
+        if (maxRounds > 9 && playerCount == 2 ) {
             playerCount = 60 / maxRounds;
         }
 

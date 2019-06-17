@@ -52,7 +52,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private CardAdapter cardAdapter = new CardAdapter() ;
     Player me = MainActivity.getPlayer();
     private String tag = "gameActivity";
-    private int round = 0;
+    private int round = -1;
     private int maxRounds = 20;
     Button startAndSendCards;
     ImageView detectBtn;
@@ -119,6 +119,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
       this.maxRounds = maxRounds;
     }
 
+    public int getMaxRounds() {
+        return maxRounds;
+    }
+
     public void playerMadeAMove(Byte cardPlayed, int playerID){
         game.moveMade(cardPlayed,playerID);
     }
@@ -136,6 +140,15 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         startActivity(i);
         messageHandler.sendEvent(Server.END,zero);
         Log.i(tag,finalSt.toString());
+    }
+
+    public void addEndListEntry(){
+        round++;
+        me.calculateMyPoints();
+        int p = me.getPoints();
+       // sendMyPoints(p);
+        messageHandler.write(Server.ROUNDEND, me.getPlayerName() + ": " + (byte)p+" points");
+        finalSt.add("\n Round"+round +" "+ me.getPlayerName()+": "+p+" points");
     }
 
     public void endGame(){
@@ -333,8 +346,16 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     //Methode to set the points of the other players in the Pointsview to show them in the dialog
     public void setPointsInDialog(String points){
         pointsView.append("\n"+points+" ");
+    }
+
+    public void setPointsInList(String points){
         finalSt.add("\n Round"+round+" "+points);
     }
+    public void addLastPointsInList(String pointsend){
+        finalSt.add("\n Round"+round+" "+pointsend);
+    }
+
+
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
     }
