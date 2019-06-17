@@ -74,6 +74,15 @@ public class PlayerTest {
         assertEquals(card, player.getActualPlayedCard());
     }
     @Test
+    public void testCheckPredictedtricks0(){
+        player.checkPredictedTricks("null");
+        assertEquals(0, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("0 Uhr");
+        assertEquals(0, player.getCheckedPredictedTricks());
+        player.checkPredictedTricks("hundert und 0");
+        assertEquals(0, player.getCheckedPredictedTricks());
+    }
+    @Test
     public void testCheckPredictedtricks1(){
         player.checkPredictedTricks("eins");
         assertEquals(1, player.getCheckedPredictedTricks());
@@ -288,5 +297,24 @@ public class PlayerTest {
         player.calculateMyPoints();
         assertEquals(-10, player.getPoints());
     }
-
+    @Test
+    public void testCheated(){
+        assertEquals(0, player.getMadeTrick());
+        assertEquals(0,player.getPoints());
+        assertEquals(0, player.getPredictedTrick());
+        player.calculateMyPoints();
+        assertEquals(20, player.getPoints());
+        player.cheated();
+        assertEquals(-30, player.getPoints());
+    }
+    @Test
+    public void testFoundACheater(){
+        assertEquals(0, player.getMadeTrick());
+        assertEquals(0,player.getPoints());
+        assertEquals(0, player.getPredictedTrick());
+        player.calculateMyPoints();
+        assertEquals(20, player.getPoints());
+        player.foundACheater();
+        assertEquals(70, player.getPoints());
+    }
 }

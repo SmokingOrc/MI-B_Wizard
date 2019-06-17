@@ -83,7 +83,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private CheatingDialog cD;
     List<String> finalSt = new ArrayList<>();
     //For Cards in Hand, Trump and played cards
-    ArrayList<ViewCards> handCards = new ArrayList<ViewCards>();
+    ArrayList<ViewCards> handCards = new ArrayList<>();
     LinearLayout playedCardsOthers;
     LinearLayout myPlayedCards;
     Card nextCard;
@@ -91,8 +91,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager mySensorManager;
     private Vibrator myVibrator;
     private long lastUpdate;
-   // private AlertDialog.Builder myBuilder;
-   // private AlertDialog myDialog;
     public boolean isPopUpActive = false;
 
     //For SpeechRecognition and manuel tricks input
@@ -538,7 +536,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                                 byte predictedTricks = (byte)numberPicker.getValue();
                                 me.updatePredictedTricks(predictedTricks);
                                 sendPredictedTricks();
-                                //resultActivity.setPredictedTricks(predictedTricks);
                                 Log.d(LOG_TAG,predictedTricks+"");
                                 //Set Tricks for Dialog
                                 myTricksTable.setText(me.getPlayerName()+": "+me.getPredictedTrick()+" tricks");
