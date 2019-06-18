@@ -72,7 +72,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     ViewGroup layout;
     Server server;
     Card trump;
-    ResultActivity resultActivity;
     byte zero = 0;
     boolean tricks = false;
     MessageHandler messageHandler;
@@ -117,19 +116,18 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
       this.maxRounds = maxRounds;
     }
 
-    public int getMaxRounds() {
-        return maxRounds;
-    }
-
     public void playerMadeAMove(Byte cardPlayed, int playerID){
         game.moveMade(cardPlayed,playerID);
     }
 
     public void newRound(){
+        round++;
         cardAdapter.setReturnValue("");
         me.calculateMyPoints();
         showMyPoints();
         haveICheated = false;
+        LinearLayout trumpPos = findViewById(R.id.trumpPosition);
+        trumpPos.removeAllViews();
     }
 
     public void sendEnd(){
@@ -140,24 +138,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         Log.i(tag,finalSt.toString());
     }
 
-    public void sendLastPoints(int p){
-        messageHandler.write(Server.ROUNDEND, me.getPlayerName() + ": " + (byte)p+" points");
-    }
-
-    /*
-    public void addEndListEntry(){
-        round++;
-        me.calculateMyPoints();
-        int p = me.getPoints();
-       // sendMyPoints(p);
-        sendLastPoints(p);
-        finalSt.add("\n Round"+round +" "+ me.getPlayerName()+": "+p+" points");
-    }
-        */
     public void endGame(){
         Intent i = new Intent(GameActivity.this, ResultActivity.class);
         i.putExtra("maxRounds", maxRounds);
-        startActivity(i);
+         startActivity(i);
         Log.i(tag,finalSt.toString());
     }
 
@@ -174,7 +158,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         }
     }
     public void setTrump(byte cardT){
-        round++;
+      //  round++;
         messageHandler.resetCheaters();
         trump = cardAdapter.getThisCard(cardT);
         LinearLayout trumpPos = findViewById(R.id.trumpPosition);
@@ -354,10 +338,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void setPointsInList(String points){
         finalSt.add("\n Round"+round+" "+points);
     }
-    public void addLastPointsInList(String pointsend){
-        finalSt.add("\n Round"+round+" "+pointsend);
-    }
-
 
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
@@ -728,23 +708,17 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private List<Card> generateCardsForCheating (String csvString) {
         List<Card> returnList = new ArrayList<Card>();
         String[] csvSplitted = csvString.split(";");
-        //System.out.println("Splitted: " + csvSplitted[0]);
         String[] cardSplitted;
         int i = 0;
         while(i < csvSplitted.length) {
             cardSplitted = csvSplitted[i].split("_");
-            //System.out.println(cardSplitted[0]);
             if(cardSplitted[0].equals("BLUE")) {
-                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 0));
             } else if (cardSplitted[0].equals("GREEN")) {
-                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 1));
             } else if (cardSplitted[0].equals("YELLOW")) {
-                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 2));
             } else if (cardSplitted[0].equals("RED")) {
-                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 3));
             }
             i++;

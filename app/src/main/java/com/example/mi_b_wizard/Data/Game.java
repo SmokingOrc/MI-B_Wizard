@@ -30,11 +30,10 @@ public class Game {
     private int turns = 0;
     private byte n = 0;
     private int host = 0;
-    private int minPlayers = 2;  // when testing with 2 devices change the value of minPlayers.
+    private int minPlayers = 3;  // when testing with 2 devices change the value of minPlayers.
     private int maxPlayers = 6;
     private boolean rightNumberOfPlayers = false;
     private Map<Byte, Integer> playedCards = new HashMap<>();
-
 
 
 
@@ -80,28 +79,26 @@ public class Game {
             } else {
                 maxRounds = 10;
             }
-            //set maxRound to 3 for Demoversion
-            maxRounds = 3;
             gameActivity.setMaxRounds(maxRounds);
 
         }
     }
 
     private void whoIsNext() {
-        System.out.println("max "+maxRounds+" round "+round);
         if (turnsCount == ((ids.size() + 1) * round) && round <= maxRounds) {
             if(round == maxRounds){
-
-                messageHandler.sendEvent(Server.NEW_ROUND, n);
+                whoWonThisRound();
+                waitALittleBit();
                 gameActivity.newRound();
+                messageHandler.sendEvent(Server.NEW_ROUND, n);
                 waitALittleBit();
                 gameActivity.sendEnd();
             }else {
             whoWonThisRound();
             waitALittleBit();
-            nextRound();
             messageHandler.sendEvent(Server.NEW_ROUND, n);
-            gameActivity.newRound();}
+            gameActivity.newRound();
+            nextRound();}
         }else if (playersPlayedThisRound == ids.size() + 1) {
             nextTurn();
         }else {
@@ -115,6 +112,9 @@ public class Game {
         playersPlayedThisRound = 0;
         cardAdapter.setReturnValue("");
         waitALittleBit();
+        if(round == maxRounds){
+            lastRound = true;
+        }
         sendCards(); }
 
 
@@ -178,9 +178,10 @@ public class Game {
     }
 
     private void findAndSendTrump() {
-        trumpThisRound = cardAdapter.getTrump();
-        gameActivity.setTrump(trumpThisRound);
-        messageHandler.sendEvent(Server.TRUMP, trumpThisRound);
+        if(!lastRound) {
+            trumpThisRound = cardAdapter.getTrump();
+            gameActivity.setTrump(trumpThisRound);
+            messageHandler.sendEvent(Server.TRUMP, trumpThisRound);}
     }
 
     public void moveMade(byte cardPlayed, int playerID) {
@@ -193,6 +194,9 @@ public class Game {
         if (playersPlayedThisRound == 0) {
             if (cardPlayed != (byte) 31 || cardPlayed != (byte) 46 || cardPlayed != (byte) 61 || cardPlayed != (byte) 16) {
                 firstCardThisTurn = cardPlayed;
+                if(lastRound){
+                    trumpThisRound = cardPlayed;
+                }
                 Log.i(tag,"new first/high card");
             }
         }

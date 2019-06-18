@@ -174,7 +174,7 @@ public class MessageHandler implements Handler.Callback {
             case NOTIFICATION:
                 String notification = new String((byte[]) msg.obj, 1, msg.arg1);
                 if(gameActivity != null){
-                gameActivity.toast(notification);
+               // gameActivity.toast(notification);
                 if (JoinGameActivity.owner) {
                     writeToAllExceptTheSender(Server.NOTIFICATION,notification, msg.arg2);
                 }}
@@ -270,16 +270,6 @@ public class MessageHandler implements Handler.Callback {
                 else {
                     Log.i(gameNaN,tag); }
                 break;
-
-            case ROUNDEND:
-                String pointsend = new String((byte[]) msg.obj, 1, msg.arg1);
-                if (gameActivity != null) {
-                    gameActivity.addLastPointsInList(pointsend);
-                    if (JoinGameActivity.owner){
-                        writeToAllExceptTheSender(Server.ROUNDEND,pointsend, msg.arg2);
-                    }}
-                break;
-
 
 
                 default:
