@@ -86,16 +86,20 @@ public class Game {
     }
 
     private void whoIsNext() {
-        System.out.println("max "+maxRounds+" round "+round);
         if (turnsCount == ((ids.size() + 1) * round) && round <= maxRounds) {
             if(round == maxRounds){
+                whoWonThisRound();
+                waitALittleBit();
+                gameActivity.newRound();
+                messageHandler.sendEvent(Server.NEW_ROUND, n);
+                waitALittleBit();
                 gameActivity.sendEnd();
             }else {
             whoWonThisRound();
             waitALittleBit();
-            nextRound();
             messageHandler.sendEvent(Server.NEW_ROUND, n);
-            gameActivity.newRound();}
+            gameActivity.newRound();
+            nextRound();}
         }else if (playersPlayedThisRound == ids.size() + 1) {
             nextTurn();
         }else {
@@ -109,6 +113,9 @@ public class Game {
         playersPlayedThisRound = 0;
         cardAdapter.setReturnValue("");
         waitALittleBit();
+        if(round == maxRounds){
+            lastRound = true;
+        }
         sendCards(); }
 
 
@@ -172,9 +179,10 @@ public class Game {
     }
 
     private void findAndSendTrump() {
-        trumpThisRound = cardAdapter.getTrump();
-        gameActivity.setTrump(trumpThisRound);
-        messageHandler.sendEvent(Server.TRUMP, trumpThisRound);
+        if(!lastRound) {
+            trumpThisRound = cardAdapter.getTrump();
+            gameActivity.setTrump(trumpThisRound);
+            messageHandler.sendEvent(Server.TRUMP, trumpThisRound);}
     }
 
     public void moveMade(byte cardPlayed, int playerID) {
@@ -187,6 +195,9 @@ public class Game {
         if (playersPlayedThisRound == 0) {
             if (cardPlayed != (byte) 31 || cardPlayed != (byte) 46 || cardPlayed != (byte) 61 || cardPlayed != (byte) 16) {
                 firstCardThisTurn = cardPlayed;
+                if(lastRound){
+                    trumpThisRound = cardPlayed;
+                }
                 Log.i(tag,"new first/high card");
             }
         }
