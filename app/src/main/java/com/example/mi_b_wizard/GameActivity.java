@@ -126,10 +126,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void newRound(){
+        round++;
         cardAdapter.setReturnValue("");
         me.calculateMyPoints();
         showMyPoints();
         haveICheated = false;
+        LinearLayout trumpPos = findViewById(R.id.trumpPosition);
+        trumpPos.removeAllViews();
     }
 
     public void sendEnd(){
@@ -157,7 +160,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void endGame(){
         Intent i = new Intent(GameActivity.this, ResultActivity.class);
         i.putExtra("maxRounds", maxRounds);
-        startActivity(i);
+         startActivity(i);
         Log.i(tag,finalSt.toString());
     }
 
@@ -174,7 +177,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         }
     }
     public void setTrump(byte cardT){
-        round++;
+      //  round++;
         messageHandler.resetCheaters();
         trump = cardAdapter.getThisCard(cardT);
         LinearLayout trumpPos = findViewById(R.id.trumpPosition);
@@ -349,6 +352,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     //Methode to set the points of the other players in the Pointsview to show them in the dialog
     public void setPointsInDialog(String points){
         pointsView.append("\n"+points+" ");
+
     }
 
     public void setPointsInList(String points){
