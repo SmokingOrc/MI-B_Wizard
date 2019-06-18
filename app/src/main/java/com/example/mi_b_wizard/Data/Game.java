@@ -37,6 +37,7 @@ public class Game {
 
 
 
+
     public void setIdsTest(List<Integer> id) {
         ids = id;
     }
@@ -79,6 +80,8 @@ public class Game {
             } else {
                 maxRounds = 10;
             }
+            //set maxRound to 3 for Demoversion
+            maxRounds = 3;
             gameActivity.setMaxRounds(maxRounds);
 
         }

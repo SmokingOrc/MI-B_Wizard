@@ -72,6 +72,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     ViewGroup layout;
     Server server;
     Card trump;
+    ResultActivity resultActivity;
     byte zero = 0;
     boolean tricks = false;
     MessageHandler messageHandler;
@@ -114,6 +115,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void setMaxRounds(int maxRounds) {
       this.maxRounds = maxRounds;
+    }
+
+    public int getMaxRounds() {
+        return maxRounds;
     }
 
     public void playerMadeAMove(Byte cardPlayed, int playerID){
