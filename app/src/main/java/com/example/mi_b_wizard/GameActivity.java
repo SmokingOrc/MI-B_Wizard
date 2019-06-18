@@ -144,7 +144,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         messageHandler.write(Server.ROUNDEND, me.getPlayerName() + ": " + (byte)p+" points");
     }
 
-
+    /*
     public void addEndListEntry(){
         round++;
         me.calculateMyPoints();
@@ -153,7 +153,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         sendLastPoints(p);
         finalSt.add("\n Round"+round +" "+ me.getPlayerName()+": "+p+" points");
     }
-
+        */
     public void endGame(){
         Intent i = new Intent(GameActivity.this, ResultActivity.class);
         i.putExtra("maxRounds", maxRounds);

@@ -91,7 +91,8 @@ public class Game {
         System.out.println("max "+maxRounds+" round "+round);
         if (turnsCount == ((ids.size() + 1) * round) && round <= maxRounds) {
             if(round == maxRounds){
-                gameActivity.addEndListEntry();
+
+                messageHandler.sendEvent(Server.NEW_ROUND, n);
                 gameActivity.newRound();
                 waitALittleBit();
                 gameActivity.sendEnd();

@@ -2,17 +2,22 @@ package com.example.mi_b_wizard;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.example.mi_b_wizard.Network.WiFiDirectBroadcastReceiver;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +26,12 @@ import static android.graphics.Color.parseColor;
 
 public class ResultActivity extends AppCompatActivity {
     TableLayout resultLayout;
-    ListView resultView;
     GameActivity gameActivity = GameActivity.getGameActivity();
     int rowcounter = 1;
     int maxRounds = 3;
     int playerCount = 2;
     List<String> end = new ArrayList<>();
-    Button btmm;
+    ImageView btmm;
 
 
     public String getPlayernameFromList(int position){
@@ -64,7 +68,7 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
         resultLayout = findViewById(R.id.result);
         end = gameActivity.getFinalSt(); // end results..
-        btmm = findViewById(R.id.backToMainMenu);
+        btmm = findViewById(R.id.home);
 
         //Getting maxRounds from Game_activity
         //Intent mIntent = getIntent();
@@ -79,19 +83,7 @@ public class ResultActivity extends AppCompatActivity {
         }
 
         cleanMyList(end);
-
-        System.out.println("Game: " + end.size());
-
-        for (String s: end){
-            System.out.println(s);
-        }
         generateNewResultList(maxRounds);
-
-      /*  resultLayout.setVisibility(View.GONE);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, end);
-        resultView.setAdapter(adapter);
-        */
-
 
 
         btmm.setOnClickListener(new View.OnClickListener(){
