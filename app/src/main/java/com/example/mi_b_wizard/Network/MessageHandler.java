@@ -51,6 +51,7 @@ public class MessageHandler implements Handler.Callback {
     public static final byte END = 49;
     public static final byte DETECT = 77;
     public static final byte CHEATER_FOUND = 94;
+    public static final byte ROUNDEND =  18;
 
 
 
@@ -218,7 +219,8 @@ public class MessageHandler implements Handler.Callback {
             case POINTS:
                 String points = new String((byte[]) msg.obj, 1, msg.arg1);
                 if (gameActivity != null) {
-                gameActivity.setPointsInDialog(points);
+                    gameActivity.setPointsInList(points);
+                    gameActivity.setPointsInDialog(points);
                 if (JoinGameActivity.owner){
                     writeToAllExceptTheSender(Server.SEND_POINTS,points, msg.arg2);
                 }}
@@ -268,7 +270,6 @@ public class MessageHandler implements Handler.Callback {
                 else {
                     Log.i(gameNaN,tag); }
                 break;
-
 
 
                 default:

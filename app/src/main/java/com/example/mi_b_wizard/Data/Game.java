@@ -80,6 +80,8 @@ public class Game {
             } else {
                 maxRounds = 10;
             }
+            //set maxRound to 3 for Demoversion
+            maxRounds = 3;
             gameActivity.setMaxRounds(maxRounds);
 
         }

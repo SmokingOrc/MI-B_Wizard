@@ -6,11 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+
+import com.example.mi_b_wizard.Data.Game;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,22 +25,33 @@ public class ResultActivity extends AppCompatActivity {
     TableLayout resultLayout;
     GameActivity gameActivity = GameActivity.getGameActivity();
     int rowcounter = 1;
-    int maxRounds = 21;
-    int playerCount;
+    int maxRounds = 20;
+    int playerCount = 3;
     List<String> end = new ArrayList<>();
-    Button btmm;
-
+    ImageView btmm;
 
     public String getPlayernameFromList(int position){
         String name  = end.get(position);
         String[] row = name.split(" ");
-        return row[1];
+        return row[2];
     }
 
     public String getPointsFromList(int position){
         String points = end.get(position);
         String[] row = points.split(" ");
-        return row[2];
+        return row[3];
+
+    }
+
+    public void cleanMyList(List<String> end){
+        for (int i=0; i < end.size();i++ ){
+           String s  = end.get(i);
+           String[] row = s.split(" ");
+           if (row.length <= 3){
+               end.remove(i);
+               i--;
+           }
+        }
 
     }
 
@@ -47,20 +62,16 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
         resultLayout = findViewById(R.id.result);
         end = gameActivity.getFinalSt(); // end results..
-        btmm = findViewById(R.id.backToMainMenu);
+        btmm = findViewById(R.id.home);
+
+
 
         //Getting maxRounds from Game_activity
         Intent mIntent = getIntent();
         maxRounds = mIntent.getIntExtra("maxRounds", 0);
-
-  //      randomdata2();
-        System.out.println("Game: " + end.size());
-        System.out.println("maxRounds: " + maxRounds);
-        for (String s: end){
-            System.out.println(s);
-        }
-
+        cleanMyList(end);
         generateNewResultList(maxRounds);
+
 
         btmm.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -74,9 +85,7 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private void generateNewResultList(int maxRounds){
-        if (maxRounds > 0 ) {
             playerCount = 60 / maxRounds;
-        }
 
         //Creating HeadRow
         TableRow headRow = new TableRow(ResultActivity.this);
@@ -92,7 +101,7 @@ public class ResultActivity extends AppCompatActivity {
                     String playername = getPlayernameFromList(i-1);
                     cell.setText(playername+" ");
                     cell.setTextColor(parseColor("#FFFFFFFF"));
-                    cell.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+ //                   cell.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
                 }
             }
         resultLayout.addView(headRow);
@@ -104,7 +113,7 @@ public class ResultActivity extends AppCompatActivity {
             resultLayout.addView(row);
             for (int j = 0; j < playerCount + 1; j++){
                 LinearLayout cell = new LinearLayout(ResultActivity.this);
-                cell.setGravity(Gravity.CENTER_VERTICAL);
+//                cell.setGravity(Gravity.CENTER_VERTICAL);
                 row.addView(cell);
 
                 TextView tv1 = new TextView(ResultActivity.this); //actual score
@@ -120,6 +129,7 @@ public class ResultActivity extends AppCompatActivity {
                         tv1.setPadding(20, 0, 0, 0);
 
                 }
+
                 cell.addView(tv1);
 
                 //first cell that shows the number of the round
@@ -132,11 +142,10 @@ public class ResultActivity extends AppCompatActivity {
 
                 }else {
 
-                    String s;
-                    s = getPointsFromList(rowcounter-1);
-
+                    String res;
+                    res = getPointsFromList(rowcounter-1);
                     TextView textViewValues = new TextView(ResultActivity.this);
-                    textViewValues.setText(s);
+                    textViewValues.setText(res);
                     textViewValues.setTypeface(null, Typeface.BOLD);
                     textViewValues.setTextColor(parseColor("#FFFFFFFF"));
                     cell.addView(textViewValues);

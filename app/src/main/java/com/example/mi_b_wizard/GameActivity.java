@@ -52,7 +52,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private CardAdapter cardAdapter = new CardAdapter() ;
     Player me = MainActivity.getPlayer();
     private String tag = "gameActivity";
-    private int round = 0;
+    private int round = -1;
     private int maxRounds = 20;
     Button startAndSendCards;
     ImageView detectBtn;
@@ -115,6 +115,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public void setMaxRounds(int maxRounds) {
       this.maxRounds = maxRounds;
+    }
+
+    public int getMaxRounds() {
+        return maxRounds;
     }
 
     public void playerMadeAMove(Byte cardPlayed, int playerID){
@@ -334,7 +338,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     //Methode to set the points of the other players in the Pointsview to show them in the dialog
     public void setPointsInDialog(String points){
         pointsView.append("\n"+points+" ");
-        finalSt.add("\n Round"+round+" "+points);}
+    }
+
+    public void setPointsInList(String points){
+        finalSt.add("\n Round"+round+" "+points);
+    }
 
     public void PlayersStart(){
         layout.removeView(startAndSendCards);
@@ -705,23 +713,17 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private List<Card> generateCardsForCheating (String csvString) {
         List<Card> returnList = new ArrayList<Card>();
         String[] csvSplitted = csvString.split(";");
-        //System.out.println("Splitted: " + csvSplitted[0]);
         String[] cardSplitted;
         int i = 0;
         while(i < csvSplitted.length) {
             cardSplitted = csvSplitted[i].split("_");
-            //System.out.println(cardSplitted[0]);
             if(cardSplitted[0].equals("BLUE")) {
-                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 0));
             } else if (cardSplitted[0].equals("GREEN")) {
-                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 1));
             } else if (cardSplitted[0].equals("YELLOW")) {
-                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 2));
             } else if (cardSplitted[0].equals("RED")) {
-                //System.out.println("hello");
                 returnList.add(new Card(Integer.parseInt(cardSplitted[1]), 3));
             }
             i++;
