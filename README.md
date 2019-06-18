@@ -3,17 +3,19 @@
 Ziel des Spiels ist es, in jeder Runde korrekt vorherzusagen, wie oft man die höchste Karte (Stich) hat.
 
 <h2>Spielbeschreibung:</h2>
-In der ersten Runde bekommt jeder Spieler eine Karte und kann somit entweder 0 oder 1 Stich vorhersagen. Mit jeder Runde kommt eine Karte hinzu, wodurch die Anzahl der möglichen Stiche steigt.
+<br>In der ersten Runde bekommt jeder Spieler eine Karte und kann somit entweder 0 oder 1 Stich vorhersagen. Mit jeder Runde kommt eine Karte hinzu, wodurch die Anzahl der möglichen Stiche steigt.
 Pro Runde wird eine Karte offen ausgelegt, welche die Trumpf-Farbe bestimmt, also die stärkste Farbe der Runde
 Es gibt 13 Zahlen-Karten in 4 Farben sowie 4 Zauberer und 4 Narren.
-Die Wertung der Karten ist wie folgt (absteigend):
-
-- Zauberer
-- 13-1 in Trumpf-Farbe
-- 13-1 in der Farbe der ersten gelegten Karte
-- alle anderen Zahlenkarten
-- Narr
-
+Die Wertung der Karten ist wie folgt (absteigend): </br>
+<p>
+    <ul>
+       <li>Zauberer</li>
+       <li>13-1 in Trumpf-Farbe</li>
+       <li>13-1 in der Farbe der ersten gelegten Karte</li>
+       <li>alle anderen Zahlenkarten</li>
+       <li>Narr</li>
+</ul>
+</p>
 
 
 Zuerst muss jeder Spieler vorhersagen, wie viele Stiche er glaubt diese Runde zu machen. Die Vorhersage kann mittels Spracheingabe durchgeführt und einfach in das Smartdevice gesprochen oder auch manuell eingegeben werden.
